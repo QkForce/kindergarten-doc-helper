@@ -1,0 +1,24 @@
+# Python кэші мен уақытша файлдар
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Виртуалды орта
+venv/
+.env/
+
+# Excel және уақытша деректер
+*.xlsx
+*.xls
+/data/
+output/
+
+# IDE және жүйелік файлдар
+.vscode/
+.idea/
+.DS_Store
+
+# Құпия файлдар немесе логтар
+*.log
+*.bak
