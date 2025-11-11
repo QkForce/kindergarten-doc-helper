@@ -1,6 +1,6 @@
 import os
 from dotenv import load_dotenv
-from config import metrics_mapping_adult
+from config import metrics_mapping_senior
 
 
 load_dotenv()
@@ -18,13 +18,13 @@ GROUPS = {
         "sheet_name": "ересек топ",
         "row_start": ROW_START,
         "row_end": ROW_END,
-        "metrics_mapping": metrics_mapping_adult.MAPPING,
+        "metrics_mapping": metrics_mapping_senior.MAPPING,
     },
     "мектепалды топ": {
         "sheet_name": "мектепалды топ",
         "row_start": ROW_START,
         "row_end": ROW_END,
-        "metrics_mapping": metrics_mapping_adult.MAPPING,
+        "metrics_mapping": metrics_mapping_senior.MAPPING,
     },
 }
 

@@ -1,5 +1,5 @@
 import random
-from config.metrics_groups import METRICS_GROUPS
+from config.metrics_groups_senior import METRICS_GROUPS
 from config.config import GROUP_CONF
 
 
