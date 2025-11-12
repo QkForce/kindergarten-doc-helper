@@ -20,10 +20,13 @@ def create_children_grow_cards(template_path, children_data, output_path):
     merged_doc = Document(template_path)
     replace_placeholders_in_document(merged_doc, children_data[0])
     merged_body = merged_doc.element.body
+    print(
+        f"\nProcessing child: {children_data[0]['fullname']} (1/{len(children_data)})"
+    )
 
     for index, child_data in enumerate(children_data[1:]):
         print(
-            f"Processing child: {child_data['fullname']} ({index+1}/{len(children_data)})"
+            f"Processing child: {child_data['fullname']} ({index+2}/{len(children_data)})"
         )
         template_doc = Document(template_path)
         replace_placeholders_in_document(template_doc, child_data)
