@@ -13,6 +13,10 @@ METRICS_GROUPS = GROUP_CONF["metrics_groups"]
 METRICS_MAPPING = GROUP_CONF["metrics_mapping"]
 
 
+def print_process(fullname, current_index, total_children):
+    print(f"Processing child: {fullname} ({current_index}/{total_children})")
+
+
 if __name__ == "__main__":
     children_data = load_metrics_from_excel(
         XLSX_FILE_PATH,
@@ -23,6 +27,7 @@ if __name__ == "__main__":
     all_children_grow_card_data = prepare_all_children_grow_card_data(
         children_data, MARKERS_BY_TYPE, METRICS_GROUPS, METRICS_MAPPING
     )
-    create_children_grow_cards(
-        TEMPLATE_DOCX_PATH, all_children_grow_card_data, OUTPUT_DOCX_PATH
+    merged_doc = create_children_grow_cards(
+        TEMPLATE_DOCX_PATH, all_children_grow_card_data, print_process
     )
+    merged_doc.save(OUTPUT_DOCX_PATH)

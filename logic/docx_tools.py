@@ -16,18 +16,18 @@ def replace_placeholders_in_document(element, replacements):
                     replace_placeholders_in_document(cell, replacements)
 
 
-def create_children_grow_cards(template_path, children_data, output_path):
+def create_children_grow_cards(template_path, children_data, progress_callback=None):
     merged_doc = Document(template_path)
     replace_placeholders_in_document(merged_doc, children_data[0])
     merged_body = merged_doc.element.body
-    print(
-        f"\nProcessing child: {children_data[0]['fullname']} (1/{len(children_data)})"
-    )
+    total_children = len(children_data)
+
+    if progress_callback:
+        progress_callback(children_data[0]["fullname"], 1, total_children)
 
     for index, child_data in enumerate(children_data[1:]):
-        print(
-            f"Processing child: {child_data['fullname']} ({index+2}/{len(children_data)})"
-        )
+        if progress_callback:
+            progress_callback(child_data["fullname"], index + 2, total_children)
         template_doc = Document(template_path)
         replace_placeholders_in_document(template_doc, child_data)
         merged_doc.add_page_break()
@@ -39,4 +39,4 @@ def create_children_grow_cards(template_path, children_data, output_path):
             if isinstance(element, CT_P) and not element.text.strip():
                 continue
             merged_body.insert(merged_body.index(sect_pr), element)
-    merged_doc.save(output_path)
+    return merged_doc
