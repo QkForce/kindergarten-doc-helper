@@ -26,36 +26,36 @@ ROW_START = int(os.getenv("ROW_START", 14))
 ROW_END = int(os.getenv("ROW_END", 38))
 
 GROUPS = {
-    "ерте жас тобы": {
-        "sheet_name": XLSX_SHEET_NAME or "ерте жас тобы",
+    "early_age": {
+        "sheet_name": XLSX_SHEET_NAME,
         "row_start": ROW_START,
         "row_end": ROW_END,
         "metrics_mapping": metrics_mapping_early_age.MAPPING,
         "metrics_groups": metrics_groups_early_age.METRICS_GROUPS,
     },
-    "кіші топ": {
-        "sheet_name": XLSX_SHEET_NAME or "кіші топ",
+    "junior": {
+        "sheet_name": XLSX_SHEET_NAME,
         "row_start": ROW_START,
         "row_end": ROW_END,
         "metrics_mapping": metrics_mapping_junior.MAPPING,
         "metrics_groups": metrics_groups_junior.METRICS_GROUPS,
     },
-    "ортаңғы топ": {
-        "sheet_name": XLSX_SHEET_NAME or "ортаңғы топ",
+    "middle": {
+        "sheet_name": XLSX_SHEET_NAME,
         "row_start": ROW_START,
         "row_end": ROW_END,
         "metrics_mapping": metrics_mapping_middle.MAPPING,
         "metrics_groups": metrics_groups_middle.METRICS_GROUPS,
     },
-    "ересек топ": {
-        "sheet_name": XLSX_SHEET_NAME or "ересек топ",
+    "senior": {
+        "sheet_name": XLSX_SHEET_NAME,
         "row_start": ROW_START,
         "row_end": ROW_END,
         "metrics_mapping": metrics_mapping_senior.MAPPING,
         "metrics_groups": metrics_groups_senior.METRICS_GROUPS,
     },
-    "мектепалды тобы": {
-        "sheet_name": XLSX_SHEET_NAME or "мектепалды тобы",
+    "preschool": {
+        "sheet_name": XLSX_SHEET_NAME,
         "row_start": ROW_START,
         "row_end": ROW_END,
         "metrics_mapping": metrics_mapping_preschool.MAPPING,
