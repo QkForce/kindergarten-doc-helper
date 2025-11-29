@@ -1,0 +1,47 @@
+/* STEP 2 */
+
+/* QWidget#ste2_widget {
+    border: 1px solid #D1D5DB;
+    border-radius: 8px;
+} */
+
+QWidget#children_table_widget {
+    border-radius: 8px;
+    background-color: #F9FAFB;
+    padding: 10px;
+}
+
+/* ------ Manual Load Widget ------ */
+
+QWidget#manual_load_widget QLabel {
+    color: #374151;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+QWidget#manual_load_widget QSpinBox {
+    border: 1px solid #D1D5DB;
+    border-radius: 4px;
+    background-color: white;
+    color: black;
+    font-size: 14px;
+    padding: 5px;
+}
+
+QWidget#manual_load_widget QSpinBox::up-button {
+    /* subcontrol-origin: border;
+    subcontrol-position: top right; */
+    background-color: #F0F0F0;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+}
+
+QWidget#manual_load_widget QSpinBox::down-button {
+    /* subcontrol-origin: border;
+    subcontrol-position: bottom right; */
+    background-color: #F0F0F0;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
+
+/* STEP 3 */

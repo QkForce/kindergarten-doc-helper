@@ -1,0 +1,40 @@
+QWidget#outer_container {
+    background-color: #DAEAEB;
+}
+
+QFrame#central_panel {
+    background-color: #fff;
+    border-radius: 16px;
+    border: 1px solid #fff;
+    padding: 10px 15px 15px 15px;
+}
+
+QStackedWidget {
+    border: 1px solid #D1D5DB;
+    border-radius: 8px;
+    background-color: #F9FAFB;
+}
+
+/* ---------- progress_title ----------- */
+
+QLabel#progress_title {
+    font-weight: bold;
+    font-size: 24px;
+    line-height: 0px;
+    color: black;
+}
+
+/* ---------- progress_description ----------- */
+
+QLabel#progress_description {
+    margin-top: 10px;
+    font-weight: 500;
+    font-size: 16px;
+    color: #626872;
+}
+
+QScrollArea {
+    border: 1px solid #D1D5DB;
+    border-radius: 8px;
+    background-color: #F9FAFB;
+}
