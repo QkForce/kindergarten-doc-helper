@@ -36,14 +36,13 @@ class Step3MetricsDetect(StepWidget):
         )
 
         self.content_widget = MetricsContent()
-        self.content_widget.hide()
+        self.content_widget.mappingChanged.connect(self._edit_mapping)
 
         self.empty_plug = EmptyPlug(
             "Метрикалар табылмады",
             "• Файлда метрикалар тізімі бар екеніне көз жеткізіңіз<br>"
             "• Немесе қолмен баптау арқылы жүктеп көріңіз",
         )
-        self.empty_plug.hide()
 
         self.btn_toggle = QPushButton(
             "Автоматты анықтау дұрыс жұмыс істемеді ме? Өрістерді қолмен баптаңыз."
@@ -178,3 +177,6 @@ class Step3MetricsDetect(StepWidget):
             self.sig_result.emit()
         else:
             self.sig_empty.emit()
+
+    def _edit_mapping(self, code, new_transformed):
+        self.state.metrics_mapping[code]["transformed"] = new_transformed
