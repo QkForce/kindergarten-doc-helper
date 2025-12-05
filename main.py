@@ -3,14 +3,13 @@ from logic.metrics_tools import prepare_all_children_grow_card_data
 from logic.docx_tools import create_children_grow_cards
 from config.config import (
     XLSX_FILE_PATH,
-    GROUP_CONF,
+    AGE_GROUP_DATA,
     TEMPLATE_DOCX_PATH,
     OUTPUT_DOCX_PATH,
-    MARKERS_BY_TYPE,
+    XLSX_SHEET_NAME,
+    ROW_START,
+    ROW_END,
 )
-
-METRICS_GROUPS = GROUP_CONF["metrics_groups"]
-METRICS_MAPPING = GROUP_CONF["metrics_mapping"]
 
 
 def print_process(fullname, current_index, total_children):
@@ -20,12 +19,12 @@ def print_process(fullname, current_index, total_children):
 if __name__ == "__main__":
     children_data = load_metrics_from_excel(
         XLSX_FILE_PATH,
-        GROUP_CONF["sheet_name"],
-        GROUP_CONF["row_start"],
-        GROUP_CONF["row_end"],
+        XLSX_SHEET_NAME,
+        ROW_START,
+        ROW_END,
     )
     all_children_grow_card_data = prepare_all_children_grow_card_data(
-        children_data, MARKERS_BY_TYPE, METRICS_GROUPS, METRICS_MAPPING
+        children_data, AGE_GROUP_DATA
     )
     merged_doc = create_children_grow_cards(
         TEMPLATE_DOCX_PATH, all_children_grow_card_data, print_process

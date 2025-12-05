@@ -12,6 +12,7 @@ from gui.widgets.manual_load_metrics_widget import ManualLoadMetricsWidget
 from gui.widgets.metrics_content import MetricsContent
 from gui.widgets.empty_plug import EmptyPlug
 from gui.widgets.loading_plug import LoadingPlug
+from logic.config_tools import get_age_group_data, get_age_group_metrics_mapping
 from logic.loaders.metrics_loader import MetricsLoader
 from logic.worker import start_worker_task
 
@@ -128,6 +129,7 @@ class Step3MetricsDetect(StepWidget):
 
     def run_auto_load(self):
         try:
+            self.state.age_group_data = get_age_group_data(self.state.age_group)
             self.sig_loading.emit()
             self.loader = MetricsLoader(self.state.workbook[self.state.sheet_name])
             start_worker_task(self.loader.load_auto, self._loaded, self._load_failed)
@@ -173,10 +175,15 @@ class Step3MetricsDetect(StepWidget):
 
     def _process_result(self, metrics):
         if metrics and len(metrics) > 0:
-            self.content_widget.set_data(metrics, self.state.metrics_mapping)
+            metrics_mapping = get_age_group_metrics_mapping(self.state.age_group_data)
+            self.content_widget.set_data(metrics, metrics_mapping)
             self.sig_result.emit()
         else:
             self.sig_empty.emit()
 
     def _edit_mapping(self, code, new_transformed):
-        self.state.metrics_mapping[code]["transformed"] = new_transformed
+        for metric_group in self.state.age_group_data.keys():
+            if code in self.state.age_group_data[metric_group]:
+                self.state.age_group_data[metric_group][code][
+                    "transformed"
+                ] = new_transformed

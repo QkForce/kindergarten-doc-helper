@@ -2,7 +2,6 @@ from PySide6.QtWidgets import QLabel, QVBoxLayout, QComboBox, QMessageBox, QSize
 from openpyxl import load_workbook
 from gui.steps.step_widget import StepWidget
 from gui.widgets.file_picker import FilePickerWidget
-from logic.config_tools import get_group_metrics_mapping, get_group_metrics_groups
 
 
 class Step1FileSelect(StepWidget):
@@ -84,8 +83,6 @@ class Step1FileSelect(StepWidget):
             return False
 
         self.state.sheet_name = self.combo_sheet.currentText()
-        self.state.group_type = self.combo_group.currentData()
-        self.state.metrics_mapping = get_group_metrics_mapping(self.state.group_type)
-        self.state.metrics_groups = get_group_metrics_groups(self.state.group_type)
+        self.state.age_group = self.combo_group.currentData()
 
         return True

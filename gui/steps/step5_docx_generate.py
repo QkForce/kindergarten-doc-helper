@@ -16,7 +16,7 @@ from gui.steps.step_widget import StepWidget
 from gui.widgets.file_picker import FilePickerWidget
 from logic.docx_tools import create_children_grow_cards
 from logic.metrics_tools import prepare_all_children_grow_card_data
-from logic.worker import start_worker_task, Worker
+from logic.worker import start_worker_task
 
 
 class Step5DocxGenerate(StepWidget):
@@ -191,10 +191,7 @@ class Step5DocxGenerate(StepWidget):
         try:
             self.sig_progress_state.emit()
             all_children_data = prepare_all_children_grow_card_data(
-                self.state.children_scores,
-                self.state.markers_by_type,
-                self.state.metrics_groups,
-                self.state.metrics_mapping,
+                self.state.children_scores, self.state.age_group_data
             )
             worker_func = functools.partial(
                 create_children_grow_cards,

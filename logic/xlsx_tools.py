@@ -1,5 +1,11 @@
 from openpyxl import load_workbook
-from config.config import GROUP_CONF
+from config.config import AGE_GROUP_DATA
+
+METRIC_CODES = [
+    code
+    for metric_group_data in AGE_GROUP_DATA.values()
+    for code in metric_group_data.keys()
+]
 
 
 def load_metrics_from_excel(file_path, sheet_name, min_row=14, max_row=38):
@@ -12,7 +18,7 @@ def load_metrics_from_excel(file_path, sheet_name, min_row=14, max_row=38):
             "number": row[0],
             "name": row[1],
         }
-        for index, metrics_key in enumerate(GROUP_CONF["metrics_mapping"].keys()):
+        for index, metrics_key in enumerate(METRIC_CODES):
             if row[2 + index * 3] is not None:
                 child[metrics_key] = 1
             elif row[2 + index * 3 + 1] is not None:
