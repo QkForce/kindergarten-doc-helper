@@ -13,6 +13,8 @@ from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QColor
 
 from gui.dialogs.edit_row_dialog import EditRowDialog
+from logic.config_store import save_age_group
+from logic.utils import sentences_equal
 
 
 class MetricsContent(QWidget):
@@ -57,9 +59,10 @@ class MetricsContent(QWidget):
         layout.addWidget(self.table)
         layout.addLayout(self.buttons_layout)
 
-    def set_data(self, metrics, mapping):
+    def set_data(self, metrics, mapping, age_group):
         self.metrics = metrics
         self.mapping = mapping
+        self.age_group = age_group
 
         self.table.setRowCount(len(metrics))
         has_errors = False
@@ -67,18 +70,19 @@ class MetricsContent(QWidget):
         for i, metric in enumerate(metrics):
             code = metric["code"]
             excel_desc = metric["desc"]
-            mapped_desc = (
+            mapped_desc = mapping.get(code, {}).get("original", "")
+            transformed = (
                 "" if mapping.get(code) is None else mapping.get(code)["transformed"]
             )
 
             item_code = QTableWidgetItem(code)
             item_excel = QTableWidgetItem(excel_desc)
-            item_docx = QTableWidgetItem(mapped_desc if mapped_desc else "")
+            item_docx = QTableWidgetItem(transformed if transformed else "")
 
             if code not in mapping:
                 color = QColor(255, 230, 230)  # bright red
                 has_errors = True
-            elif mapped_desc.strip() != excel_desc.strip():
+            elif not sentences_equal(excel_desc, mapped_desc):
                 color = QColor(255, 255, 200)  # bright yellow
                 has_errors = True
             else:
@@ -110,11 +114,12 @@ class MetricsContent(QWidget):
 
     def apply_row_color(self, row, code):
         excel = self.metrics[row]["desc"]
+        mapped_desc = self.mapping[code]["original"]
         transformed = self.mapping[code]["transformed"]
 
         if not transformed:
             color = QColor(255, 230, 230)
-        elif transformed.strip() != excel.strip():
+        elif not sentences_equal(excel, mapped_desc):
             color = QColor(255, 255, 200)
         else:
             color = QColor(230, 255, 230)
@@ -127,30 +132,16 @@ class MetricsContent(QWidget):
         for row, m in enumerate(self.metrics):
             code = m["code"]
             excel = m["desc"]
+            mapped_desc = self.mapping[code]["original"]
             transformed = self.mapping[code]["transformed"]
-            if not transformed or transformed.strip() != excel.strip():
+            if not transformed or not sentences_equal(excel, mapped_desc):
                 has_errors = True
             self.apply_row_color(row, code)
         self.btn_save.setEnabled(not has_errors)
 
     def on_save(self):
-        mapping_file = f"config/metrics_mapping_{self.group_type}.py"
         try:
-            new_mapping = {}
-            for i in range(self.table.rowCount()):
-                code = self.table.item(i, 0).text().strip()
-                desc = self.table.item(i, 2).text().strip()
-                if code and desc:
-                    new_mapping[code] = desc
-
-            text = "MAPPING = {\n"
-            for k, v in new_mapping.items():
-                text += f"    '{k}': '{v}',\n"
-            text += "}\n"
-
-            with open(mapping_file, "w", encoding="utf-8") as f:
-                f.write(text)
-
+            mapping_file = save_age_group(self.age_group, self.mapping)
             QMessageBox.information(
                 self, "Сақталды", f"Mapping жаңартылды: {mapping_file}"
             )
