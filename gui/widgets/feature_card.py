@@ -9,6 +9,7 @@ from PySide6.QtGui import QColor, QPixmap, QPainter
 from PySide6.QtSvg import QSvgRenderer
 
 from gui.constants.icons import IconPaths
+from gui.constants.colors import AppColors
 from gui.utils.icon_utils import get_svg_pixmap
 
 
@@ -29,7 +30,7 @@ class FeatureCard(QFrame):
         # Icon
         self.icon_label = QLabel()
         self.icon_label.setObjectName("card_icon")
-        self.set_icon(icon_path, color="#475569")
+        self.set_icon(icon_path, color=AppColors.TEXT_SECONDARY)
 
         self.title_label = QLabel(title)
         self.title_label.setObjectName("card_title")
