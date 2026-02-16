@@ -9,6 +9,7 @@ from PySide6.QtGui import QColor, QPixmap, QPainter
 from PySide6.QtSvg import QSvgRenderer
 
 from gui.constants.icons import IconPaths
+from gui.utils.icon_utils import get_svg_pixmap
 
 
 class FeatureCard(QFrame):
@@ -28,7 +29,7 @@ class FeatureCard(QFrame):
         # Icon
         self.icon_label = QLabel()
         self.icon_label.setObjectName("card_icon")
-        self.set_icon(icon_path)
+        self.set_icon(icon_path, color="#475569")
 
         self.title_label = QLabel(title)
         self.title_label.setObjectName("card_title")
@@ -53,22 +54,9 @@ class FeatureCard(QFrame):
         shadow.setColor(QColor(0, 0, 0, 20))
         self.setGraphicsEffect(shadow)
 
-    def set_icon(self, icon_path: str, size: int = 48):
-        # 1. Create a blank transparent Pixmap
-        pixmap = QPixmap(size, size)
-        pixmap.fill(Qt.transparent)
-
-        # 2. Create a Renderer to render the SVG
-        renderer = QSvgRenderer(icon_path)
-
-        if renderer.isValid():
-            # 3. Using Painter to draw SVG on top of Pixmap
-            painter = QPainter(pixmap)
-            # Turn on anti-aliasing for smoother edges
-            painter.setRenderHint(QPainter.Antialiasing)
-            renderer.render(painter)
-            painter.end()
-            self.icon_label.setPixmap(pixmap)
+    def set_icon(self, icon_path, color):
+        pixmap = get_svg_pixmap(icon_path, color, size=48)
+        self.icon_label.setPixmap(pixmap)
 
     def mousePressEvent(self, event):
         if event.button() == Qt.LeftButton:
