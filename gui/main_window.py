@@ -1,6 +1,7 @@
 from PySide6.QtWidgets import QMainWindow, QStackedWidget, QVBoxLayout, QWidget
 
 from gui.pages.hub_page import HubPage
+from gui.constants.strings import AppStrings
 
 
 class MainWindow(QMainWindow):
@@ -8,7 +9,7 @@ class MainWindow(QMainWindow):
         super().__init__()
 
         # 1. WINDOW
-        self.setWindowTitle("KinderDoc Helper")
+        self.setWindowTitle(AppStrings.APP_NAME)
         self.setMinimumSize(1000, 700)
 
         # 2. MAIN STACK

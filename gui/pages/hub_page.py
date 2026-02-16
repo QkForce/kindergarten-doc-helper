@@ -8,6 +8,7 @@ from PySide6.QtCore import Qt, Signal
 
 from gui.widgets.feature_card import FeatureCard
 from gui.constants.icons import IconPaths
+from gui.constants.strings import AppStrings
 
 
 class HubPage(QWidget):
@@ -28,10 +29,10 @@ class HubPage(QWidget):
         header_layout = QVBoxLayout()
         header_layout.setSpacing(8)
 
-        title = QLabel("KinderDoc Helper")
+        title = QLabel(AppStrings.HUB_TITLE)
         title.setObjectName("hub_main_title")
 
-        subtitle = QLabel("Automated document workflows for modern educators.")
+        subtitle = QLabel(AppStrings.HUB_SUBTITLE)
         subtitle.setObjectName("hub_subtitle")
 
         header_layout.addWidget(title, 0, Qt.AlignCenter)
@@ -45,18 +46,18 @@ class HubPage(QWidget):
         cards_layout.setSpacing(25)
 
         self.card_gen = FeatureCard(
-            "Document Generator",
-            "Build DOCX files from scratch using XLSX source data.",
+            AppStrings.CARD_GEN_TITLE,
+            AppStrings.CARD_GEN_DESC,
             IconPaths.FEATURE_DOCX_GENERATOR,
         )
         self.card_tpl = FeatureCard(
-            "Template Filler",
-            "Auto-fill existing Word templates with Excel variables.",
+            AppStrings.CARD_TPL_TITLE,
+            AppStrings.CARD_TPL_DESC,
             IconPaths.FEATURE_TEMPLATE_FILLER,
         )
         self.card_entry = FeatureCard(
-            "Smart Entry",
-            "Create student data tables with an intuitive grid.",
+            AppStrings.CARD_ENTRY_TITLE,
+            AppStrings.CARD_ENTRY_DESC,
             IconPaths.FEATURE_ENTRY_XLSX,
         )
 
