@@ -9,12 +9,6 @@ QFrame#central_panel {
     padding: 10px 15px 15px 15px;
 }
 
-QStackedWidget {
-    border: 1px solid #D1D5DB;
-    border-radius: 8px;
-    background-color: #F9FAFB;
-}
-
 /* ---------- progress_title ----------- */
 
 QLabel#progress_title {
