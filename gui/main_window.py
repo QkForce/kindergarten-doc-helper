@@ -1,5 +1,6 @@
 from PySide6.QtWidgets import QMainWindow, QStackedWidget, QVBoxLayout, QWidget
-from PySide6.QtCore import Qt
+
+from gui.pages.hub_page import HubPage
 
 
 class MainWindow(QMainWindow):
@@ -25,7 +26,7 @@ class MainWindow(QMainWindow):
 
     def init_pages(self):
         # Index 0: HUB PAGE
-        self.hub_page = QWidget()
+        self.hub_page = HubPage()
         self.stack.addWidget(self.hub_page)
 
         # Index 1: GENERATOR FLOW

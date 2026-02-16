@@ -1,3 +1,50 @@
+/* HubPage common bg */
+QWidget#hub_page {
+    background-color: #F9FAFB;
+}
+
+#hub_main_title {
+    font-size: 42px;
+    font-weight: 800;
+    color: #0F172A;
+}
+
+#hub_subtitle {
+    font-size: 18px;
+    color: #64748B;
+}
+
+/* FeatureCard style */
+#feature_card {
+    background-color: white;
+    border: 1px solid #E2E8F0;
+    border-radius: 32px;
+}
+
+#feature_card:hover {
+    border: 1px solid #BFDBFE;
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #FFFFFF, stop:1 #F0F7FF);
+}
+
+#card_icon {
+    font-size: 48px;
+    margin-bottom: 10px;
+}
+
+#card_title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1E293B;
+}
+
+#card_desc {
+    font-size: 14px;
+    color: #64748B;
+    line-height: 1.4;
+}
+
+/* Old styles */
+
 QWidget#outer_container {
     background-color: #DAEAEB;
 }
