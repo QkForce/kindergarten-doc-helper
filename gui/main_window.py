@@ -10,7 +10,7 @@ class MainWindow(QMainWindow):
 
         # 1. WINDOW
         self.setWindowTitle(AppStrings.APP_NAME)
-        self.setMinimumSize(1000, 700)
+        self.setMinimumSize(950, 650)
 
         # 2. MAIN STACK
         self.central_widget = QWidget()
