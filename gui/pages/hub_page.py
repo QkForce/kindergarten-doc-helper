@@ -5,7 +5,9 @@ from PySide6.QtWidgets import (
     QLabel,
 )
 from PySide6.QtCore import Qt, Signal
+
 from gui.widgets.feature_card import FeatureCard
+from gui.constants.icons import IconPaths
 
 
 class HubPage(QWidget):
@@ -45,15 +47,17 @@ class HubPage(QWidget):
         self.card_gen = FeatureCard(
             "Document Generator",
             "Build DOCX files from scratch using XLSX source data.",
-            "📄",
+            IconPaths.FEATURE_DOCX_GENERATOR,
         )
         self.card_tpl = FeatureCard(
             "Template Filler",
             "Auto-fill existing Word templates with Excel variables.",
-            "✏️",
+            IconPaths.FEATURE_TEMPLATE_FILLER,
         )
         self.card_entry = FeatureCard(
-            "Smart Entry", "Create student data tables with an intuitive grid.", "📊"
+            "Smart Entry",
+            "Create student data tables with an intuitive grid.",
+            IconPaths.FEATURE_ENTRY_XLSX,
         )
 
         cards_layout.addWidget(self.card_gen)
