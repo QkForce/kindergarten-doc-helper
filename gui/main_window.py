@@ -2,6 +2,7 @@ from PySide6.QtWidgets import QMainWindow, QStackedWidget, QVBoxLayout, QWidget
 
 from gui.pages.hub_page import HubPage
 from gui.constants.strings import AppStrings
+from gui.utils.window_utils import center_on_screen
 
 
 class MainWindow(QMainWindow):
@@ -11,6 +12,7 @@ class MainWindow(QMainWindow):
         # 1. WINDOW
         self.setWindowTitle(AppStrings.APP_NAME)
         self.setMinimumSize(950, 650)
+        center_on_screen(self)
 
         # 2. MAIN STACK
         self.central_widget = QWidget()
