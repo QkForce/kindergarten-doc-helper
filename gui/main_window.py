@@ -1,6 +1,7 @@
 from PySide6.QtWidgets import QMainWindow, QStackedWidget, QVBoxLayout, QWidget
 
 from gui.pages.hub_page import HubPage
+from gui.pages.generator_page import GeneratorPage
 from gui.constants.strings import AppStrings
 from gui.utils.window_utils import center_on_screen
 
@@ -30,10 +31,13 @@ class MainWindow(QMainWindow):
     def init_pages(self):
         # Index 0: HUB PAGE
         self.hub_page = HubPage()
+        self.hub_page.generator_requested.connect(lambda: self.switch_page(1))
+        self.hub_page.template_requested.connect(lambda: self.switch_page(2))
+        self.hub_page.entry_requested.connect(lambda: self.switch_page(3))
         self.stack.addWidget(self.hub_page)
 
         # Index 1: GENERATOR FLOW
-        self.generator_page = QWidget()
+        self.generator_page = GeneratorPage()
         self.stack.addWidget(self.generator_page)
 
         # Index 2: TEMPLATE FILLER
