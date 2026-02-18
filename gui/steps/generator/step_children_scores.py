@@ -11,7 +11,7 @@ from logic.loaders.scores_loader import ScoresLoader
 from logic.worker import start_worker_task
 
 
-class Step4ChildrenScores(StepWidget):
+class StepChildrenScores(StepWidget):
     sig_loading = Signal()
     sig_result = Signal()
     sig_empty = Signal()

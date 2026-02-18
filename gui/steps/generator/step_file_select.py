@@ -4,7 +4,7 @@ from gui.steps.step_widget import StepWidget
 from gui.widgets.file_picker import FilePickerWidget
 
 
-class Step1FileSelect(StepWidget):
+class StepFileSelect(StepWidget):
     def setup_ui(self):
         self.title = "Кезең 1 / 5: Бастапқы деректерді таңдау"
         self.description = (

@@ -1,8 +1,8 @@
-from gui.steps.generator.step1_file_select import Step1FileSelect
-from gui.steps.generator.step2_children_list import Step2ChildrenList
-from gui.steps.generator.step3_metrics_detect import Step3MetricsDetect
-from gui.steps.generator.step4_children_scores import Step4ChildrenScores
-from gui.steps.generator.step5_docx_generate import Step5DocxGenerate
+from gui.steps.generator.step_file_select import StepFileSelect
+from gui.steps.generator.step_children_list import StepChildrenList
+from gui.steps.generator.step_metrics_detect import StepMetricsDetect
+from gui.steps.generator.step_children_scores import StepChildrenScores
+from gui.steps.generator.step_docx_generate import StepDocxGenerate
 from gui.widgets.wizard_widget import WizardWidget
 from logic.app_state import AppState
 
@@ -11,10 +11,10 @@ class GeneratorPage(WizardWidget):
     def __init__(self):
         state = AppState()
         step_factories = [
-            lambda: Step1FileSelect(state),
-            lambda: Step2ChildrenList(state),
-            lambda: Step3MetricsDetect(state),
-            lambda: Step4ChildrenScores(state),
-            lambda: Step5DocxGenerate(state),
+            lambda: StepFileSelect(state),
+            lambda: StepChildrenList(state),
+            lambda: StepMetricsDetect(state),
+            lambda: StepChildrenScores(state),
+            lambda: StepDocxGenerate(state),
         ]
         super().__init__(step_factories=step_factories, state=state)

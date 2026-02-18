@@ -19,7 +19,7 @@ from logic.metrics_tools import prepare_all_children_grow_card_data
 from logic.worker import start_worker_task
 
 
-class Step5DocxGenerate(StepWidget):
+class StepDocxGenerate(StepWidget):
     temp_file_path: str = ""
     docx_file = None
     sig_start_state = Signal()
