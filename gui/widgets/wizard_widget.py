@@ -21,14 +21,14 @@ class WizardWidget(QWidget):
         self.state = state
 
         # OUTER CONTAINER
-        self.outer_layout = QVBoxLayout(self)
+        self.outer_layout = QHBoxLayout(self)
         self.outer_layout.setObjectName("outer_container")
         self.outer_layout.setAlignment(Qt.AlignCenter)
 
         # CENTRAL PANEL (DESIGN KEPT)
         self.central_panel = QFrame()
         self.central_panel.setObjectName("central_panel")
-        self.central_panel.setFixedWidth(750)
+        self.central_panel.setMinimumWidth(600)
         self.central_panel.setMinimumHeight(500)
         panel_layout = QVBoxLayout(self.central_panel)
 
@@ -82,7 +82,9 @@ class WizardWidget(QWidget):
         panel_layout.addLayout(nav)
 
         # finalize layout
-        self.outer_layout.addWidget(self.central_panel)
+        self.outer_layout.addStretch(10)
+        self.outer_layout.addWidget(self.central_panel, 80)
+        self.outer_layout.addStretch(10)
 
         # initial step
         self.current_step = 0
