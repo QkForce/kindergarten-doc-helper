@@ -1,8 +1,8 @@
-from gui.steps.step1_file_select import Step1FileSelect
-from gui.steps.step2_children_list import Step2ChildrenList
-from gui.steps.step3_metrics_detect import Step3MetricsDetect
-from gui.steps.step4_children_scores import Step4ChildrenScores
-from gui.steps.step5_docx_generate import Step5DocxGenerate
+from gui.steps.generator.step1_file_select import Step1FileSelect
+from gui.steps.generator.step2_children_list import Step2ChildrenList
+from gui.steps.generator.step3_metrics_detect import Step3MetricsDetect
+from gui.steps.generator.step4_children_scores import Step4ChildrenScores
+from gui.steps.generator.step5_docx_generate import Step5DocxGenerate
 from gui.widgets.wizard_widget import WizardWidget
 from logic.app_state import AppState
 
