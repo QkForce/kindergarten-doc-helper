@@ -45,9 +45,7 @@ class WizardWidget(QWidget):
         self.progress_bar.setTextVisible(False)
         panel_layout.addWidget(self.progress_bar)
 
-        self.progress_description = QLabel(
-            "Система автоматически определила поле ФИО и нашла первые записи. Проверьте имена:"
-        )
+        self.progress_description = QLabel()
         self.progress_description.setWordWrap(True)
         self.progress_description.setObjectName("progress_description")
         panel_layout.addWidget(self.progress_description)
