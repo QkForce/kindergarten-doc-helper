@@ -1,4 +1,3 @@
-import functools
 from PySide6.QtWidgets import QVBoxLayout, QMessageBox
 from PySide6.QtStateMachine import QStateMachine, QState
 from PySide6.QtCore import Signal
@@ -7,8 +6,10 @@ from gui.steps.step_widget import StepWidget
 from gui.widgets.children_scores_content import ChildrenScoresWidget
 from gui.widgets.loading_plug import LoadingPlug
 from gui.widgets.empty_plug import EmptyPlug
-from logic.loaders.scores_loader import ScoresLoader
+from logic.loaders.universal_checklist_loader import UniversalChecklistLoader
 from logic.worker import start_worker_task
+from config import config
+from logic.config_tools import get_all_metric_codes
 
 
 class StepChildrenScores(StepWidget):
@@ -97,22 +98,10 @@ class StepChildrenScores(StepWidget):
     def run_auto_load(self):
         try:
             self.has_errors = False
-            self.loader = ScoresLoader(self.state.workbook[self.state.sheet_name])
-            self.metric_codes = [metric["code"] for metric in self.state.source_metrics]
-            start_row = self.state.children_start_row
-            end_row = self.state.children_end_row
-            name_col = self.state.children_col
-            start_col = self.state.metric_start_col
-
-            loader_func = functools.partial(
-                self.loader.load_manual,
-                start_row,
-                end_row,
-                name_col,
-                start_col,
-                self.metric_codes,
+            self.loader = UniversalChecklistLoader(
+                self.state.workbook[self.state.sheet_name]
             )
-            start_worker_task(loader_func, self._loaded, self._load_failed)
+            start_worker_task(self.loader.load_auto, self._loaded, self._load_failed)
         except Exception as e:
             print(e)
             QMessageBox.critical(self, "Қате", f"Автоматты жүктеу кезінде қате: {e}")
@@ -121,12 +110,24 @@ class StepChildrenScores(StepWidget):
     def validate_before_next(self):
         return True
 
-    def set_state(self, children_scores):
-        self.state.children_scores = children_scores
+    def set_state(self, result):
+        start_row, end_row, name_col = result["children_data"]
+        self.state.children_start_row = start_row
+        self.state.children_end_row = end_row
+        self.state.children_col = name_col
+
+        metrics, code_row, desc_row, start_col, end_col = result["metrics_data"]
+        self.state.metric_code_row = code_row
+        self.state.metric_desc_row = desc_row
+        self.state.metric_start_col = start_col
+        self.state.metric_end_col = end_col
+        self.state.source_metrics = metrics
+
+        self.state.children_scores = result["children_scores"]
 
     def _loaded(self, result):
         self.set_state(result)
-        self._process_result(result)
+        self._process_result(result["children_scores"])
 
     def _load_failed(self, err):
         self.sig_error.emit()
@@ -134,7 +135,8 @@ class StepChildrenScores(StepWidget):
 
     def _process_result(self, children_scores):
         if children_scores and len(children_scores) > 0:
-            self.content_widget.set_data(children_scores, self.metric_codes)
+            metric_codes = get_all_metric_codes(self.state.age_group)
+            self.content_widget.set_data(children_scores, metric_codes)
             self.sig_result.emit()
         else:
             self.sig_empty.emit()

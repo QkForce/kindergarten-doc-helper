@@ -5,6 +5,14 @@ def get_age_group_data(age_group):
     return METRICS_SCHEMA[age_group]
 
 
+def get_all_metric_codes(age_group):
+    return [
+        metric_code
+        for metric_group in METRICS_SCHEMA[age_group].values()
+        for metric_code in metric_group.keys()
+    ]
+
+
 def get_age_group_metrics_mapping(age_group_data):
     return {
         code: metric_data

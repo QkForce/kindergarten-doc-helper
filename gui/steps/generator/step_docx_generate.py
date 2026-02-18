@@ -17,6 +17,7 @@ from gui.widgets.file_picker import FilePickerWidget
 from logic.docx_tools import create_children_grow_cards
 from logic.metrics_tools import prepare_all_children_grow_card_data
 from logic.worker import start_worker_task
+from logic.config_tools import get_age_group_data
 
 
 class StepDocxGenerate(StepWidget):
@@ -190,8 +191,9 @@ class StepDocxGenerate(StepWidget):
             return
         try:
             self.sig_progress_state.emit()
+            age_group_data = get_age_group_data(self.state.age_group)
             all_children_data = prepare_all_children_grow_card_data(
-                self.state.children_scores, self.state.age_group_data
+                self.state.children_scores, age_group_data
             )
             worker_func = functools.partial(
                 create_children_grow_cards,

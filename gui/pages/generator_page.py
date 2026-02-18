@@ -1,6 +1,4 @@
 from gui.steps.generator.step_file_select import StepFileSelect
-from gui.steps.generator.step_children_list import StepChildrenList
-from gui.steps.generator.step_metrics_detect import StepMetricsDetect
 from gui.steps.generator.step_children_scores import StepChildrenScores
 from gui.steps.generator.step_docx_generate import StepDocxGenerate
 from gui.widgets.wizard_widget import WizardWidget
@@ -12,8 +10,6 @@ class GeneratorPage(WizardWidget):
         state = AppState()
         step_factories = [
             lambda: StepFileSelect(state),
-            lambda: StepChildrenList(state),
-            lambda: StepMetricsDetect(state),
             lambda: StepChildrenScores(state),
             lambda: StepDocxGenerate(state),
         ]
