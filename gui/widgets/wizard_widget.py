@@ -15,10 +15,13 @@ T = TypeVar("T")
 
 
 class WizardWidget(QWidget, Generic[T]):
-    def __init__(self, step_factories: List[Callable[[], QWidget]], state: T):
+    def __init__(
+        self, step_factories: List[Callable[[], QWidget]], state: T, on_finish: Callable
+    ):
         super().__init__()
         self._step_factories = step_factories
         self.state = state
+        self.on_finish = on_finish
 
         # OUTER CONTAINER
         self.outer_layout = QHBoxLayout(self)
@@ -124,27 +127,57 @@ class WizardWidget(QWidget, Generic[T]):
         if next_widget and hasattr(next_widget, "run_auto_load"):
             next_widget.run_auto_load()
 
+    def _on_finish(self):
+        # 1. Delete all widgets in the stack
+        while self.stack.count() > 0:
+            widget = self.stack.widget(0)
+            self.stack.removeWidget(widget)
+            widget.deleteLater()
+
+        # 2. Clear list
+        self.steps = [None] * len(self._step_factories)
+
+        # 3. Reset state
+        if hasattr(self.state, "reset"):
+            self.state.reset()
+
+        # 4. Return to step one
+        self.current_step = 0
+        self.update_ui()
+
     def update_ui(self):
         # ensure current widget is created and show it
         widget = self.get_step(self.current_step)
         if widget:
             self.stack.setCurrentWidget(widget)
 
-        # прогресс
+        # progress
         total = len(self._step_factories)
         self.progress_bar.setValue(int((self.current_step + 1) / total * 100))
         self.progress_title.setText(widget.title)
         self.progress_description.setText(widget.description)
 
-        # navigation buttons
-        btn_back_enabled = self.current_step > 0
-        btn_back_type = "neutral" if btn_back_enabled else "disabled"
-        self.btn_back.setEnabled(btn_back_enabled)
-        self.btn_back.setProperty("btn-type", btn_back_type)
+        # back button
+        is_first = self.current_step == 0
+        self.btn_back.setEnabled(not is_first)
+        self.btn_back.setProperty("btn-type", "disabled" if is_first else "neutral")
         self.btn_back.style().polish(self.btn_back)
 
-        btn_next_enabled = self.current_step < total - 1
-        btn_next_type = "primary" if btn_next_enabled else "disabled"
-        self.btn_next.setEnabled(btn_next_enabled)
-        self.btn_next.setProperty("btn-type", btn_next_type)
+        # next button
+        is_last = self.current_step == total - 1
+        try:
+            self.btn_next.clicked.disconnect()
+        except RuntimeError:
+            pass
+        if is_last:
+            self.btn_next.setText("Аяқтау")
+            self.btn_next.setEnabled(True)
+            self.btn_next.setProperty("btn-type", "primary")
+            self.btn_next.clicked.connect(self.on_finish)
+            self.btn_next.clicked.connect(self._on_finish)
+        else:
+            self.btn_next.setText("Келесі")
+            self.btn_next.setEnabled(True)
+            self.btn_next.setProperty("btn-type", "primary")
+            self.btn_next.clicked.connect(self.on_next)
         self.btn_next.style().polish(self.btn_next)

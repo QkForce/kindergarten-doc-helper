@@ -37,7 +37,7 @@ class MainWindow(QMainWindow):
         self.stack.addWidget(self.hub_page)
 
         # Index 1: GENERATOR FLOW
-        self.generator_page = GeneratorPage()
+        self.generator_page = GeneratorPage(on_finish=lambda: self.switch_page(0))
         self.stack.addWidget(self.generator_page)
 
         # Index 2: TEMPLATE FILLER

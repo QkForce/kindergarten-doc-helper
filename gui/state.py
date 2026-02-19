@@ -13,6 +13,9 @@ class AgeGroup(Enum):
 
 class ChecklistBaseState:
     def __init__(self):
+        self.init()
+
+    def init(self):
         self.workbook: Optional[Workbook] = None
         self.sheet_name: str = ""
         self.age_group: Optional[AgeGroup] = None
@@ -29,6 +32,9 @@ class ChecklistBaseState:
         # Main Data
         self.source_metrics: List[Dict[str, str]] = []
         self.children_scores: List[dict] = []
+
+    def reset(self):
+        self.init()
 
 
 class GeneratorState(ChecklistBaseState):
