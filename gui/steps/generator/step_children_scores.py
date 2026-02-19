@@ -7,6 +7,7 @@ from gui.widgets.children_scores_content import ChildrenScoresWidget
 from gui.widgets.loading_plug import LoadingPlug
 from gui.widgets.empty_plug import EmptyPlug
 from gui.state import GeneratorState
+from gui.constants.strings import AppStrings
 from logic.loaders.universal_checklist_loader import UniversalChecklistLoader
 from logic.worker import start_worker_task
 from logic.config_tools import get_all_metric_codes
@@ -19,11 +20,8 @@ class StepChildrenScores(StepWidget[GeneratorState]):
     sig_error = Signal()
 
     def setup_ui(self):
-        self.title = "Кезең 4 / 5: Балалардың бағаларын жүктеу"
-        self.description = (
-            "Жүктелген балалардың бағаларын тексеріңіз. "
-            "Егер дұрыс болмаса, онда файлдағы деректердің дұрыстығына көз жеткізіңіз."
-        )
+        self.title = AppStrings.GENERATOR.STEP_2_TITLE
+        self.description = AppStrings.GENERATOR.STEP_2_DESC
         self.loading_plug = LoadingPlug(
             "Балалардың бағалары жүктелуде... Күте тұрыңыз.",
             "Файлдағы балалардың бағалары оқылуда.",

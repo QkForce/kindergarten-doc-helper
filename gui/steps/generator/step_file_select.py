@@ -4,14 +4,13 @@ from openpyxl import load_workbook
 from gui.steps.step_widget import StepWidget
 from gui.widgets.file_picker import FilePickerWidget
 from gui.state import GeneratorState
+from gui.constants.strings import AppStrings
 
 
 class StepFileSelect(StepWidget[GeneratorState]):
     def setup_ui(self):
-        self.title = "Кезең 1 / 5: Бастапқы деректерді таңдау"
-        self.description = (
-            "Файлды таңдаңыз, өңделетін парақты (лист) және топты көрсетіңіз."
-        )
+        self.title = AppStrings.GENERATOR.STEP_1_TITLE
+        self.description = AppStrings.GENERATOR.STEP_1_DESC
 
         self.layout = QVBoxLayout(self)
 

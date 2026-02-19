@@ -15,6 +15,7 @@ from PySide6.QtGui import QPixmap
 from gui.steps.step_widget import StepWidget
 from gui.widgets.file_picker import FilePickerWidget
 from gui.state import GeneratorState
+from gui.constants.strings import AppStrings
 from logic.docx_tools import create_children_grow_cards
 from logic.metrics_tools import prepare_all_children_grow_card_data
 from logic.worker import start_worker_task
@@ -31,13 +32,8 @@ class StepDocxGenerate(StepWidget[GeneratorState]):
     sig_progress = Signal(str, int, int)
 
     def setup_ui(self):
-        self.title = "Кезең 5 / 5: Жеке даму картасын дайындау"
-        self.description = (
-            "Шаблондық файл таңдап, генерацияны орындауға жіберіңіз. "
-            "Генерация сәтті аяқталғаннан кейін нәтиже жүктелуге дайын болады. \n"
-            "Ескерту: генерация процесі кезінде шаблондық файлға ешқандай өзгеріс енгізілмеуі "
-            "және файл басқа орынға көшірілмеуі бағдарламаның дұрыс жұмысы үшін қажет."
-        )
+        self.title = AppStrings.GENERATOR.STEP_3_TITLE
+        self.description = AppStrings.GENERATOR.STEP_3_DESC
         self.sig_progress.connect(self._listen_progress)
         layout = QVBoxLayout(self)
 
