@@ -1,10 +1,12 @@
 from PySide6.QtWidgets import QLabel, QVBoxLayout, QComboBox, QMessageBox, QSizePolicy
 from openpyxl import load_workbook
+
 from gui.steps.step_widget import StepWidget
 from gui.widgets.file_picker import FilePickerWidget
+from gui.state import GeneratorState
 
 
-class StepFileSelect(StepWidget):
+class StepFileSelect(StepWidget[GeneratorState]):
     def setup_ui(self):
         self.title = "Кезең 1 / 5: Бастапқы деректерді таңдау"
         self.description = (

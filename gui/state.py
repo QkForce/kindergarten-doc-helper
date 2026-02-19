@@ -11,11 +11,7 @@ class AgeGroup(Enum):
     PRESCHOOL = "preschool"
 
 
-class BaseState:
-    pass
-
-
-class ChecklistBaseState(BaseState):
+class ChecklistBaseState:
     def __init__(self):
         self.workbook: Optional[Workbook] = None
         self.sheet_name: str = ""

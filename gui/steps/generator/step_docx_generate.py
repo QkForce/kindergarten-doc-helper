@@ -8,19 +8,20 @@ from PySide6.QtWidgets import (
     QLabel,
     QFrame,
 )
-from PySide6.QtCore import Qt, Signal, QTimer
+from PySide6.QtCore import Qt, Signal
 from PySide6.QtStateMachine import QStateMachine, QState
 from PySide6.QtGui import QPixmap
 
 from gui.steps.step_widget import StepWidget
 from gui.widgets.file_picker import FilePickerWidget
+from gui.state import GeneratorState
 from logic.docx_tools import create_children_grow_cards
 from logic.metrics_tools import prepare_all_children_grow_card_data
 from logic.worker import start_worker_task
 from logic.config_tools import get_age_group_data
 
 
-class StepDocxGenerate(StepWidget):
+class StepDocxGenerate(StepWidget[GeneratorState]):
     temp_file_path: str = ""
     docx_file = None
     sig_start_state = Signal()

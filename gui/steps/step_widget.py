@@ -1,9 +1,11 @@
+from typing import TypeVar, Generic
 from PySide6.QtWidgets import QWidget
-from gui.state import BaseState
+
+T = TypeVar("T")
 
 
-class StepWidget(QWidget):
-    def __init__(self, state: BaseState, parent=None):
+class StepWidget(QWidget, Generic[T]):
+    def __init__(self, state: T, parent=None):
         super().__init__(parent)
         self.state = state
         self.title = "title"

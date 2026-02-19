@@ -1,4 +1,4 @@
-from typing import List, Callable
+from typing import List, Callable, TypeVar, Generic
 from PySide6.QtWidgets import (
     QWidget,
     QVBoxLayout,
@@ -11,11 +11,11 @@ from PySide6.QtWidgets import (
 )
 from PySide6.QtCore import Qt
 
-from gui.state import BaseState
+T = TypeVar("T")
 
 
-class WizardWidget(QWidget):
-    def __init__(self, step_factories: List[Callable[[], QWidget]], state: BaseState):
+class WizardWidget(QWidget, Generic[T]):
+    def __init__(self, step_factories: List[Callable[[], QWidget]], state: T):
         super().__init__()
         self._step_factories = step_factories
         self.state = state

@@ -6,13 +6,13 @@ from gui.steps.step_widget import StepWidget
 from gui.widgets.children_scores_content import ChildrenScoresWidget
 from gui.widgets.loading_plug import LoadingPlug
 from gui.widgets.empty_plug import EmptyPlug
+from gui.state import GeneratorState
 from logic.loaders.universal_checklist_loader import UniversalChecklistLoader
 from logic.worker import start_worker_task
-from config import config
 from logic.config_tools import get_all_metric_codes
 
 
-class StepChildrenScores(StepWidget):
+class StepChildrenScores(StepWidget[GeneratorState]):
     sig_loading = Signal()
     sig_result = Signal()
     sig_empty = Signal()

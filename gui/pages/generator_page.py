@@ -5,7 +5,7 @@ from gui.widgets.wizard_widget import WizardWidget
 from gui.state import GeneratorState
 
 
-class GeneratorPage(WizardWidget):
+class GeneratorPage(WizardWidget[GeneratorState]):
     def __init__(self):
         state = GeneratorState()
         step_factories = [
