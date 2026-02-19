@@ -128,20 +128,26 @@ class WizardWidget(QWidget, Generic[T]):
             next_widget.run_auto_load()
 
     def _on_finish(self):
-        # 1. Delete all widgets in the stack
+        current_widget = self.get_step(self.current_step)
+        if not current_widget.validate_before_next():
+            return
+
+        self.on_finish()
+
+        # Delete all widgets in the stack
         while self.stack.count() > 0:
             widget = self.stack.widget(0)
             self.stack.removeWidget(widget)
             widget.deleteLater()
 
-        # 2. Clear list
+        # Clear list
         self.steps = [None] * len(self._step_factories)
 
-        # 3. Reset state
+        # Reset state
         if hasattr(self.state, "reset"):
             self.state.reset()
 
-        # 4. Return to step one
+        # Return to step one
         self.current_step = 0
         self.update_ui()
 
@@ -173,7 +179,6 @@ class WizardWidget(QWidget, Generic[T]):
             self.btn_next.setText("Аяқтау")
             self.btn_next.setEnabled(True)
             self.btn_next.setProperty("btn-type", "primary")
-            self.btn_next.clicked.connect(self.on_finish)
             self.btn_next.clicked.connect(self._on_finish)
         else:
             self.btn_next.setText("Келесі")

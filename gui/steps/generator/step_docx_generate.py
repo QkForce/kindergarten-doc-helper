@@ -162,6 +162,12 @@ class StepDocxGenerate(StepWidget[GeneratorState]):
         self.sig_start_state.emit()
 
     def validate_before_next(self):
+        if not self.temp_file_path:
+            QMessageBox.warning(self, "Ескерту", "Шаблондық файлды таңдаңыз.")
+            return False
+        if not self.docx_file:
+            QMessageBox.warning(self, "Ескерту", "Құжатты жасау керек.")
+            return False
         return True
 
     def _listen_progress(self, fullname, current_index, total_children):
