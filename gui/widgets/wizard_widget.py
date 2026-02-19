@@ -11,11 +11,11 @@ from PySide6.QtWidgets import (
 )
 from PySide6.QtCore import Qt
 
-from logic.app_state import AppState
+from gui.state import BaseState
 
 
 class WizardWidget(QWidget):
-    def __init__(self, step_factories: List[Callable[[], QWidget]], state: AppState):
+    def __init__(self, step_factories: List[Callable[[], QWidget]], state: BaseState):
         super().__init__()
         self._step_factories = step_factories
         self.state = state

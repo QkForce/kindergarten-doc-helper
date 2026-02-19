@@ -1,9 +1,9 @@
 from PySide6.QtWidgets import QWidget
-from logic.app_state import AppState
+from gui.state import BaseState
 
 
 class StepWidget(QWidget):
-    def __init__(self, state: AppState, parent=None):
+    def __init__(self, state: BaseState, parent=None):
         super().__init__(parent)
         self.state = state
         self.title = "title"
