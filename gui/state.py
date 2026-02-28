@@ -40,3 +40,8 @@ class ChecklistBaseState:
 class GeneratorState(ChecklistBaseState):
     def __init__(self):
         super().__init__()
+
+
+class FillerState(ChecklistBaseState):
+    def __init__(self):
+        super().__init__()
