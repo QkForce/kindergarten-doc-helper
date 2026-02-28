@@ -1,7 +1,7 @@
 from typing import Callable
 
-from gui.steps.generator.step_file_select import StepFileSelect
-from gui.steps.generator.step_children_scores import StepChildrenScores
+from gui.steps.common.step_file_select import StepFileSelect
+from gui.steps.common.step_children_scores import StepChildrenScores
 from gui.steps.generator.step_docx_generate import StepDocxGenerate
 from gui.widgets.wizard_widget import WizardWidget
 from gui.state import GeneratorState
