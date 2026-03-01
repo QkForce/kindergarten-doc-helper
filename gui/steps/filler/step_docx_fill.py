@@ -18,10 +18,10 @@ from gui.widgets.file_picker import FilePickerWidget
 from gui.state import FillerState
 from gui.constants.strings import AppStrings
 
-# from logic.docx_tools import create_children_grow_cards
-# from logic.metrics_tools import prepare_all_children_grow_card_data
-# from logic.worker import start_worker_task
-# from logic.config_tools import get_age_group_data
+from logic.docx_tools import fill_all_children_in_big_file
+from logic.metrics_tools import prepare_all_children_grow_card_data
+from logic.worker import start_worker_task
+from logic.config_tools import get_age_group_data
 
 
 class StepDocxFill(StepWidget[FillerState]):
@@ -49,9 +49,9 @@ class StepDocxFill(StepWidget[FillerState]):
         )
         self.combo_control_types = QComboBox()
         self.control_types = {
-            "initial": "Бастапқы бақылау",
-            "intermediate": "Аралық бақылау",
-            "final": "Қорытынды бақылау",
+            1: "Бастапқы бақылау",
+            2: "Аралық бақылау",
+            3: "Қорытынды бақылау",
         }
         for key, display_text in self.control_types.items():
             self.combo_control_types.addItem(display_text, key)
@@ -129,24 +129,28 @@ class StepDocxFill(StepWidget[FillerState]):
 
         # --- START MODE ---
         st_start.assignProperty(self.file_select_widget, "enabled", True)
+        st_start.assignProperty(self.combo_control_types, "enabled", True)
         st_start.assignProperty(self.btn_generate, "visible", True)
         st_start.assignProperty(self.process_progress_frame, "visible", False)
         st_start.assignProperty(self.process_result_frame, "visible", False)
 
         # --- PROGRESS MODE ---
         st_progress.assignProperty(self.file_select_widget, "enabled", False)
+        st_progress.assignProperty(self.combo_control_types, "enabled", False)
         st_progress.assignProperty(self.btn_generate, "visible", False)
         st_progress.assignProperty(self.process_progress_frame, "visible", True)
         st_progress.assignProperty(self.process_result_frame, "visible", False)
 
         # --- RESULT MODE ---
         st_result.assignProperty(self.file_select_widget, "enabled", False)
+        st_result.assignProperty(self.combo_control_types, "enabled", False)
         st_result.assignProperty(self.btn_generate, "visible", False)
         st_result.assignProperty(self.process_progress_frame, "visible", False)
         st_result.assignProperty(self.process_result_frame, "visible", True)
 
         # --- ERROR MODE ---
         st_error.assignProperty(self.file_select_widget, "enabled", True)
+        st_error.assignProperty(self.combo_control_types, "enabled", True)
         st_error.assignProperty(self.btn_generate, "visible", True)
         st_error.assignProperty(self.process_progress_frame, "visible", False)
         st_error.assignProperty(self.process_result_frame, "visible", False)
@@ -224,24 +228,25 @@ class StepDocxFill(StepWidget[FillerState]):
                 "Алдымен бақылау түрін таңдауыңыз керек.",
             )
             return
-        # try:
-        #     self.sig_progress_state.emit()
-        #     age_group_data = get_age_group_data(self.state.age_group)
-        #     all_children_data = prepare_all_children_grow_card_data(
-        #         self.state.children_scores, age_group_data
-        #     )
-        #     worker_func = functools.partial(
-        #         create_children_grow_cards,
-        #         self.temp_file_path,
-        #         all_children_data,
-        #         self.sig_progress.emit,
-        #     )
-        #     start_worker_task(
-        #         worker_func, self._generation_finished, self._generation_failed
-        #     )
-        # except Exception as e:
-        #     QMessageBox.critical(self, "Қате", f"Генерация кезінде қате: {e}")
-        #     self.sig_error_state.emit()
+        try:
+            self.sig_progress_state.emit()
+            age_group_data = get_age_group_data(self.state.age_group)
+            all_children_data = prepare_all_children_grow_card_data(
+                self.state.children_scores, age_group_data
+            )
+            worker_func = functools.partial(
+                fill_all_children_in_big_file,
+                self.temp_file_path,
+                all_children_data,
+                self.control_type,
+                self.sig_progress.emit,
+            )
+            start_worker_task(
+                worker_func, self._generation_finished, self._generation_failed
+            )
+        except Exception as e:
+            QMessageBox.critical(self, "Қате", f"Генерация кезінде қате: {e}")
+            self.sig_error_state.emit()
 
     def on_save(self):
         if not self.docx_file:
@@ -250,7 +255,7 @@ class StepDocxFill(StepWidget[FillerState]):
         file_path, _ = QFileDialog.getSaveFileName(
             self,
             "Қайда сақтайсыз?",
-            "Балалардың даму картасы.docx",
+            "Балалардың даму картасы (filled).docx",
             "DOCX Files (*.docx)",
         )
         if not file_path:
