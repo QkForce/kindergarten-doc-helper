@@ -1,13 +1,18 @@
+from typing import TypeVar
+
 from PySide6.QtWidgets import QLabel, QVBoxLayout, QComboBox, QMessageBox, QSizePolicy
 from openpyxl import load_workbook
 
 from gui.steps.step_widget import StepWidget
 from gui.widgets.file_picker import FilePickerWidget
-from gui.state import GeneratorState
+from gui.state import ChecklistBaseState
 from gui.constants.strings import AppStrings
 
 
-class StepFileSelect(StepWidget[GeneratorState]):
+T = TypeVar("T", bound=ChecklistBaseState)
+
+
+class StepFileSelect(StepWidget[T]):
     def setup_ui(self):
         self.title = AppStrings.GENERATOR.STEP_1_TITLE
         self.description = AppStrings.GENERATOR.STEP_1_DESC

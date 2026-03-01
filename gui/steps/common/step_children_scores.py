@@ -1,3 +1,5 @@
+from typing import TypeVar
+
 from PySide6.QtWidgets import QVBoxLayout, QMessageBox
 from PySide6.QtStateMachine import QStateMachine, QState
 from PySide6.QtCore import Signal
@@ -6,14 +8,16 @@ from gui.steps.step_widget import StepWidget
 from gui.widgets.children_scores_content import ChildrenScoresWidget
 from gui.widgets.loading_plug import LoadingPlug
 from gui.widgets.empty_plug import EmptyPlug
-from gui.state import GeneratorState
+from gui.state import ChecklistBaseState
 from gui.constants.strings import AppStrings
 from logic.loaders.universal_checklist_loader import UniversalChecklistLoader
 from logic.worker import start_worker_task
 from logic.config_tools import get_all_metric_codes
 
+T = TypeVar("T", bound=ChecklistBaseState)
 
-class StepChildrenScores(StepWidget[GeneratorState]):
+
+class StepChildrenScores(StepWidget[T]):
     sig_loading = Signal()
     sig_result = Signal()
     sig_empty = Signal()
