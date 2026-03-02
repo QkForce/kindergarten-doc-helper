@@ -2,6 +2,7 @@ from PySide6.QtWidgets import QMainWindow, QStackedWidget, QVBoxLayout, QWidget
 
 from gui.pages.hub_page import HubPage
 from gui.pages.generator_page import GeneratorPage
+from gui.pages.smart_entry_page import SmartEntryPage
 from gui.pages.filler_page import FillerPage
 from gui.constants.strings import AppStrings
 from gui.utils.window_utils import center_on_screen
@@ -46,7 +47,7 @@ class MainWindow(QMainWindow):
         self.stack.addWidget(self.template_page)
 
         # Index 3: SMART ENTRY
-        self.entry_page = QWidget()
+        self.entry_page = SmartEntryPage(on_finish=lambda: self.switch_page(0))
         self.stack.addWidget(self.entry_page)
 
         # First page - Hub
