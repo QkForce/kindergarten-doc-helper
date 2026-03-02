@@ -2,6 +2,7 @@ from PySide6.QtWidgets import QWidget, QHBoxLayout, QLabel, QFrame
 from PySide6.QtCore import Qt
 
 from gui.widgets.child_selector import ChildSelector
+from gui.widgets.assessment_area import AssessmentArea
 
 
 class ChildrenAssessmentWidget(QWidget):
@@ -12,11 +13,11 @@ class ChildrenAssessmentWidget(QWidget):
         self.selector = ChildSelector()
         self.selector.childSelected.connect(self.load_child_scores)
 
-        self.matrix_area = QLabel("Баланы таңдаңыз...")
-        self.matrix_area.setAlignment(Qt.AlignCenter)
+        self.assessment_area = AssessmentArea()
+        self.assessment_area.setAlignment(Qt.AlignCenter)
 
         layout.addWidget(self.selector)
-        layout.addWidget(self.matrix_area, 1)
+        layout.addWidget(self.assessment_area, 1)
 
         self.setContentsMargins(0, 0, 0, 0)
 
@@ -24,4 +25,4 @@ class ChildrenAssessmentWidget(QWidget):
         self.selector.set_data(children_names)
 
     def load_child_scores(self, name):
-        self.matrix_area.setText(f"{name} үшін бағалау матрицасы жүктелуде...")
+        self.assessment_area.updateChild(name, {})
