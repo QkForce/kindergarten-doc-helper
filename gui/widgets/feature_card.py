@@ -30,7 +30,7 @@ class FeatureCard(QFrame):
         # Icon
         self.icon_label = QLabel()
         self.icon_label.setObjectName("card_icon")
-        self.set_icon(icon_path, color=AppColors.TEXT_SECONDARY)
+        self.set_icon(icon_path, color=AppColors.PRIMARY)
 
         self.title_label = QLabel(title)
         self.title_label.setObjectName("card_title")

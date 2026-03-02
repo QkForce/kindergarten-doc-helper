@@ -1,21 +1,26 @@
 class AppColors:
-    # Main background
-    MAIN_BG = "#F9FAFB"  # Slate 50
-    WHITE = "#FFFFFF"
+    BG = "#F0F2F5"  # Жалпы фон
+    CANVAS = "#FFFFFF"  # Негізгі ақ парақ
+    PRIMARY = "#2563EB"  # Негізгі көк түс (blue-600)
+    PRIMARY_DARK = "#1D4ED8"  # Күңгірт көк
+    DARK = "#0F172A"  # Domain тақырыптары (slate-900)
+    TEXT_MAIN = "#1E293B"  # Негізгі мәтін (slate-800)
+    TEXT_MUTED = "#94A3B8"  # Көмекші мәтін (slate-400)
+    BORDER = "#E2E8F0"  # Жиектер (slate-200)
+    SIDEBAR = "#F8FAFC"  # Sidebar фоны (slate-50)
 
-    # Blue Palette (Accents)
-    PRIMARY = "#2563EB"  # Blue 600
-    PRIMARY_DARK = "#1D4ED8"  # Blue 700
-    ACCENT_LIGHT = "#DBEAFE"  # Blue 100
-    HOVER_SOFT = "#EFF6FF"  # Blue 50
+    # Scoring colors
+    SCORE_LOW_BG = "#FB7185"
+    SCORE_LOW_BORDER = "#FFE4E6"
+    SCORE_LOW_TEXT = "#E11D48"
 
-    # Grayscale (Text and Borders)
-    TEXT_MAIN = "#0F172A"  # Slate 900
-    TEXT_TITLE = "#1E293B"  # Slate 800
-    TEXT_SECONDARY = "#475569"  # Slate 600
-    TEXT_MUTED = "#64748B"  # Slate 500
-    TEXT_ICON = "#94A3B8"  # Slate 400
-    BORDER = "#E2E8F0"  # Slate 200
+    SCORE_MID_BG = "#FBBF24"
+    SCORE_MID_BORDER = "#FEF3C7"
+    SCORE_MID_TEXT = "#D97706"
+
+    SCORE_HIGH_BG = "#34D399"
+    SCORE_HIGH_BORDER = "#D1FAE5"
+    SCORE_HIGH_TEXT = "#059669"
 
     # Status colors
     SUCCESS = "#10B981"  # Emerald 500
