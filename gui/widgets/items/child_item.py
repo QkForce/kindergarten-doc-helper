@@ -4,6 +4,10 @@ from PySide6.QtWidgets import (
     QHBoxLayout,
 )
 
+from gui.utils.icon_utils import get_svg_pixmap
+from gui.constants.icons import IconPaths
+from gui.constants.colors import AppColors
+
 
 class ChildItemWidget(QWidget):
     def __init__(self, name, status="empty", parent=None):
@@ -17,9 +21,9 @@ class ChildItemWidget(QWidget):
         # Child's name
         self.name_label = QLabel(name)
 
-        layout.addWidget(self.status_icon)
         layout.addWidget(self.name_label)
         layout.addStretch()
+        layout.addWidget(self.status_icon)
 
     def setSelected(self, selected):
         self.name_label.setProperty("lbl-selected", selected)
@@ -27,9 +31,13 @@ class ChildItemWidget(QWidget):
         self.style().polish(self.name_label)
 
     def setStatus(self, status):
+        if status == "empty":
+            self.status_icon.clear()
+            return
         icons = {
-            "success": "🟢",
-            "partial": "🟡",
-            "empty": "⚪",
+            "success": (IconPaths.ENTRY_COMPLETED, AppColors.SUCCESS),
+            "partial": (IconPaths.ENTRY_PARTIAL, AppColors.WARNING),
         }
-        self.status_icon.setText(icons.get(status, "⚪"))
+        icon_path, color = icons.get(status, (None, None))
+        pixmap = get_svg_pixmap(icon_path, color, size=14)
+        self.status_icon.setPixmap(pixmap)

@@ -19,3 +19,5 @@ class AppColors:
 
     # Status colors
     SUCCESS = "#10B981"  # Emerald 500
+    WARNING = "#F59E0B"  # Amber 500
+    ERROR = "#EF4444"  # Red 500

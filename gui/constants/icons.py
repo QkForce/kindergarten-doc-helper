@@ -21,3 +21,7 @@ class IconPaths:
     # Other icons
     DROP_DOWN = str(ICON_DIR / "arrow_drop_down.png")
     DROP_UP = str(ICON_DIR / "arrow_drop_up.png")
+
+    # Smart Entry icons
+    ENTRY_COMPLETED = str(ICON_DIR / "circle-check-big.svg")
+    ENTRY_PARTIAL = str(ICON_DIR / "circle-dashed.svg")
