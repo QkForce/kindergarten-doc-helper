@@ -47,5 +47,6 @@ class ChildSelector(QFrame):
         for i in range(self.list_widget.count()):
             item = self.list_widget.item(i)
             widget = self.list_widget.itemWidget(item)
+            widget.setSelected(item in selected_items)
             if item in selected_items:
                 self.childSelected.emit(widget.name_label.text())

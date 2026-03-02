@@ -16,11 +16,15 @@ class ChildItemWidget(QWidget):
 
         # Child's name
         self.name_label = QLabel(name)
-        self.name_label.setObjectName("child_name_label")
 
         layout.addWidget(self.status_icon)
         layout.addWidget(self.name_label)
         layout.addStretch()
+
+    def setSelected(self, selected):
+        self.name_label.setProperty("lbl-selected", selected)
+        self.style().unpolish(self.name_label)
+        self.style().polish(self.name_label)
 
     def setStatus(self, status):
         icons = {

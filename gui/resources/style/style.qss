@@ -79,3 +79,18 @@ QScrollArea {
     border-radius: 8px;
     background-color: #F9FAFB;
 }
+
+/* SMART ENTRY */
+
+QListWidget#child_selector {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    outline: none;
+    padding: 2px;
+}
+
+QListWidget#child_selector::item:selected {
+    border-radius: 10px;
+    background-color: #2563EB;
+}
+
