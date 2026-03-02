@@ -6,6 +6,8 @@ from PySide6.QtWidgets import (
 )
 from PySide6.QtCore import Qt, Signal
 
+from gui.widgets.score_toggle import ScoreToggle
+
 
 class AssessmentArea(QScrollArea):
     on_score_updated = Signal(str, dict)
@@ -17,8 +19,11 @@ class AssessmentArea(QScrollArea):
         self.child_name = QLabel()
         self.child_name.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
+        self.score_toggle = ScoreToggle(size=20, spacing=2)
+
         header_layout = QHBoxLayout()
-        header_layout.addWidget(self.child_name)
+        header_layout.addWidget(self.child_name, stretch=1)
+        header_layout.addWidget(self.score_toggle)
 
         main_layout = QVBoxLayout()
 

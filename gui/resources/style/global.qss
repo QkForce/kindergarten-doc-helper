@@ -105,6 +105,28 @@ QPushButton:disabled {
     color: #9ca3af;
 }
 
+QPushButton#score_btn_1 {
+    background-color: @CANVAS;
+    border: 1px solid @SCORE_HIGH_BORDER;
+    color: @SCORE_HIGH_TEXT;
+    font-weight: bold;
+    border-radius: 6px;
+}
+QPushButton#score_btn_2 {
+    background-color: @CANVAS;
+    border: 1px solid @SCORE_MID_BORDER;
+    color: @SCORE_MID_TEXT;
+    font-weight: bold;
+    border-radius: 6px;
+}
+QPushButton#score_btn_3 {
+    background-color: @CANVAS;
+    border: 1px solid @SCORE_LOW_BORDER;
+    color: @SCORE_LOW_TEXT;
+    font-weight: bold;
+    border-radius: 6px;
+}
+
 /* QTextEdit */
 
 QTextEdit[textedit-style="box"] {
