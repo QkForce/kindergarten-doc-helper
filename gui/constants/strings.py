@@ -31,3 +31,7 @@ class AppStrings:
     class FILLER:
         STEP_3_TITLE = "Кезең 3 / 3: Құжатты толтыру"
         STEP_3_DESC = "Шаблонды таңдап, бақылау түрін көрсетіңіз."
+
+    class SMART_ENTRY:
+        STEP_2_TITLE = "Кезең 2 / 3: Балаларды бағалау"
+        STEP_2_DESC = "Балаларға бағаларын қойыңыз."

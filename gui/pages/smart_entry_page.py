@@ -1,6 +1,7 @@
 from typing import Callable
 
 from gui.steps.common.step_file_select import StepFileSelect
+from gui.steps.smart_entry.step_child_assessment import StepChildAssessment
 from gui.widgets.wizard_widget import WizardWidget
 from gui.state import SmartEntryState
 
@@ -10,6 +11,7 @@ class SmartEntryPage(WizardWidget[SmartEntryState]):
         state = SmartEntryState()
         step_factories = [
             lambda: StepFileSelect(state),
+            lambda: StepChildAssessment(state),
         ]
         super().__init__(
             step_factories=step_factories, state=state, on_finish=on_finish
