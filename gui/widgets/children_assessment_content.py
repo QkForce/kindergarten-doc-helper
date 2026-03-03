@@ -6,6 +6,8 @@ from gui.widgets.assessment_area import AssessmentArea
 
 
 class ChildrenAssessmentWidget(QWidget):
+    children_scoring_dict = {}
+
     def __init__(self):
         super().__init__()
         layout = QHBoxLayout(self)
@@ -15,6 +17,7 @@ class ChildrenAssessmentWidget(QWidget):
 
         self.assessment_area = AssessmentArea()
         self.assessment_area.setAlignment(Qt.AlignCenter)
+        self.assessment_area.on_score_updated.connect(self.handle_score_update)
 
         layout.addWidget(self.selector)
         layout.addWidget(self.assessment_area, 1)
@@ -26,3 +29,7 @@ class ChildrenAssessmentWidget(QWidget):
 
     def load_child_scores(self, name):
         self.assessment_area.updateChild(name, {})
+
+    def handle_score_update(self, child_name, scoring_dict):
+        self.children_scoring_dict[child_name] = scoring_dict
+        print(f"Updated scores for {child_name}: {scoring_dict}")
