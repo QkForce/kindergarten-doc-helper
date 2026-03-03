@@ -24,12 +24,9 @@ class ChildrenAssessmentWidget(QWidget):
 
         self.setContentsMargins(0, 0, 0, 0)
 
-    def set_data(self, children_names):
-        self.children_scoring_dict = {
-            name: {"phisical": {}, "cognitive": {}, "social": {}}
-            for name in children_names
-        }
-        self.selector.set_data(children_names)
+    def set_data(self, children_scoring_dict):
+        self.children_scoring_dict = children_scoring_dict
+        self.selector.set_data(list(children_scoring_dict.keys()))
 
     def load_child_scores(self, name):
         self.assessment_area.updateChild(name, self.children_scoring_dict.get(name, {}))

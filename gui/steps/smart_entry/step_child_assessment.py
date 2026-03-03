@@ -10,6 +10,7 @@ from gui.state import SmartEntryState
 from gui.constants.strings import AppStrings
 from logic.loaders.children_loader import ChildrenLoader
 from logic.worker import start_worker_task
+from logic.assessment_tools import create_default_scoring_dict
 
 
 class StepChildAssessment(StepWidget[SmartEntryState]):
@@ -121,8 +122,11 @@ class StepChildAssessment(StepWidget[SmartEntryState]):
 
     def _process_result(self, children_result):
         children, start_row, end_row, name_col = children_result
+        children_scoring_dict = {
+            name: create_default_scoring_dict(self.state.age_group) for name in children
+        }
         if children and len(children) > 0:
-            self.content_widget.set_data(children)
+            self.content_widget.set_data(children_scoring_dict)
             self.sig_result.emit()
         else:
             self.sig_empty.emit()
