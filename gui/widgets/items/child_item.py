@@ -1,3 +1,5 @@
+from enum import Enum, auto
+
 from PySide6.QtWidgets import (
     QWidget,
     QLabel,
@@ -7,6 +9,12 @@ from PySide6.QtWidgets import (
 from gui.utils.icon_utils import get_svg_pixmap
 from gui.constants.icons import IconPaths
 from gui.constants.colors import AppColors
+
+
+class AssessmentStatus(Enum):
+    NOT_STARTED = auto()
+    IN_PROGRESS = auto()
+    COMPLETED = auto()
 
 
 class ChildItemWidget(QWidget):
@@ -30,14 +38,17 @@ class ChildItemWidget(QWidget):
         self.style().unpolish(self.name_label)
         self.style().polish(self.name_label)
 
-    def setStatus(self, status):
-        if status == "empty":
+    def setStatus(self, status: AssessmentStatus):
+        if (
+            not isinstance(status, AssessmentStatus)
+            or status is AssessmentStatus.NOT_STARTED
+        ):
             self.status_icon.clear()
             return
         icons = {
-            "success": (IconPaths.ENTRY_COMPLETED, AppColors.SUCCESS),
-            "partial": (IconPaths.ENTRY_PARTIAL, AppColors.WARNING),
+            AssessmentStatus.COMPLETED: (IconPaths.ENTRY_COMPLETED, AppColors.SUCCESS),
+            AssessmentStatus.IN_PROGRESS: (IconPaths.ENTRY_PARTIAL, AppColors.WARNING),
         }
-        icon_path, color = icons.get(status, (None, None))
+        icon_path, color = icons.get(status)
         pixmap = get_svg_pixmap(icon_path, color, size=14)
         self.status_icon.setPixmap(pixmap)

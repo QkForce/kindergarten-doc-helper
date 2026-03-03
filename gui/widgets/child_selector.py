@@ -7,10 +7,11 @@ from PySide6.QtWidgets import (
 )
 from PySide6.QtCore import Signal
 
-from gui.widgets.items.child_item import ChildItemWidget
+from gui.widgets.items.child_item import ChildItemWidget, AssessmentStatus
 
 
 class ChildSelector(QFrame):
+    children_name_list = []
     childSelected = Signal(str)
 
     def __init__(self, parent=None):
@@ -34,6 +35,7 @@ class ChildSelector(QFrame):
 
     def set_data(self, children_names):
         self.list_widget.clear()
+        self.children_name_list = children_names
         for name in children_names:
             item = QListWidgetItem(self.list_widget)
             custom_widget = ChildItemWidget(name)
@@ -50,3 +52,16 @@ class ChildSelector(QFrame):
             widget.setSelected(item in selected_items)
             if item in selected_items:
                 self.childSelected.emit(widget.name_label.text())
+
+    def setChildStatus(self, child_name, status: AssessmentStatus):
+        index = (
+            self.children_name_list.index(child_name)
+            if child_name in self.children_name_list
+            else -1
+        )
+        if index == -1:
+            return
+        item = self.list_widget.item(index)
+        widget = self.list_widget.itemWidget(item)
+        print(f"Setting status for {child_name} to {status}")
+        widget.setStatus(status)
