@@ -17,7 +17,6 @@ class ChildrenAssessmentWidget(QWidget):
         self.selector.childSelected.connect(self.load_child_scores)
 
         self.assessment_area = AssessmentArea()
-        self.assessment_area.setAlignment(Qt.AlignCenter)
         self.assessment_area.on_score_updated.connect(self.handle_score_update)
 
         layout.addWidget(self.selector)
@@ -26,10 +25,14 @@ class ChildrenAssessmentWidget(QWidget):
         self.setContentsMargins(0, 0, 0, 0)
 
     def set_data(self, children_names):
+        self.children_scoring_dict = {
+            name: {"phisical": {}, "cognitive": {}, "social": {}}
+            for name in children_names
+        }
         self.selector.set_data(children_names)
 
     def load_child_scores(self, name):
-        self.assessment_area.updateChild(name, {})
+        self.assessment_area.updateChild(name, self.children_scoring_dict.get(name, {}))
 
     def handle_score_update(self, child_name, scoring_dict):
         self.children_scoring_dict[child_name] = scoring_dict
