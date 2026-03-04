@@ -34,6 +34,8 @@ class StepChildAssessment(StepWidget[SmartEntryState]):
         )
 
         layout = QVBoxLayout(self)
+        layout.setContentsMargins(0, 0, 0, 0)  # Remove margins
+        layout.setSpacing(0)  # Remove spacing between widgetss
         layout.addWidget(self.loading_plug)
         layout.addWidget(self.content_widget)
         layout.addWidget(self.empty_plug)

@@ -63,7 +63,7 @@ class WizardWidget(QWidget, Generic[T]):
         # NAVIGATION BUTTONS
         nav = QHBoxLayout()
         nav.setSpacing(16)
-        nav.setContentsMargins(0, 0, 0, 0)
+        nav.setContentsMargins(0, 10, 0, 0)
 
         self.btn_back = QPushButton("Артқа")
         self.btn_next = QPushButton("Келесі")

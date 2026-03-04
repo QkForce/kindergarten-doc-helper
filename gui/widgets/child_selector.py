@@ -20,6 +20,7 @@ class ChildSelector(QFrame):
         self.setFixedWidth(250)
 
         layout = QVBoxLayout(self)
+        layout.setContentsMargins(0, 0, 0, 0)
 
         title = QLabel("Балалар тізімі")
         title.setProperty("lbl-level", "h3")

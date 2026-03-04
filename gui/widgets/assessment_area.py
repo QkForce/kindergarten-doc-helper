@@ -21,6 +21,7 @@ class AssessmentArea(QFrame):
     def __init__(self):
         super().__init__()
         layout = QVBoxLayout(self)
+        layout.setContentsMargins(0, 0, 0, 0)
         self.child_name_lbl = QLabel()
         self.child_name_lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
