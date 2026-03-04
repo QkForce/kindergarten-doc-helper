@@ -94,3 +94,49 @@ QListWidget#child_selector::item:selected {
     background-color: #2563EB;
 }
 
+QFrame#domain_block {
+    background-color: @CANVAS;
+    border: 1px solid @BORDER;
+    border-radius: 20px;
+}
+QFrame#domain_block #domain_header {
+    background-color: @DARK;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+}
+QFrame#domain_block QLabel {
+    font-weight: bold;
+    font-size: 11px;
+    color: @PRIMARY;
+}
+
+QFrame#subject_block {
+    background-color: @SIDEBAR;
+    border: 1px solid @BORDER;
+    border-radius: 16px;
+    margin: 10px 10px 0px 10px;
+}
+QFrame#subject_block QLabel {
+    font-weight: bold;
+    font-size: 10px;
+    color: @TEXT_MAIN;
+}
+
+QFrame#metric_item QLabel {
+    font-weight: 500;
+    font-size: 9px;
+    color: @TEXT_MUTED;
+}
+
+QWidget#domain_score_toggle #score_button {
+    border-radius: 6px;
+    font-size: 10px;
+}
+QWidget#subject_score_toggle #score_button {
+    border-radius: 5px;
+    font-size: 10px;
+}
+QWidget#metric_score_toggle  #score_button {
+    border-radius: 4px;
+    font-size: 10px;
+}

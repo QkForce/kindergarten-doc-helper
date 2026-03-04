@@ -10,20 +10,24 @@ class SubjectBlock(QFrame):
         super().__init__()
         self.subject_name = subject_name
         self.metrics = metrics
+        self.setObjectName("subject_block")
 
         self.setFrameShape(QFrame.Shape.StyledPanel)
         layout = QVBoxLayout(self)
 
         title = QLabel(self.subject_name)
-        score_toggle = ScoreToggle(size=20, spacing=2)
+        score_toggle = ScoreToggle(size=16, spacing=2)
+        score_toggle.setObjectName("subject_score_toggle")
 
         header_layout = QHBoxLayout()
         header_layout.addWidget(title, stretch=1)
         header_layout.addWidget(score_toggle)
 
-        body_layout = FlowLayout(spacing=5)
-        for metric_name in self.metrics.keys():
+        body_layout = QHBoxLayout()
+        for i, metric_name in enumerate(self.metrics.keys()):
             body_layout.addWidget(MetricItem(metric_name=metric_name))
+            if i < len(self.metrics) - 1:
+                body_layout.addStretch(1)
 
         layout.addLayout(header_layout)
         layout.addLayout(body_layout, stretch=1)
