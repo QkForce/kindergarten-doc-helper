@@ -94,17 +94,25 @@ QListWidget#child_selector::item:selected {
     background-color: #2563EB;
 }
 
+QFrame#assessment_area QScrollArea, 
+QFrame#assessment_area QScrollArea > QWidget > QWidget {
+    background: transparent;
+    border: none;
+}
+
 QFrame#domain_block {
     background-color: @CANVAS;
     border: 1px solid @BORDER;
-    border-radius: 20px;
+    border-radius: 16px;
+    margin-bottom: 10px;
 }
 QFrame#domain_block #domain_header {
     background-color: @DARK;
-    border-top-left-radius: 20px;
-    border-top-right-radius: 20px;
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
 }
 QFrame#domain_block QLabel {
+    background-color: "transparent";
     font-weight: bold;
     font-size: 11px;
     color: @PRIMARY;
@@ -113,16 +121,18 @@ QFrame#domain_block QLabel {
 QFrame#subject_block {
     background-color: @SIDEBAR;
     border: 1px solid @BORDER;
-    border-radius: 16px;
+    border-radius: 12px;
     margin: 10px 10px 0px 10px;
 }
 QFrame#subject_block QLabel {
+    background-color: "transparent";
     font-weight: bold;
     font-size: 10px;
     color: @TEXT_MAIN;
 }
 
 QFrame#metric_item QLabel {
+    background-color: "transparent";
     font-weight: 500;
     font-size: 9px;
     color: @TEXT_MUTED;

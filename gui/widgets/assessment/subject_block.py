@@ -1,8 +1,12 @@
-from PySide6.QtWidgets import QFrame, QVBoxLayout, QHBoxLayout, QLabel
+from PySide6.QtWidgets import (
+    QFrame,
+    QVBoxLayout,
+    QHBoxLayout,
+    QLabel,
+)
 
 from gui.widgets.score_toggle import ScoreToggle
 from gui.widgets.assessment.metric_item import MetricItem
-from gui.widgets.flow_layout import FlowLayout
 
 
 class SubjectBlock(QFrame):
@@ -11,11 +15,12 @@ class SubjectBlock(QFrame):
         self.subject_name = subject_name
         self.metrics = metrics
         self.setObjectName("subject_block")
-
-        self.setFrameShape(QFrame.Shape.StyledPanel)
         layout = QVBoxLayout(self)
 
         title = QLabel(self.subject_name)
+        line = QFrame()
+        line.setObjectName("separator")
+        line.setFrameShape(QFrame.Shape.HLine)
         score_toggle = ScoreToggle(size=16, spacing=2)
         score_toggle.setObjectName("subject_score_toggle")
 
@@ -30,5 +35,6 @@ class SubjectBlock(QFrame):
                 body_layout.addStretch(1)
 
         layout.addLayout(header_layout)
+        layout.addWidget(line)
         layout.addLayout(body_layout, stretch=1)
         layout.addStretch(1)

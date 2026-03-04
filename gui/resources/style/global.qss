@@ -308,3 +308,7 @@ QFrame[frame-style="blank"] {
     padding: 0px;
     margin: 0px;
 }
+
+QFrame#separator {
+    border-top: 1px solid @BORDER;
+}

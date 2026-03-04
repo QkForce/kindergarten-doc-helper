@@ -1,4 +1,11 @@
-from PySide6.QtWidgets import QFrame, QVBoxLayout, QHBoxLayout, QLabel
+from PySide6.QtWidgets import (
+    QFrame,
+    QVBoxLayout,
+    QHBoxLayout,
+    QLabel,
+    QGraphicsDropShadowEffect,
+)
+from PySide6.QtGui import QColor
 
 from gui.widgets.assessment.subject_block import SubjectBlock
 from gui.widgets.score_toggle import ScoreToggle
@@ -37,3 +44,11 @@ class DomainBlock(QFrame):
         layout.addWidget(header_widget)
         layout.addLayout(body_layout, stretch=1)
         layout.addStretch(1)
+
+        # Shadow
+        shadow = QGraphicsDropShadowEffect(self)
+        shadow.setBlurRadius(25)
+        shadow.setXOffset(0)
+        shadow.setYOffset(8)
+        shadow.setColor(QColor(0, 0, 0, 20))
+        self.setGraphicsEffect(shadow)
