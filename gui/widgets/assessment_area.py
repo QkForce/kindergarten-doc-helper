@@ -10,13 +10,14 @@ from PySide6.QtCore import Qt, Signal
 
 from gui.widgets.score_toggle import ScoreToggle
 from gui.widgets.assessment.domain_block import DomainBlock
-from logic.assessment_tools import set_score
+from logic.assessment_tools import bulk_update, get_common_score_type
 
 
 class AssessmentArea(QFrame):
-    on_score_updated = Signal(str, dict)
+    on_score_updated = Signal(str, dict)  # child_name, score_dict
     child_name = ""
-    scoring_dict = {}
+    score_dict = {}
+    domain_blocks = {}
 
     def __init__(self):
         super().__init__()
@@ -27,7 +28,7 @@ class AssessmentArea(QFrame):
         self.child_name_lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.score_toggle = ScoreToggle(size=20, spacing=2)
-        self.score_toggle.scoreChanged.connect(self.handle_score_change)
+        self.score_toggle.scoreChanged.connect(self.on_bulk_score)
 
         header_layout = QHBoxLayout()
         header_layout.addWidget(self.child_name_lbl, stretch=1)
@@ -49,9 +50,27 @@ class AssessmentArea(QFrame):
         layout.addLayout(header_layout)
         layout.addWidget(self.scroll_area)
 
-        self.update_ui()
+    def on_bulk_score(self, score):
+        bulk_update(self.score_dict, score)
+        for dn, domain_block in self.domain_blocks.items():
+            domain_block.applyData(self.score_dict[dn])
+        self.on_score_updated.emit(self.child_name, self.score_dict)
 
-    def update_ui(self):
+    def handle_child_update(self, dn, subjects):
+        # Update self.score_togle state
+        self.score_dict[dn] = subjects
+        cmn_score = get_common_score_type(self.score_dict)
+        self.score_toggle.set_score(cmn_score)
+        # Send signal to parent
+        self.on_score_updated.emit(self.child_name, self.score_dict)
+
+    def applyChildData(self, child_name, score_dict):
+        if child_name is None or score_dict is None:
+            return
+
+        self.child_name = child_name
+        self.score_dict = score_dict
+
         self.child_name_lbl.setText(self.child_name)
 
         # Clear existing domain blocks
@@ -60,19 +79,9 @@ class AssessmentArea(QFrame):
             if item.widget():
                 item.widget().deleteLater()
 
-        # Add new domain blocks based on scoring_dict
-        for domain_name, subjects in self.scoring_dict.items():
+        # Add new domain blocks based on score_dict
+        for domain_name, subjects in self.score_dict.items():
             domain_block = DomainBlock(domain_name, subjects)
+            domain_block.on_score_updated.connect(self.handle_child_update)
+            self.domain_blocks[domain_name] = domain_block
             self.body_layout.addWidget(domain_block)
-
-        # Fill remaining space
-        self.body_layout.addStretch()
-
-    def handle_score_change(self, score):
-        set_score(self.scoring_dict, score=score)
-        self.on_score_updated.emit(self.child_name, self.scoring_dict)
-
-    def updateChild(self, child_name, scoring_dict):
-        self.child_name = child_name
-        self.scoring_dict = scoring_dict
-        self.update_ui()

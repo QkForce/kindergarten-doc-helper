@@ -127,6 +127,19 @@ QPushButton#score_btn_3 {
     border-radius: 6px;
 }
 
+QPushButton#score_btn_1:checked {
+    background-color: @SCORE_HIGH_BG;
+    color: @CANVAS;
+}
+QPushButton#score_btn_2:checked {
+    background-color: @SCORE_MID_BG;
+    color: @CANVAS;
+}
+QPushButton#score_btn_3:checked {
+    background-color: @SCORE_LOW_BG;
+    color: @CANVAS;
+}
+
 /* QTextEdit */
 
 QTextEdit[textedit-style="box"] {

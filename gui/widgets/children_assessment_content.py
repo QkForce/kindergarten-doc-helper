@@ -29,7 +29,7 @@ class ChildrenAssessmentWidget(QWidget):
         self.selector.set_data(list(children_scoring_dict.keys()))
 
     def load_child_scores(self, name):
-        self.assessment_area.updateChild(name, self.children_scoring_dict.get(name, {}))
+        self.assessment_area.applyChildData(name, self.children_scoring_dict.get(name, {}))
 
     def handle_score_update(self, child_name, scoring_dict):
         self.children_scoring_dict[child_name] = scoring_dict

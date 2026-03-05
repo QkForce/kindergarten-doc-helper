@@ -17,6 +17,7 @@ class ScoreToggle(QWidget):
         self.layout.setContentsMargins(0, 0, 0, 0)
 
         self.group = QButtonGroup(self)
+        self.group.setExclusive(True)
         self.buttons = {}
 
         for val in [1, 2, 3]:
@@ -29,4 +30,21 @@ class ScoreToggle(QWidget):
             self.layout.addWidget(btn)
             self.buttons[val] = btn
 
-        self.group.idClicked.connect(self.scoreChanged.emit)
+        self.group.idClicked.connect(self._on_button_clicked)
+
+    def _on_button_clicked(self, score_id):
+        self.scoreChanged.emit(score_id)
+
+    def set_score(self, score: int):
+        if score in self.buttons:
+            self.buttons[score].setChecked(True)
+        elif score == 0:
+            # If 0 comes, deselect all buttons
+            checked_btn = self.group.checkedButton()
+            if checked_btn:
+                self.group.setExclusive(False)
+                checked_btn.setChecked(False)
+                self.group.setExclusive(True)
+
+    def get_score(self) -> int:
+        return self.group.checkedId()
