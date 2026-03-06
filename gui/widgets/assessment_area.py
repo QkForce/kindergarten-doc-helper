@@ -74,14 +74,19 @@ class AssessmentArea(QFrame):
         self.child_name_lbl.setText(self.child_name)
 
         # Clear existing domain blocks
+        self.domain_blocks.clear()
         while self.body_layout.count():
             item = self.body_layout.takeAt(0)
-            if item.widget():
-                item.widget().deleteLater()
+            widget = item.widget()
+            if widget:
+                widget.deleteLater()
 
-        # Add new domain blocks based on score_dict
+        # Create new domain blocks
         for domain_name, subjects in self.score_dict.items():
             domain_block = DomainBlock(domain_name, subjects)
             domain_block.on_score_updated.connect(self.handle_child_update)
             self.domain_blocks[domain_name] = domain_block
             self.body_layout.addWidget(domain_block)
+
+        cmn_score = get_common_score_type(self.score_dict)
+        self.score_toggle.set_score(cmn_score)

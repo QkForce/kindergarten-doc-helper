@@ -27,6 +27,9 @@ class StepChildAssessment(StepWidget[SmartEntryState]):
             "Файлдағы балалардың есімдері оқылуда.",
         )
         self.content_widget = ChildrenAssessmentWidget()
+        self.content_widget.on_scores_updated.connect(
+            lambda scores: setattr(self.state, "children_scores", scores)
+        )
         self.empty_plug = EmptyPlug(
             "Балалардың есімдері табылмады",
             "• Файлда балалардың есімдері бар екеніне көз жеткізіңіз<br>"
@@ -108,27 +111,23 @@ class StepChildAssessment(StepWidget[SmartEntryState]):
     def validate_before_next(self):
         return True
 
-    def set_state(self, result):
+    def _loaded(self, result):
+        # Set state data
         children, start_row, end_row, name_col = result
         self.state.children_start_row = start_row
         self.state.children_end_row = end_row
         self.state.children_col = name_col
+        self.state.children_scores = {
+            name: create_default_scoring_dict(self.state.age_group) for name in children
+        }
 
-    def _loaded(self, result):
-        self.set_state(result)
-        self._process_result(result)
+        # Update UI
+        if children and len(children) > 0:
+            self.content_widget.applyData(self.state.children_scores)
+            self.sig_result.emit()
+        else:
+            self.sig_empty.emit()
 
     def _load_failed(self, err):
         self.sig_error.emit()
         QMessageBox.critical(self, "Қате", f"Автоматты жүктеу кезінде қате: {err}")
-
-    def _process_result(self, children_result):
-        children, start_row, end_row, name_col = children_result
-        children_scoring_dict = {
-            name: create_default_scoring_dict(self.state.age_group) for name in children
-        }
-        if children and len(children) > 0:
-            self.content_widget.set_data(children_scoring_dict)
-            self.sig_result.emit()
-        else:
-            self.sig_empty.emit()
