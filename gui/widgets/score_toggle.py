@@ -36,15 +36,18 @@ class ScoreToggle(QWidget):
         self.scoreChanged.emit(score_id)
 
     def set_score(self, score: int):
-        if score in self.buttons:
-            self.buttons[score].setChecked(True)
-        elif score == 0:
-            # If 0 comes, deselect all buttons
-            checked_btn = self.group.checkedButton()
-            if checked_btn:
-                self.group.setExclusive(False)
-                checked_btn.setChecked(False)
-                self.group.setExclusive(True)
+        self.blockSignals(True)
+        try:
+            if score in self.buttons:
+                self.buttons[score].setChecked(True)
+            elif score == 0:
+                checked_btn = self.group.checkedButton()
+                if checked_btn:
+                    self.group.setExclusive(False)
+                    checked_btn.setChecked(False)
+                    self.group.setExclusive(True)
+        finally:
+            self.blockSignals(False)
 
     def get_score(self) -> int:
         return self.group.checkedId()

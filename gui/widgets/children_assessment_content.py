@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import QWidget, QHBoxLayout, QLabel, QFrame
+from PySide6.QtWidgets import QWidget, QHBoxLayout
 from PySide6.QtCore import Signal
 
 from gui.widgets.child_selector import ChildSelector
@@ -15,7 +15,7 @@ class ChildrenAssessmentWidget(QWidget):
         layout = QHBoxLayout(self)
 
         self.selector = ChildSelector()
-        self.selector.childSelected.connect(self.load_child_scores)
+        self.selector.childSelected.connect(self.handle_child_selection)
 
         self.assessment_area = AssessmentArea()
         self.assessment_area.on_score_updated.connect(self.handle_score_update)
@@ -27,12 +27,13 @@ class ChildrenAssessmentWidget(QWidget):
 
     def applyData(self, children_scores):
         self.children_scores = children_scores
-        self.selector.set_data(list(children_scores.keys()))
+        self.selector.applyData(list(children_scores.keys()))
 
-    def load_child_scores(self, name):
-        self.assessment_area.applyChildData(name, self.children_scores.get(name, {}))
+    def handle_child_selection(self, name):
+        self.assessment_area.applyChildData(name, self.children_scores[name])
 
     def handle_score_update(self, child_name, scoring_dict):
         self.children_scores[child_name] = scoring_dict
         assessment_status = get_assessment_status(scoring_dict)
         self.selector.setChildStatus(child_name, assessment_status)
+        self.on_scores_updated.emit(self.children_scores)

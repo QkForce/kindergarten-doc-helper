@@ -34,7 +34,7 @@ class ChildSelector(QFrame):
         self.list_widget.itemSelectionChanged.connect(self._on_selection_changed)
         layout.addWidget(self.list_widget)
 
-    def set_data(self, children_names):
+    def applyData(self, children_names):
         self.list_widget.clear()
         self.children_name_list = children_names
         for name in children_names:
@@ -52,7 +52,7 @@ class ChildSelector(QFrame):
             widget = self.list_widget.itemWidget(item)
             widget.setSelected(item in selected_items)
             if item in selected_items:
-                self.childSelected.emit(widget.name_label.text())
+                self.childSelected.emit(self.children_name_list[i])
 
     def setChildStatus(self, child_name, status: AssessmentStatus):
         index = (
