@@ -37,9 +37,7 @@ class SubjectBlock(QFrame):
         body_layout = QHBoxLayout()
         for i, mn in enumerate(self.metrics.keys()):
             metric_item = MetricItem(metric_name=mn)
-            metric_item.on_score_updated.connect(
-                lambda score: self.handle_child_update(mn, score)
-            )
+            metric_item.on_score_updated.connect(self.handle_child_update)
             self.metric_items[mn] = metric_item
             body_layout.addWidget(metric_item)
             if i < len(self.metrics) - 1:

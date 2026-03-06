@@ -21,29 +21,26 @@ def set_metrics_score(metrics, score):
 
 
 def get_common_score_type(score_dict):
-    score_types = set()
-    for subjects in score_dict.values():
-        for metrics in subjects.values():
-            for score in metrics:
-                if score is not None:
-                    score_types.add(score)
+    score_types = set(
+        [
+            score
+            for subjects in score_dict.values()
+            for metrics in subjects.values()
+            for score in metrics.values()
+        ]
+    )
     return score_types.pop() if len(score_types) == 1 else 0
 
 
 def get_domain_score_type(subjects):
-    score_types = set()
-    for metrics in subjects.values():
-        for score in metrics.values():
-            if score is not None:
-                score_types.add(score)
+    score_types = set(
+        [score for metrics in subjects.values() for score in metrics.values()]
+    )
     return score_types.pop() if len(score_types) == 1 else 0
 
 
 def get_subject_score_type(metrics):
-    score_types = set()
-    for score in metrics.values():
-        if score is not None:
-            score_types.add(score)
+    score_types = set(metrics.values())
     return score_types.pop() if len(score_types) == 1 else 0
 
 
@@ -55,7 +52,7 @@ def get_assessment_status(score_dict) -> AssessmentStatus:
         for metrics in subjects.values():
             for score in metrics.values():
                 total_metrics += 1
-                if score is not None:
+                if score != 0:
                     scored_metrics += 1
 
     if scored_metrics == 0:
@@ -69,7 +66,7 @@ def get_assessment_status(score_dict) -> AssessmentStatus:
 def create_default_scoring_dict(age_group):
     scoring_dict = {
         domain: {
-            subject: {metric: None for metric in metrics}
+            subject: {metric: 0 for metric in metrics}
             for subject, metrics in subjects.items()
         }
         for domain, subjects in METRICS_SCHEMA[age_group].items()

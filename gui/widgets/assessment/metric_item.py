@@ -5,7 +5,7 @@ from gui.widgets.score_toggle import ScoreToggle
 
 
 class MetricItem(QFrame):
-    on_score_updated = Signal(int)  # score
+    on_score_updated = Signal(str, int)  # metric_name, score
 
     def __init__(self, metric_name: str):
         super().__init__()
@@ -19,7 +19,9 @@ class MetricItem(QFrame):
         title.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.score_toggle = ScoreToggle(size=14, spacing=2)
         self.score_toggle.setObjectName("metric_score_toggle")
-        self.score_toggle.scoreChanged.connect(self.on_score_updated.emit)
+        self.score_toggle.scoreChanged.connect(
+            lambda score: self.on_score_updated.emit(self.metric_name, score)
+        )
 
         layout = QVBoxLayout(self)
         layout.addWidget(title)
