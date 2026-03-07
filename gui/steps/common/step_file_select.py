@@ -71,6 +71,7 @@ class StepFileSelect(StepWidget[T]):
     def select_excel_file(self, file_path):
         try:
             wb = load_workbook(file_path, read_only=True)
+            self.state.file_path = file_path
             self.state.workbook = wb
             self.combo_sheet.clear()
             self.combo_sheet.addItems(wb.sheetnames)
