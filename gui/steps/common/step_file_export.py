@@ -2,20 +2,25 @@ from typing import TypeVar
 
 from PySide6.QtWidgets import (
     QVBoxLayout,
+    QHBoxLayout,
     QPushButton,
     QFileDialog,
     QMessageBox,
     QProgressBar,
     QLabel,
     QFrame,
+    QGraphicsDropShadowEffect,
 )
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtStateMachine import QStateMachine, QState
-from PySide6.QtGui import QPixmap
+from PySide6.QtGui import QColor
 
 from gui.steps.step_widget import StepWidget
 from gui.state import ChecklistBaseState
 from gui.constants.strings import AppStrings
+from gui.constants.colors import AppColors
+from gui.constants.icons import IconPaths
+from gui.utils.icon_utils import get_svg_pixmap
 from logic.worker import start_worker_task
 from logic.config_tools import get_age_group_data
 
@@ -28,14 +33,22 @@ class StepFileExportOptions:
         file_name: str = "Балалардың даму картасы.docx",
         file_filter: str = "DOCX Files (*.docx)",
         file_extension: str = ".docx",
+        progress_title: str = "Экспорт процесі жүріп жатыр...",
         get_progress_desc: callable = lambda fullname: f"Даму картасы жасалып жатқан бала: {fullname}",
-        result_desc: str = "Балалардың даму картасы дайын. Оны төменгі батырма арқылы ала аласыз.",
+        result_title: str = "Балалардың даму картасы дайын",
+        result_desc: str = "Құжатты төменгі батырма арқылы ала аласыз.",
+        error_title: str = "Қате",
+        error_desc: str = "Экспорт кезінде қате пайда болды. Қайтадан көріңіз.",
     ):
         self.file_name = file_name
         self.file_filter = file_filter
         self.file_extension = file_extension
+        self.progress_title = progress_title
         self.get_progress_desc = get_progress_desc
+        self.result_title = result_title
         self.result_desc = result_desc
+        self.error_title = error_title
+        self.error_desc = error_desc
 
 
 class StepFileExport(StepWidget[T]):
@@ -45,68 +58,80 @@ class StepFileExport(StepWidget[T]):
     sig_progress = Signal(str, int, int)
 
     def __init__(self, state, exporter, options: StepFileExportOptions = None):
-        super().__init__(state, parent=None)
         self.result_file = None
-        self.sig_progress.connect(self._listen_progress)
         self.exporter = exporter
         self.options = options or {}
+        super().__init__(state, parent=None)
 
     def setup_ui(self):
         self.title = AppStrings.GENERATOR.STEP_3_TITLE
         self.description = AppStrings.GENERATOR.STEP_3_DESC
-        layout = QVBoxLayout(self)
 
-        self.progress_title = QLabel("Экспорт процесі: 0/0")
+        # --- STATE ICON ---
+        self.progress_pixmap = get_svg_pixmap(
+            IconPaths.ENTRY_PARTIAL, AppColors.PRIMARY, size=48
+        )
+        self.success_pixmap = get_svg_pixmap(
+            IconPaths.SUCCESS, AppColors.SUCCESS, size=48
+        )
+        self.error_pixmap = get_svg_pixmap(IconPaths.ERROR, AppColors.ERROR, size=48)
+        self.state_icon_label = QLabel()
+        self.state_icon_label.setPixmap(self.progress_pixmap)
+        self.state_icon_label.setAlignment(Qt.AlignCenter)
+        state_icon_layout = QVBoxLayout()
+        state_icon_layout.addWidget(self.state_icon_label)
+        state_icon_layout.setAlignment(Qt.AlignCenter)
+        self.state_icon_frame = QFrame()
+        self.state_icon_frame.setProperty("frame-style", "box")
+        self.state_icon_frame.setFixedSize(100, 100)
+        self.state_icon_frame.setLayout(state_icon_layout)
+        # Set shadow effect for the state icon frame
+        shadow = QGraphicsDropShadowEffect(self.state_icon_frame)
+        shadow.setBlurRadius(25)
+        shadow.setXOffset(0)
+        shadow.setYOffset(8)
+        shadow.setColor(QColor(0, 0, 0, 20))
+        self.state_icon_frame.setGraphicsEffect(shadow)
+        state_icon_outer_layout = QVBoxLayout()
+        state_icon_outer_layout.addWidget(self.state_icon_frame)
+        state_icon_outer_layout.setAlignment(self.state_icon_frame, Qt.AlignCenter)
+
+        self.title_lbl = QLabel("Экспорт процесі: 0/0")
+        self.title_lbl.setAlignment(Qt.AlignCenter)
+        self.desc_lbl = QLabel("Даму картасы жасалып жатқан бала: NAME")
+        self.desc_lbl.setAlignment(Qt.AlignCenter)
 
         self.progress_bar = QProgressBar()
         self.progress_bar.setRange(0, 100)
         self.progress_bar.setValue(0)
-        self.progress_bar.setFixedHeight(15)
+        self.progress_bar.setFixedHeight(5)
+        self.progress_bar.setFixedWidth(300)
         self.progress_bar.setTextVisible(False)
-
-        self.progress_description = QLabel("Даму картасы жасалып жатқан бала: NAME")
-
-        process_progress_layout = QVBoxLayout()
-        process_progress_layout.addWidget(self.progress_title)
-        process_progress_layout.addWidget(self.progress_bar)
-        process_progress_layout.addWidget(self.progress_description)
-        self.process_progress_frame = QFrame(self)
-        self.process_progress_frame.setProperty("frame-style", "box")
-        self.process_progress_frame.setLayout(process_progress_layout)
-
-        result_status_img_label = QLabel()
-        result_status_img_label.setAlignment(Qt.AlignCenter)
-        result_status_img_label.setPixmap(
-            QPixmap("gui\\resources\\icons\\check_circle.png")
-        )
-
-        result_title = QLabel("Экспорт сәтті аяқталды!")
-        result_title.setProperty("lbl-level", "h2")
-
-        result_description = QLabel(
-            "Балалардың даму картасы дайын. Оны төменгі батырма арқылы ала аласыз."
-        )
-        result_description.setProperty("lbl-level", "h3-normal")
+        progress_bar_layout = QHBoxLayout()
+        progress_bar_layout.addStretch()
+        progress_bar_layout.addWidget(self.progress_bar)
+        progress_bar_layout.addStretch()
 
         self.btn_save = QPushButton("Нәтижені жүктеу")
         self.btn_save.setProperty("btn-size", "large")
         self.btn_save.setProperty("btn-type", "primary")
+        btn_layout = QHBoxLayout()
+        btn_layout.addStretch()
+        btn_layout.addWidget(self.btn_save)
+        btn_layout.addStretch()
 
-        process_result_layout = QVBoxLayout()
-        process_result_layout.addWidget(result_status_img_label)
-        process_result_layout.addWidget(result_title, alignment=Qt.AlignHCenter)
-        process_result_layout.addWidget(result_description, alignment=Qt.AlignHCenter)
-        process_result_layout.addWidget(self.btn_save, alignment=Qt.AlignHCenter)
-        self.process_result_frame = QFrame(self)
-        self.process_result_frame.setProperty("frame-style", "box")
-        self.process_result_frame.setLayout(process_result_layout)
-
-        layout.addWidget(self.process_progress_frame)
-        layout.addWidget(self.process_result_frame)
+        layout = QVBoxLayout(self)
+        layout.addStretch()
+        layout.addLayout(state_icon_outer_layout)
+        layout.addSpacing(20)
+        layout.addWidget(self.title_lbl)
+        layout.addWidget(self.desc_lbl)
+        layout.addSpacing(30)
+        layout.addLayout(progress_bar_layout)
+        layout.addLayout(btn_layout)
         layout.addStretch()
 
-        self.process_progress_frame.hide()
-        self.process_result_frame.hide()
+        self.btn_save.hide()
 
     def setup_state_machine(self):
         self.machine = QStateMachine()
@@ -115,16 +140,33 @@ class StepFileExport(StepWidget[T]):
         st_error = QState()
 
         # --- PROGRESS MODE ---
-        st_progress.assignProperty(self.process_progress_frame, "visible", True)
-        st_progress.assignProperty(self.process_result_frame, "visible", False)
+        st_progress.entered.connect(
+            lambda: self.state_icon_label.setPixmap(self.progress_pixmap)
+        )
+        st_progress.assignProperty(self.title_lbl, "text", self.options.progress_title)
+        st_progress.assignProperty(
+            self.desc_lbl, "text", self.options.get_progress_desc("")
+        )
+        st_progress.assignProperty(self.progress_bar, "visible", True)
+        st_progress.assignProperty(self.btn_save, "visible", False)
 
         # --- RESULT MODE ---
-        st_result.assignProperty(self.process_progress_frame, "visible", False)
-        st_result.assignProperty(self.process_result_frame, "visible", True)
+        st_result.entered.connect(
+            lambda: self.state_icon_label.setPixmap(self.success_pixmap)
+        )
+        st_result.assignProperty(self.title_lbl, "text", self.options.result_title)
+        st_result.assignProperty(self.desc_lbl, "text", self.options.result_desc)
+        st_result.assignProperty(self.progress_bar, "visible", False)
+        st_result.assignProperty(self.btn_save, "visible", True)
 
         # --- ERROR MODE ---
-        st_error.assignProperty(self.process_progress_frame, "visible", False)
-        st_error.assignProperty(self.process_result_frame, "visible", False)
+        st_error.entered.connect(
+            lambda: self.state_icon_label.setPixmap(self.error_pixmap)
+        )
+        st_error.assignProperty(self.title_lbl, "text", self.options.error_title)
+        st_error.assignProperty(self.desc_lbl, "text", self.options.error_desc)
+        st_error.assignProperty(self.progress_bar, "visible", False)
+        st_error.assignProperty(self.btn_save, "visible", True)
 
         # --- TRANSITIONS ---
         st_progress.addTransition(self.sig_result_state, st_result)
@@ -140,6 +182,7 @@ class StepFileExport(StepWidget[T]):
 
     def connect_signals(self):
         self.btn_save.clicked.connect(self.on_save)
+        self.sig_progress.connect(self._listen_progress)
 
     def run_auto_load(self):
         try:
@@ -164,11 +207,9 @@ class StepFileExport(StepWidget[T]):
         return True
 
     def _listen_progress(self, fullname, current_index, total_children):
-        self.progress_title.setText(
-            f"Экспорт процесі: {current_index}/{total_children}"
-        )
+        self.title_lbl.setText(f"Экспорт процесі: {current_index}/{total_children}")
         self.progress_bar.setValue(current_index / total_children * 100)
-        self.progress_description.setText(self.options.get_progress_desc(fullname))
+        self.desc_lbl.setText(self.options.get_progress_desc(fullname))
 
     def _export_finished(self, result_file):
         self.result_file = result_file

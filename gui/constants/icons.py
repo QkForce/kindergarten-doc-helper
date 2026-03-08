@@ -15,8 +15,8 @@ class IconPaths:
     FORWARD = str(ICON_DIR / "arrow_forward.png")
 
     # Status icons
-    SUCCESS = str(ICON_DIR / "check_circle.png")
-    ERROR = str(ICON_DIR / "error.png")
+    SUCCESS = str(ICON_DIR / "circle-check.svg")
+    ERROR = str(ICON_DIR / "circle-alert.svg")
 
     # Other icons
     DROP_DOWN = str(ICON_DIR / "arrow_drop_down.png")
