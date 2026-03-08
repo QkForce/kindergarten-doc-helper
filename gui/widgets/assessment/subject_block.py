@@ -9,6 +9,7 @@ from PySide6.QtCore import Signal
 from gui.widgets.score_toggle import ScoreToggle
 from gui.widgets.assessment.metric_item import MetricItem
 from logic.assessment_tools import set_metrics_score, get_subject_score_type
+from gui.constants.strings import SUBJECT_NAMES
 
 
 class SubjectBlock(QFrame):
@@ -22,7 +23,7 @@ class SubjectBlock(QFrame):
         self.setObjectName("subject_block")
         layout = QVBoxLayout(self)
 
-        title = QLabel(self.subject_name)
+        title = QLabel(SUBJECT_NAMES.get(self.subject_name, self.subject_name))
         line = QFrame()
         line.setObjectName("separator")
         line.setFrameShape(QFrame.Shape.HLine)

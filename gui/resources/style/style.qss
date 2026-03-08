@@ -154,7 +154,7 @@ QFrame#domain_block QLabel {
     background-color: "transparent";
     font-weight: bold;
     font-size: 11px;
-    color: @PRIMARY;
+    color: @CANVAS;
 }
 
 QFrame#subject_block {

@@ -1,14 +1,7 @@
-from enum import Enum
 from typing import Dict, List, Optional
 from openpyxl.workbook.workbook import Workbook
 
-
-class AgeGroup(Enum):
-    EARLY_AGE = "early_age"
-    JUNIOR = "junior"
-    MIDDLE = "middle"
-    SENIOR = "senior"
-    PRESCHOOL = "preschool"
+from gui.types import AgeGroup
 
 
 class ChecklistBaseState:
