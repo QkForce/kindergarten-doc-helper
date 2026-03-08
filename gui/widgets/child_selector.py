@@ -40,9 +40,9 @@ class ChildSelector(QFrame):
     def applyData(self, children_names):
         self.list_widget.clear()
         self.children_name_list = children_names
-        for name in children_names:
+        for i, name in enumerate(children_names):
             item = QListWidgetItem(self.list_widget)
-            custom_widget = ChildItemWidget(name)
+            custom_widget = ChildItemWidget(f"{i+1}. {name}")
             item.setSizeHint(custom_widget.sizeHint())
 
             self.list_widget.addItem(item)
@@ -53,7 +53,8 @@ class ChildSelector(QFrame):
         for i in range(self.list_widget.count()):
             item = self.list_widget.item(i)
             widget = self.list_widget.itemWidget(item)
-            widget.setSelected(item in selected_items)
+            if widget:
+                widget.setSelected(item in selected_items)
             if item in selected_items:
                 self.childSelected.emit(self.children_name_list[i])
 

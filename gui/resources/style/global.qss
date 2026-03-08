@@ -29,15 +29,6 @@ QLabel[lbl-level="lbl"] {
     color: #626872;
 }
 
-QLabel[lbl-selected=true] {
-    color: white;
-}
-
-QLabel[lbl-selected=false] {
-    color: #1E293B;
-}
-
-
 /* ------ Buttons ------ */
 
 QPushButton[btn-size="small"] {

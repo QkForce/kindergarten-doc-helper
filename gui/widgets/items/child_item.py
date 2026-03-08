@@ -20,21 +20,21 @@ class AssessmentStatus(Enum):
 class ChildItemWidget(QWidget):
     def __init__(self, name, status="empty", parent=None):
         super().__init__(parent)
-        layout = QHBoxLayout(self)
+        self.setObjectName("child_item")
 
+        # Child's name
+        self.name_label = QLabel(name)
         # Status marker (circle)
         self.status_icon = QLabel()
         self.setStatus(status)
 
-        # Child's name
-        self.name_label = QLabel(name)
-
+        layout = QHBoxLayout(self)
         layout.addWidget(self.name_label)
         layout.addStretch()
         layout.addWidget(self.status_icon)
 
     def setSelected(self, selected):
-        self.name_label.setProperty("lbl-selected", selected)
+        self.name_label.setProperty("selected", selected)
         self.style().unpolish(self.name_label)
         self.style().polish(self.name_label)
 
