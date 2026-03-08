@@ -1,5 +1,6 @@
 from PySide6.QtWidgets import (
     QVBoxLayout,
+    QHBoxLayout,
     QListWidget,
     QListWidgetItem,
     QLabel,
@@ -16,22 +17,24 @@ class ChildSelector(QFrame):
 
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.setProperty("frame-style", "sidebar")
+        self.setObjectName("child_selector")
         self.setFixedWidth(250)
-
-        layout = QVBoxLayout(self)
-        layout.setContentsMargins(0, 0, 0, 0)
 
         title = QLabel("Балалар тізімі")
         title.setProperty("lbl-level", "h3")
-        layout.addWidget(title)
+        title_layout = QHBoxLayout()
+        title_layout.setContentsMargins(10, 0, 10, 0)
+        title_layout.addWidget(title)
+        title_layout.addStretch()
 
         self.list_widget = QListWidget()
         self.list_widget.setFrameShape(QFrame.NoFrame)
         self.list_widget.setVerticalScrollMode(QListWidget.ScrollPerPixel)
-        self.list_widget.setObjectName("child_selector")
-
         self.list_widget.itemSelectionChanged.connect(self._on_selection_changed)
+
+        layout = QVBoxLayout(self)
+        layout.setContentsMargins(0, 10, 0, 10)
+        layout.addLayout(title_layout)
         layout.addWidget(self.list_widget)
 
     def applyData(self, children_names):
