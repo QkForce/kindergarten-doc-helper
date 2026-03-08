@@ -69,20 +69,18 @@ class StepFileExport(StepWidget[T]):
 
         # --- STATE ICON ---
         self.progress_pixmap = get_svg_pixmap(
-            IconPaths.ENTRY_PARTIAL, AppColors.PRIMARY, size=48
+            IconPaths.ENTRY_PARTIAL, AppColors.CANVAS, size=48
         )
         self.success_pixmap = get_svg_pixmap(
-            IconPaths.SUCCESS, AppColors.SUCCESS, size=48
+            IconPaths.SUCCESS, AppColors.CANVAS, size=48
         )
-        self.error_pixmap = get_svg_pixmap(IconPaths.ERROR, AppColors.ERROR, size=48)
+        self.error_pixmap = get_svg_pixmap(IconPaths.ERROR, AppColors.CANVAS, size=48)
         self.state_icon_label = QLabel()
-        self.state_icon_label.setPixmap(self.progress_pixmap)
         self.state_icon_label.setAlignment(Qt.AlignCenter)
         state_icon_layout = QVBoxLayout()
         state_icon_layout.addWidget(self.state_icon_label)
         state_icon_layout.setAlignment(Qt.AlignCenter)
         self.state_icon_frame = QFrame()
-        self.state_icon_frame.setProperty("frame-style", "box")
         self.state_icon_frame.setFixedSize(100, 100)
         self.state_icon_frame.setLayout(state_icon_layout)
         # Set shadow effect for the state icon frame
@@ -140,13 +138,11 @@ class StepFileExport(StepWidget[T]):
         st_error = QState()
 
         # --- PROGRESS MODE ---
+        st_progress.entered.connect(self.run_auto_load)
         st_progress.entered.connect(
             lambda: self.state_icon_label.setPixmap(self.progress_pixmap)
         )
-        st_progress.assignProperty(self.title_lbl, "text", self.options.progress_title)
-        st_progress.assignProperty(
-            self.desc_lbl, "text", self.options.get_progress_desc("")
-        )
+        st_progress.entered.connect(lambda: self.set_frame_status("status-loading"))
         st_progress.assignProperty(self.progress_bar, "visible", True)
         st_progress.assignProperty(self.btn_save, "visible", False)
 
@@ -154,8 +150,13 @@ class StepFileExport(StepWidget[T]):
         st_result.entered.connect(
             lambda: self.state_icon_label.setPixmap(self.success_pixmap)
         )
-        st_result.assignProperty(self.title_lbl, "text", self.options.result_title)
-        st_result.assignProperty(self.desc_lbl, "text", self.options.result_desc)
+        st_result.entered.connect(lambda: self.set_frame_status("status-success"))
+        st_result.entered.connect(
+            lambda: self.title_lbl.setText(self.options.result_title)
+        )
+        st_result.entered.connect(
+            lambda: self.desc_lbl.setText(self.options.result_desc)
+        )
         st_result.assignProperty(self.progress_bar, "visible", False)
         st_result.assignProperty(self.btn_save, "visible", True)
 
@@ -163,8 +164,11 @@ class StepFileExport(StepWidget[T]):
         st_error.entered.connect(
             lambda: self.state_icon_label.setPixmap(self.error_pixmap)
         )
-        st_error.assignProperty(self.title_lbl, "text", self.options.error_title)
-        st_error.assignProperty(self.desc_lbl, "text", self.options.error_desc)
+        st_error.entered.connect(lambda: self.set_frame_status("status-error"))
+        st_error.entered.connect(
+            lambda: self.title_lbl.setText(self.options.error_title)
+        )
+        st_error.entered.connect(lambda: self.desc_lbl.setText(self.options.error_desc))
         st_error.assignProperty(self.progress_bar, "visible", False)
         st_error.assignProperty(self.btn_save, "visible", True)
 
@@ -208,7 +212,9 @@ class StepFileExport(StepWidget[T]):
 
     def _listen_progress(self, fullname, current_index, total_children):
         self.title_lbl.setText(f"Экспорт процесі: {current_index}/{total_children}")
-        self.progress_bar.setValue(current_index / total_children * 100)
+        if total_children > 0:
+            val = int((current_index / total_children) * 100)
+            self.progress_bar.setValue(val)
         self.desc_lbl.setText(self.options.get_progress_desc(fullname))
 
     def _export_finished(self, result_file):
@@ -240,3 +246,8 @@ class StepFileExport(StepWidget[T]):
         QMessageBox.information(
             self, "Сақтау сәтті аяқталды", f"Құжат сақталды:\n{file_path}"
         )
+
+    def set_frame_status(self, status):
+        self.state_icon_frame.setProperty("frame-style", status)
+        self.state_icon_frame.style().unpolish(self.state_icon_frame)
+        self.state_icon_frame.style().polish(self.state_icon_frame)

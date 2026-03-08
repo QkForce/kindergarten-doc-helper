@@ -317,6 +317,22 @@ QFrame[frame-style="box"] {
     margin: 0px;
 }
 
+QFrame[frame-style="status-loading"] {
+    border: 1px solid @BORDER;
+    border-radius: 30px;
+    background-color: @BG;
+}
+QFrame[frame-style="status-success"] {
+    border: 1px solid @BORDER;
+    border-radius: 30px;
+    background-color: @SUCCESS;
+}
+QFrame[frame-style="status-error"] {
+    border: 1px solid @BORDER;
+    border-radius: 30px;
+    background-color: @ERROR;
+}
+
 QFrame[frame-style="blank"] {
     padding: 0px;
     margin: 0px;
