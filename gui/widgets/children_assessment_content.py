@@ -12,7 +12,7 @@ class ChildrenAssessmentWidget(QWidget):
     def __init__(self):
         super().__init__()
         self.children_scores = {}
-        layout = QHBoxLayout(self)
+        self.setContentsMargins(0, 0, 0, 0)
 
         self.selector = ChildSelector()
         self.selector.childSelected.connect(self.handle_child_selection)
@@ -20,10 +20,9 @@ class ChildrenAssessmentWidget(QWidget):
         self.assessment_area = AssessmentArea()
         self.assessment_area.on_score_updated.connect(self.handle_score_update)
 
+        layout = QHBoxLayout(self)
         layout.addWidget(self.selector)
         layout.addWidget(self.assessment_area, 1)
-
-        self.setContentsMargins(0, 0, 0, 0)
 
     def applyData(self, children_scores):
         self.children_scores = children_scores

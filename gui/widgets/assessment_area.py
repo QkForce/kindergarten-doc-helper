@@ -22,17 +22,26 @@ class AssessmentArea(QFrame):
     def __init__(self):
         super().__init__()
         self.setObjectName("assessment_area")
-        layout = QVBoxLayout(self)
-        layout.setContentsMargins(0, 0, 0, 0)
-        self.child_name_lbl = QLabel()
-        self.child_name_lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
+        self.child_name_lbl = QLabel()
+        self.child_name_lbl.setObjectName("child_name_lbl")
+        # self.child_name_lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        score_toggle_lbl = QLabel("Жаппай бағалау:")
+        score_toggle_lbl.setObjectName("score_toggle_lbl")
         self.score_toggle = ScoreToggle(size=20, spacing=2)
         self.score_toggle.scoreChanged.connect(self.on_bulk_score)
+        score_toggle_layout = QHBoxLayout()
+        score_toggle_layout.addWidget(score_toggle_lbl)
+        score_toggle_layout.addWidget(self.score_toggle)
+        score_toggle_frame = QFrame()
+        score_toggle_frame.setContentsMargins(0, 0, 0, 0)
+        score_toggle_frame.setObjectName("bulk_score_toggle_frame")
+        score_toggle_frame.setLayout(score_toggle_layout)
 
         header_layout = QHBoxLayout()
         header_layout.addWidget(self.child_name_lbl, stretch=1)
-        header_layout.addWidget(self.score_toggle)
+        header_layout.addWidget(score_toggle_frame)
 
         # Create a ScrollArea
         self.scroll_area = QScrollArea()
@@ -47,6 +56,8 @@ class AssessmentArea(QFrame):
         self.scroll_area.setWidget(self.scroll_content)
 
         # Add to main layout
+        layout = QVBoxLayout(self)
+        layout.setContentsMargins(0, 0, 0, 0)
         layout.addLayout(header_layout)
         layout.addWidget(self.scroll_area)
 
