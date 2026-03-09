@@ -5,13 +5,13 @@ from PySide6.QtWidgets import (
     QLabel,
 )
 
-from gui.steps.step_widget import StepWidget
+from gui.steps.base_step import BaseStep
 from gui.widgets.file_picker import FilePickerWidget
 from gui.state import FillerState
 from gui.constants.strings import AppStrings
 
 
-class StepDocxFillSetup(StepWidget[FillerState]):
+class StepDocxFillSetup(BaseStep[FillerState]):
     def setup_ui(self):
         # File selection widget
         self.file_select_widget = FilePickerWidget(

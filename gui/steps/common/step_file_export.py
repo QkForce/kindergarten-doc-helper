@@ -15,7 +15,7 @@ from PySide6.QtCore import Qt, Signal
 from PySide6.QtStateMachine import QStateMachine, QState
 from PySide6.QtGui import QColor
 
-from gui.steps.step_widget import StepWidget
+from gui.steps.base_step import BaseStep
 from gui.state import ChecklistBaseState
 from gui.constants.strings import AppStrings
 from gui.constants.colors import AppColors
@@ -55,7 +55,7 @@ class StepFileExportOptions:
         self.error_desc = error_desc
 
 
-class StepFileExport(StepWidget[T]):
+class StepFileExport(BaseStep[T]):
     sig_progress_state = Signal()
     sig_result_state = Signal()
     sig_error_state = Signal()

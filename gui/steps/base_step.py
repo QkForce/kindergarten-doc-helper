@@ -4,7 +4,7 @@ from PySide6.QtWidgets import QWidget
 T = TypeVar("T")
 
 
-class StepWidget(QWidget, Generic[T]):
+class BaseStep(QWidget, Generic[T]):
     def __init__(self, state: T, parent=None):
         super().__init__(parent)
         self.state = state

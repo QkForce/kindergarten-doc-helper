@@ -4,7 +4,7 @@ from PySide6.QtWidgets import QVBoxLayout, QMessageBox
 from PySide6.QtStateMachine import QStateMachine, QState
 from PySide6.QtCore import Signal
 
-from gui.steps.step_widget import StepWidget
+from gui.steps.base_step import BaseStep
 from gui.widgets.children_scores_content import ChildrenScoresWidget
 from gui.widgets.loading_plug import LoadingPlug
 from gui.widgets.empty_plug import EmptyPlug
@@ -17,7 +17,7 @@ from logic.config_tools import get_all_metric_codes
 T = TypeVar("T", bound=ChecklistBaseState)
 
 
-class StepChildrenScores(StepWidget[T]):
+class StepChildrenScores(BaseStep[T]):
     sig_loading = Signal()
     sig_result = Signal()
     sig_empty = Signal()

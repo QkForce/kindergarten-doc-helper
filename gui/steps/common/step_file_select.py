@@ -3,7 +3,7 @@ from typing import TypeVar
 from PySide6.QtWidgets import QLabel, QVBoxLayout, QComboBox, QMessageBox, QSizePolicy
 from openpyxl import load_workbook
 
-from gui.steps.step_widget import StepWidget
+from gui.steps.base_step import BaseStep
 from gui.widgets.file_picker import FilePickerWidget
 from gui.state import ChecklistBaseState
 from gui.constants.strings import AppStrings
@@ -12,7 +12,7 @@ from gui.constants.strings import AppStrings
 T = TypeVar("T", bound=ChecklistBaseState)
 
 
-class StepFileSelect(StepWidget[T]):
+class StepFileSelect(BaseStep[T]):
     def setup_ui(self):
         self.layout = QVBoxLayout(self)
 

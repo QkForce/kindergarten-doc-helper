@@ -1,7 +1,7 @@
 from typing import Callable
 
 from gui.steps.common.step_file_select import StepFileSelect
-from gui.steps.smart_entry.step_child_assessment import StepChildAssessment
+from gui.steps.step_child_assessment import StepChildAssessment
 from gui.steps.common.step_file_export import StepFileExport, StepFileExportOptions
 from gui.widgets.wizard_widget import WizardWidget
 from gui.state import SmartEntryState

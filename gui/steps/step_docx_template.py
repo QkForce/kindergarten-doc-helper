@@ -3,13 +3,13 @@ from PySide6.QtWidgets import (
     QMessageBox,
 )
 
-from gui.steps.step_widget import StepWidget
+from gui.steps.base_step import BaseStep
 from gui.widgets.file_picker import FilePickerWidget
 from gui.state import GeneratorState
 from gui.constants.strings import AppStrings
 
 
-class StepDocxTemplate(StepWidget[GeneratorState]):
+class StepDocxTemplate(BaseStep[GeneratorState]):
     def setup_ui(self):
         self.file_select_widget = FilePickerWidget(
             "Шаблондық файл",
