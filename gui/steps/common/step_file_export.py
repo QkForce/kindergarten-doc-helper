@@ -12,7 +12,6 @@ from PySide6.QtWidgets import (
 )
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtStateMachine import QStateMachine, QState
-from PySide6.QtGui import QColor
 
 from gui.steps.base_step import BaseStep
 from gui.state import ChecklistBaseState
@@ -102,7 +101,7 @@ class StepFileExport(BaseStep[T]):
     def setup_ui(self):
         # --- STATE ICON ---
         self.state_icon_frame = ExportStatusWidget()
-        apply_shadow(self.state_icon_frame, QColor(0, 0, 0, 20))
+        apply_shadow(self.state_icon_frame)
         state_icon_outer_layout = QVBoxLayout()
         state_icon_outer_layout.addWidget(self.state_icon_frame)
         state_icon_outer_layout.setAlignment(self.state_icon_frame, Qt.AlignCenter)

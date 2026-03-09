@@ -3,15 +3,14 @@ from PySide6.QtWidgets import (
     QVBoxLayout,
     QHBoxLayout,
     QLabel,
-    QGraphicsDropShadowEffect,
 )
-from PySide6.QtGui import QColor
 from PySide6.QtCore import Signal
 
 from gui.widgets.assessment.subject_block import SubjectBlock
 from gui.widgets.score_toggle import ScoreToggle
 from logic.assessment_tools import set_subjects_score, get_domain_score_type
 from gui.constants.strings import DOMAIN_NAMES
+from gui.utils.style_utils import apply_shadow
 
 
 class DomainBlock(QFrame):
@@ -54,12 +53,7 @@ class DomainBlock(QFrame):
         layout.addStretch(1)
 
         # Shadow
-        shadow = QGraphicsDropShadowEffect(self)
-        shadow.setBlurRadius(25)
-        shadow.setXOffset(0)
-        shadow.setYOffset(8)
-        shadow.setColor(QColor(0, 0, 0, 20))
-        self.setGraphicsEffect(shadow)
+        apply_shadow(self)
 
     def on_bulk_score(self, score):
         set_subjects_score(self.subjects, score)

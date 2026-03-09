@@ -2,15 +2,13 @@ from PySide6.QtWidgets import (
     QVBoxLayout,
     QLabel,
     QFrame,
-    QGraphicsDropShadowEffect,
 )
 from PySide6.QtCore import Qt, Signal
-from PySide6.QtGui import QColor, QPixmap, QPainter
-from PySide6.QtSvg import QSvgRenderer
 
 from gui.constants.icons import IconPaths
 from gui.constants.colors import AppColors
 from gui.utils.icon_utils import get_svg_pixmap
+from gui.utils.style_utils import apply_shadow
 
 
 class FeatureCard(QFrame):
@@ -48,12 +46,7 @@ class FeatureCard(QFrame):
         layout.addStretch()
 
         # Shadow
-        shadow = QGraphicsDropShadowEffect(self)
-        shadow.setBlurRadius(25)
-        shadow.setXOffset(0)
-        shadow.setYOffset(8)
-        shadow.setColor(QColor(0, 0, 0, 20))
-        self.setGraphicsEffect(shadow)
+        apply_shadow(self)
 
     def set_icon(self, icon_path, color):
         pixmap = get_svg_pixmap(icon_path, color, size=48)
