@@ -39,6 +39,8 @@ class GeneratorState(ChecklistBaseState):
 class FillerState(ChecklistBaseState):
     def __init__(self):
         super().__init__()
+        self.temp_file_path = None
+        self.control_type = None
 
 
 class SmartEntryState(ChecklistBaseState):

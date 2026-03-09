@@ -53,7 +53,7 @@ class StepDocxFill(StepWidget[FillerState]):
         }
         for key, display_text in self.control_types.items():
             self.combo_control_types.addItem(display_text, key)
-        self.control_type = self.combo_control_types.currentData()
+        self.state.control_type = self.combo_control_types.currentData()
         control_types_label = QLabel("Бақылау түрі:")
         control_types_label.setBuddy(self.combo_control_types)
         control_types_label.setProperty("lbl-level", "lbl")
@@ -169,10 +169,12 @@ class StepDocxFill(StepWidget[FillerState]):
         self.machine.start()
 
     def connect_signals(self):
-        self.file_select_widget.fileSelected.connect(self.on_select_template)
+        self.file_select_widget.fileSelected.connect(
+            lambda selected_file: setattr(self.state, "temp_file_path", selected_file)
+        )
         self.combo_control_types.currentIndexChanged.connect(
             lambda: setattr(
-                self, "control_type", self.combo_control_types.currentData()
+                self.state, "control_type", self.combo_control_types.currentData()
             )
         )
         self.btn_generate.clicked.connect(self.on_press_generate)
@@ -182,7 +184,7 @@ class StepDocxFill(StepWidget[FillerState]):
         self.sig_start_state.emit()
 
     def validate_before_next(self):
-        if not self.temp_file_path:
+        if not self.state.temp_file_path:
             QMessageBox.warning(self, "Ескерту", "Шаблондық файлды таңдаңыз.")
             return False
         if not self.combo_control_types.currentText():
@@ -202,9 +204,6 @@ class StepDocxFill(StepWidget[FillerState]):
             f"Даму картасы жасалған жатқан бала: {fullname}"
         )
 
-    def on_select_template(self, file_path):
-        self.temp_file_path = file_path
-
     def _generation_finished(self, docx_file):
         self.docx_file = docx_file
         self.sig_result_state.emit()
@@ -214,12 +213,12 @@ class StepDocxFill(StepWidget[FillerState]):
         self.sig_error_state.emit()
 
     def on_press_generate(self):
-        if not self.temp_file_path:
+        if not self.state.temp_file_path:
             QMessageBox.warning(
                 self, "Файл таңдалмады", "Алдымен шаблондық файлды таңдауыңыз керек."
             )
             return
-        if not self.control_type:
+        if not self.state.control_type:
             QMessageBox.warning(
                 self,
                 "Бақылау түрі таңдалмады",
@@ -234,9 +233,9 @@ class StepDocxFill(StepWidget[FillerState]):
             )
             worker_func = functools.partial(
                 fill_all_children_in_big_file,
-                self.temp_file_path,
+                self.state.temp_file_path,
                 all_children_data,
-                self.control_type,
+                self.state.control_type,
                 self.sig_progress.emit,
             )
             start_worker_task(
