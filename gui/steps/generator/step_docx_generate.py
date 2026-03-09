@@ -23,7 +23,6 @@ from logic.config_tools import get_age_group_data
 
 
 class StepDocxGenerate(StepWidget[GeneratorState]):
-    temp_file_path: str = ""
     docx_file = None
     sig_start_state = Signal()
     sig_progress_state = Signal()
@@ -156,7 +155,7 @@ class StepDocxGenerate(StepWidget[GeneratorState]):
         self.sig_start_state.emit()
 
     def validate_before_next(self):
-        if not self.temp_file_path:
+        if not self.state.temp_file_path:
             QMessageBox.warning(self, "Ескерту", "Шаблондық файлды таңдаңыз.")
             return False
         if not self.docx_file:
@@ -174,7 +173,7 @@ class StepDocxGenerate(StepWidget[GeneratorState]):
         )
 
     def on_select_template(self, file_path):
-        self.temp_file_path = file_path
+        self.state.temp_file_path = file_path
 
     def _generation_finished(self, docx_file):
         self.docx_file = docx_file
@@ -185,7 +184,7 @@ class StepDocxGenerate(StepWidget[GeneratorState]):
         self.sig_error_state.emit()
 
     def on_press_generate(self):
-        if not self.temp_file_path:
+        if not self.state.temp_file_path:
             QMessageBox.warning(
                 self, "Файл таңдалмады", "Алдымен шаблондық файлды таңдауыңыз керек."
             )
@@ -198,7 +197,7 @@ class StepDocxGenerate(StepWidget[GeneratorState]):
             )
             worker_func = functools.partial(
                 create_children_grow_cards,
-                self.temp_file_path,
+                self.state.temp_file_path,
                 all_children_data,
                 self.sig_progress.emit,
             )
