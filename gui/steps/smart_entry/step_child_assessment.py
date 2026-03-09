@@ -20,8 +20,6 @@ class StepChildAssessment(StepWidget[SmartEntryState]):
     sig_error = Signal()
 
     def setup_ui(self):
-        self.title = AppStrings.SMART_ENTRY.STEP_2_TITLE
-        self.description = AppStrings.SMART_ENTRY.STEP_2_DESC
         self.loading_plug = LoadingPlug(
             "Балалардың аты-жөндері жүктелуде... Күте тұрыңыз.",
             "Файлдағы балалардың есімдері оқылуда.",

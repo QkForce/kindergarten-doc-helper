@@ -14,9 +14,6 @@ T = TypeVar("T", bound=ChecklistBaseState)
 
 class StepFileSelect(StepWidget[T]):
     def setup_ui(self):
-        self.title = AppStrings.GENERATOR.STEP_1_TITLE
-        self.description = AppStrings.GENERATOR.STEP_1_DESC
-
         self.layout = QVBoxLayout(self)
 
         # Excel файлды таңдау

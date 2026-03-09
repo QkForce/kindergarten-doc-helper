@@ -1,4 +1,5 @@
 from typing import List, Callable, TypeVar, Generic
+
 from PySide6.QtWidgets import (
     QWidget,
     QVBoxLayout,
@@ -11,15 +12,15 @@ from PySide6.QtWidgets import (
 )
 from PySide6.QtCore import Qt
 
+from gui.types import Step
+
 T = TypeVar("T")
 
 
 class WizardWidget(QWidget, Generic[T]):
-    def __init__(
-        self, step_factories: List[Callable[[], QWidget]], state: T, on_finish: Callable
-    ):
+    def __init__(self, steps: List[Step], state: T, on_finish: Callable):
         super().__init__()
-        self._step_factories = step_factories
+        self._step_configs = steps
         self.state = state
         self.on_finish = on_finish
 
@@ -58,7 +59,7 @@ class WizardWidget(QWidget, Generic[T]):
         panel_layout.addWidget(self.stack)
 
         # Step placeholders (None – not yet created)
-        self.steps = [None] * len(step_factories)
+        self.steps = [None] * len(self._step_configs)
 
         # NAVIGATION BUTTONS
         nav = QHBoxLayout()
@@ -95,11 +96,11 @@ class WizardWidget(QWidget, Generic[T]):
 
     # --- lazy loader ---
     def get_step(self, index: int):
-        """Создаёт шаг при первом обращении и добавляет в stack."""
+        # Creates step widget on first access and adds to stack
         if not (0 <= index < len(self.steps)):
             return None
         if self.steps[index] is None:
-            widget = self._step_factories[index]()
+            widget = self._step_configs[index].factory()
             self.steps[index] = widget
             self.stack.addWidget(widget)
         return self.steps[index]
@@ -141,7 +142,7 @@ class WizardWidget(QWidget, Generic[T]):
             widget.deleteLater()
 
         # Clear list
-        self.steps = [None] * len(self._step_factories)
+        self.steps = [None] * len(self._step_configs)
 
         # Reset state
         if hasattr(self.state, "reset"):
@@ -157,11 +158,13 @@ class WizardWidget(QWidget, Generic[T]):
         if widget:
             self.stack.setCurrentWidget(widget)
 
+        step_config = self._step_configs[self.current_step]
+
         # progress
-        total = len(self._step_factories)
+        total = len(self._step_configs)
         self.progress_bar.setValue(int((self.current_step + 1) / total * 100))
-        self.progress_title.setText(widget.title)
-        self.progress_description.setText(widget.description)
+        self.progress_title.setText(step_config.title)
+        self.progress_description.setText(step_config.description)
 
         # back button
         is_first = self.current_step == 0

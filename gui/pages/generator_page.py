@@ -5,6 +5,8 @@ from gui.steps.common.step_children_scores import StepChildrenScores
 from gui.steps.generator.step_docx_generate import StepDocxGenerate
 from gui.widgets.wizard_widget import WizardWidget
 from gui.state import GeneratorState
+from gui.types import Step
+from gui.constants.strings import GENERATOR_OPTIONS
 
 
 class GeneratorPage(WizardWidget[GeneratorState]):
@@ -15,6 +17,12 @@ class GeneratorPage(WizardWidget[GeneratorState]):
             lambda: StepChildrenScores(state),
             lambda: StepDocxGenerate(state),
         ]
-        super().__init__(
-            step_factories=step_factories, state=state, on_finish=on_finish
-        )
+        steps = []
+        for index, factory in enumerate(step_factories):
+            step = Step(
+                title=GENERATOR_OPTIONS[index]["title"],
+                description=GENERATOR_OPTIONS[index]["desc"],
+                factory=factory,
+            )
+            steps.append(step)
+        super().__init__(steps=steps, state=state, on_finish=on_finish)

@@ -32,8 +32,6 @@ class StepDocxGenerate(StepWidget[GeneratorState]):
     sig_progress = Signal(str, int, int)
 
     def setup_ui(self):
-        self.title = AppStrings.GENERATOR.STEP_3_TITLE
-        self.description = AppStrings.GENERATOR.STEP_3_DESC
         self.sig_progress.connect(self._listen_progress)
         layout = QVBoxLayout(self)
 

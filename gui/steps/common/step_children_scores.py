@@ -24,8 +24,6 @@ class StepChildrenScores(StepWidget[T]):
     sig_error = Signal()
 
     def setup_ui(self):
-        self.title = AppStrings.GENERATOR.STEP_2_TITLE
-        self.description = AppStrings.GENERATOR.STEP_2_DESC
         self.loading_plug = LoadingPlug(
             "Балалардың бағалары жүктелуде... Күте тұрыңыз.",
             "Файлдағы балалардың бағалары оқылуда.",

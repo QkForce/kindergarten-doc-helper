@@ -5,6 +5,8 @@ from gui.steps.common.step_children_scores import StepChildrenScores
 from gui.steps.filler.step_docx_fill import StepDocxFill
 from gui.widgets.wizard_widget import WizardWidget
 from gui.state import FillerState
+from gui.types import Step
+from gui.constants.strings import FILLER_OPTIONS
 
 
 class FillerPage(WizardWidget[FillerState]):
@@ -15,6 +17,12 @@ class FillerPage(WizardWidget[FillerState]):
             lambda: StepChildrenScores(state),
             lambda: StepDocxFill(state),
         ]
-        super().__init__(
-            step_factories=step_factories, state=state, on_finish=on_finish
-        )
+        steps = []
+        for index, factory in enumerate(step_factories):
+            step = Step(
+                title=FILLER_OPTIONS[index]["title"],
+                description=FILLER_OPTIONS[index]["desc"],
+                factory=factory,
+            )
+            steps.append(step)
+        super().__init__(steps=steps, state=state, on_finish=on_finish)

@@ -1,4 +1,7 @@
 from enum import Enum
+from dataclasses import dataclass
+from typing import Callable
+from PySide6.QtWidgets import QWidget
 
 
 class AgeGroup(Enum):
@@ -32,3 +35,10 @@ class Subject(Enum):
     MATH = "math"
     LITERACY = "literacy"
     SPEECH_IMMERSION = "speech_immersion"
+
+
+@dataclass
+class Step:
+    title: str
+    description: str
+    factory: Callable[[], QWidget]

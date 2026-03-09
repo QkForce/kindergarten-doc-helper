@@ -8,8 +8,6 @@ class StepWidget(QWidget, Generic[T]):
     def __init__(self, state: T, parent=None):
         super().__init__(parent)
         self.state = state
-        self.title = "title"
-        self.description = "description"
         self.setup_ui()
         self.setup_state_machine()
         self.connect_signals()

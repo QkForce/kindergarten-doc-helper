@@ -64,9 +64,6 @@ class StepFileExport(StepWidget[T]):
         super().__init__(state, parent=None)
 
     def setup_ui(self):
-        self.title = AppStrings.GENERATOR.STEP_3_TITLE
-        self.description = AppStrings.GENERATOR.STEP_3_DESC
-
         # --- STATE ICON ---
         self.progress_pixmap = get_svg_pixmap(
             IconPaths.ENTRY_PARTIAL, AppColors.CANVAS, size=48

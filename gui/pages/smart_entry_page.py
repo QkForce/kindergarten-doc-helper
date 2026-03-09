@@ -6,6 +6,8 @@ from gui.steps.common.step_file_export import StepFileExport, StepFileExportOpti
 from gui.widgets.wizard_widget import WizardWidget
 from gui.state import SmartEntryState
 from logic.exporter import SmartEntryExporter
+from gui.types import Step
+from gui.constants.strings import SMART_ENTRY_OPTIONS
 
 
 class SmartEntryPage(WizardWidget[SmartEntryState]):
@@ -25,6 +27,12 @@ class SmartEntryPage(WizardWidget[SmartEntryState]):
                 state, exporter=SmartEntryExporter(), options=options
             ),
         ]
-        super().__init__(
-            step_factories=step_factories, state=state, on_finish=on_finish
-        )
+        steps = []
+        for index, factory in enumerate(step_factories):
+            step = Step(
+                title=SMART_ENTRY_OPTIONS[index]["title"],
+                description=SMART_ENTRY_OPTIONS[index]["desc"],
+                factory=factory,
+            )
+            steps.append(step)
+        super().__init__(steps=steps, state=state, on_finish=on_finish)
