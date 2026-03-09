@@ -1,5 +1,5 @@
 from gui.state import ChecklistBaseState
-from logic.docx_tools import fill_all_children_in_big_file
+from logic.docx_tools import create_children_grow_cards, fill_all_children_in_big_file
 from logic.metrics_tools import prepare_all_children_grow_card_data
 from logic.xlsx_tools import fill_assessment_table
 
@@ -10,6 +10,24 @@ class Exporter:
 
     def export(self):
         pass
+
+
+class DocxGenerateExporter(Exporter):
+    def set_data(self, state: ChecklistBaseState, age_group_data, progress_callback):
+        self.state = state
+        self.age_group_data = age_group_data
+        self.progress_callback = progress_callback
+        self.all_children_data = prepare_all_children_grow_card_data(
+            state.children_scores, age_group_data
+        )
+
+    def export(self):
+        docx = create_children_grow_cards(
+            self.state.temp_file_path,
+            self.all_children_data,
+            self.progress_callback,
+        )
+        return docx
 
 
 class DocxFillExporter(Exporter):
