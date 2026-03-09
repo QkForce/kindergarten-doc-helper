@@ -9,7 +9,7 @@ from gui.state import GeneratorState
 from gui.constants.strings import AppStrings
 
 
-class StepDocxGenerate(StepWidget[GeneratorState]):
+class StepDocxTemplate(StepWidget[GeneratorState]):
     def setup_ui(self):
         self.file_select_widget = FilePickerWidget(
             "Шаблондық файл",
