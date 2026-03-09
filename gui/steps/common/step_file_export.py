@@ -9,7 +9,6 @@ from PySide6.QtWidgets import (
     QProgressBar,
     QLabel,
     QFrame,
-    QGraphicsDropShadowEffect,
 )
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtStateMachine import QStateMachine, QState
@@ -21,6 +20,7 @@ from gui.constants.strings import AppStrings
 from gui.constants.colors import AppColors
 from gui.constants.icons import IconPaths
 from gui.utils.icon_utils import get_svg_pixmap
+from gui.utils.style_utils import apply_shadow
 from logic.worker import start_worker_task
 from logic.config_tools import get_age_group_data
 
@@ -55,6 +55,38 @@ class StepFileExportOptions:
         self.error_desc = error_desc
 
 
+class ExportStatusWidget(QFrame):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setFixedSize(100, 100)
+
+        # --- PIXMAPS ---
+        self.progress_pixmap = get_svg_pixmap(
+            IconPaths.ENTRY_PARTIAL, AppColors.CANVAS, size=48
+        )
+        self.success_pixmap = get_svg_pixmap(
+            IconPaths.SUCCESS, AppColors.CANVAS, size=48
+        )
+        self.error_pixmap = get_svg_pixmap(IconPaths.ERROR, AppColors.CANVAS, size=48)
+
+        # --- Label ---
+        self.label = QLabel()
+        self.label.setAlignment(Qt.AlignCenter)
+
+        # --- Setup UI ---
+        layout = QVBoxLayout(self)
+        layout.addWidget(self.label)
+        layout.setAlignment(Qt.AlignCenter)
+
+    def applyStatus(self, status):
+        if status == "status-loading":
+            self.label.setPixmap(self.progress_pixmap)
+        elif status == "status-success":
+            self.label.setPixmap(self.success_pixmap)
+        elif status == "status-error":
+            self.label.setPixmap(self.error_pixmap)
+
+
 class StepFileExport(BaseStep[T]):
     sig_progress_state = Signal()
     sig_result_state = Signal()
@@ -69,28 +101,8 @@ class StepFileExport(BaseStep[T]):
 
     def setup_ui(self):
         # --- STATE ICON ---
-        self.progress_pixmap = get_svg_pixmap(
-            IconPaths.ENTRY_PARTIAL, AppColors.CANVAS, size=48
-        )
-        self.success_pixmap = get_svg_pixmap(
-            IconPaths.SUCCESS, AppColors.CANVAS, size=48
-        )
-        self.error_pixmap = get_svg_pixmap(IconPaths.ERROR, AppColors.CANVAS, size=48)
-        self.state_icon_label = QLabel()
-        self.state_icon_label.setAlignment(Qt.AlignCenter)
-        state_icon_layout = QVBoxLayout()
-        state_icon_layout.addWidget(self.state_icon_label)
-        state_icon_layout.setAlignment(Qt.AlignCenter)
-        self.state_icon_frame = QFrame()
-        self.state_icon_frame.setFixedSize(100, 100)
-        self.state_icon_frame.setLayout(state_icon_layout)
-        # Set shadow effect for the state icon frame
-        shadow = QGraphicsDropShadowEffect(self.state_icon_frame)
-        shadow.setBlurRadius(25)
-        shadow.setXOffset(0)
-        shadow.setYOffset(8)
-        shadow.setColor(QColor(0, 0, 0, 20))
-        self.state_icon_frame.setGraphicsEffect(shadow)
+        self.state_icon_frame = ExportStatusWidget()
+        apply_shadow(self.state_icon_frame, QColor(0, 0, 0, 20))
         state_icon_outer_layout = QVBoxLayout()
         state_icon_outer_layout.addWidget(self.state_icon_frame)
         state_icon_outer_layout.setAlignment(self.state_icon_frame, Qt.AlignCenter)
@@ -141,7 +153,7 @@ class StepFileExport(BaseStep[T]):
         # --- PROGRESS MODE ---
         st_progress.entered.connect(self.run_auto_load)
         st_progress.entered.connect(
-            lambda: self.state_icon_label.setPixmap(self.progress_pixmap)
+            lambda: self.state_icon_frame.applyStatus("status-loading")
         )
         st_progress.entered.connect(lambda: self.set_frame_status("status-loading"))
         st_progress.entered.connect(
@@ -156,7 +168,7 @@ class StepFileExport(BaseStep[T]):
 
         # --- RESULT MODE ---
         st_result.entered.connect(
-            lambda: self.state_icon_label.setPixmap(self.success_pixmap)
+            lambda: self.state_icon_frame.applyStatus("status-success")
         )
         st_result.entered.connect(lambda: self.set_frame_status("status-success"))
         st_result.entered.connect(
@@ -170,7 +182,7 @@ class StepFileExport(BaseStep[T]):
 
         # --- ERROR MODE ---
         st_error.entered.connect(
-            lambda: self.state_icon_label.setPixmap(self.error_pixmap)
+            lambda: self.state_icon_frame.applyStatus("status-error")
         )
         st_error.entered.connect(lambda: self.set_frame_status("status-error"))
         st_error.entered.connect(
