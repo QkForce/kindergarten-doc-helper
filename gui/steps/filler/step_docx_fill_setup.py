@@ -11,7 +11,7 @@ from gui.state import FillerState
 from gui.constants.strings import AppStrings
 
 
-class StepDocxFill(StepWidget[FillerState]):
+class StepDocxFillSetup(StepWidget[FillerState]):
     def setup_ui(self):
         # File selection widget
         self.file_select_widget = FilePickerWidget(
