@@ -1,3 +1,4 @@
+from time import sleep
 from openpyxl import load_workbook
 from openpyxl.worksheet.worksheet import Worksheet
 from config.config import AGE_GROUP_DATA
@@ -43,6 +44,7 @@ def fill_assessment_table(
     """
     children_data: { 'name': str, 'metric_code': score (1, 2, or 3) }
     """
+    progress_callback("Loading the workbook", 0, 0)
     workbook = load_workbook(filename=file_path, read_only=False)
     sheet = workbook[sheet_name]
     current_row = start_row
@@ -68,4 +70,5 @@ def fill_assessment_table(
             child["name"], current_row - start_row + 1, len(children_data)
         )
         current_row += 1
+        sleep(0.01)  # Simulate processing time
     return workbook

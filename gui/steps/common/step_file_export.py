@@ -1,4 +1,4 @@
-from typing import TypeVar
+from typing import TypeVar, Callable
 
 from PySide6.QtWidgets import (
     QVBoxLayout,
@@ -33,8 +33,12 @@ class StepFileExportOptions:
         file_name: str = "Балалардың даму картасы.docx",
         file_filter: str = "DOCX Files (*.docx)",
         file_extension: str = ".docx",
-        progress_title: str = "Экспорт процесі жүріп жатыр...",
-        get_progress_desc: callable = lambda fullname: f"Даму картасы жасалып жатқан бала: {fullname}",
+        get_progress_title: Callable[
+            [str, int, int], str
+        ] = lambda lbl, current, total: "Экспорт процесі жүріп жатыр...",
+        get_progress_desc: Callable[
+            [str, int, int], str
+        ] = lambda lbl, current, total: f"Деректер өңделіп жатқан бала: {lbl}",
         result_title: str = "Балалардың даму картасы дайын",
         result_desc: str = "Құжатты төменгі батырма арқылы ала аласыз.",
         error_title: str = "Қате",
@@ -43,7 +47,7 @@ class StepFileExportOptions:
         self.file_name = file_name
         self.file_filter = file_filter
         self.file_extension = file_extension
-        self.progress_title = progress_title
+        self.get_progress_title = get_progress_title
         self.get_progress_desc = get_progress_desc
         self.result_title = result_title
         self.result_desc = result_desc
@@ -60,7 +64,7 @@ class StepFileExport(StepWidget[T]):
     def __init__(self, state, exporter, options: StepFileExportOptions = None):
         self.result_file = None
         self.exporter = exporter
-        self.options = options or {}
+        self.options = options
         super().__init__(state, parent=None)
 
     def setup_ui(self):
@@ -91,9 +95,9 @@ class StepFileExport(StepWidget[T]):
         state_icon_outer_layout.addWidget(self.state_icon_frame)
         state_icon_outer_layout.setAlignment(self.state_icon_frame, Qt.AlignCenter)
 
-        self.title_lbl = QLabel("Экспорт процесі: 0/0")
+        self.title_lbl = QLabel()
         self.title_lbl.setAlignment(Qt.AlignCenter)
-        self.desc_lbl = QLabel("Даму картасы жасалып жатқан бала: NAME")
+        self.desc_lbl = QLabel()
         self.desc_lbl.setAlignment(Qt.AlignCenter)
 
         self.progress_bar = QProgressBar()
@@ -140,6 +144,13 @@ class StepFileExport(StepWidget[T]):
             lambda: self.state_icon_label.setPixmap(self.progress_pixmap)
         )
         st_progress.entered.connect(lambda: self.set_frame_status("status-loading"))
+        st_progress.entered.connect(
+            lambda: self.title_lbl.setText(self.options.get_progress_title("", 0, 0))
+        )
+        st_progress.entered.connect(
+            lambda: self.desc_lbl.setText(self.options.get_progress_desc("", 0, 0))
+        )
+        st_progress.assignProperty(self.progress_bar, "value", 0)
         st_progress.assignProperty(self.progress_bar, "visible", True)
         st_progress.assignProperty(self.btn_save, "visible", False)
 
@@ -172,6 +183,8 @@ class StepFileExport(StepWidget[T]):
         # --- TRANSITIONS ---
         st_progress.addTransition(self.sig_result_state, st_result)
         st_progress.addTransition(self.sig_error_state, st_error)
+        st_result.addTransition(self.sig_progress_state, st_progress)
+        st_error.addTransition(self.sig_progress_state, st_progress)
 
         # --- DEFAULT STATE ---
         self.machine.addState(st_progress)
@@ -188,6 +201,7 @@ class StepFileExport(StepWidget[T]):
     def run_auto_load(self):
         try:
             self.sig_progress_state.emit()
+            self.result_file = None
             age_group_data = get_age_group_data(self.state.age_group)
             self.exporter.set_data(
                 self.state,
@@ -208,11 +222,15 @@ class StepFileExport(StepWidget[T]):
         return True
 
     def _listen_progress(self, fullname, current_index, total_children):
-        self.title_lbl.setText(f"Экспорт процесі: {current_index}/{total_children}")
+        self.title_lbl.setText(
+            self.options.get_progress_title(fullname, current_index, total_children)
+        )
+        self.desc_lbl.setText(
+            self.options.get_progress_desc(fullname, current_index, total_children)
+        )
         if total_children > 0:
             val = int((current_index / total_children) * 100)
             self.progress_bar.setValue(val)
-        self.desc_lbl.setText(self.options.get_progress_desc(fullname))
 
     def _export_finished(self, result_file):
         self.result_file = result_file

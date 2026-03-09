@@ -1,3 +1,4 @@
+from time import sleep
 from PySide6.QtCore import QObject, Signal, QRunnable, Slot, QThreadPool
 
 
@@ -17,6 +18,7 @@ class Worker(QRunnable):
     def run(self):
         try:
             result = self.loader_func()
+            sleep(0.3)  # The UI can be updated after the signal is emitted
             self.signals.finished.emit(result)
         except Exception as e:
             self.signals.error.emit(str(e))
