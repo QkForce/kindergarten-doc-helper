@@ -98,6 +98,7 @@ class StepChildAssessment(BaseStep[SmartEntryState]):
 
     def run_auto_load(self):
         try:
+            self.sig_loading.emit()
             self.has_errors = False
             self.loader = ChildrenLoader(self.state.workbook[self.state.sheet_name])
             start_worker_task(self.loader.load_auto, self._loaded, self._load_failed)
