@@ -10,14 +10,24 @@ from PySide6.QtWidgets import (
     QLabel,
     QFrame,
 )
-from PySide6.QtCore import Qt, Signal
+from PySide6.QtCore import (
+    QPoint,
+    Qt,
+    Signal,
+    QPropertyAnimation,
+    QEasingCurve,
+    QSequentialAnimationGroup,
+    QSize,
+    QVariantAnimation,
+)
 from PySide6.QtStateMachine import QStateMachine, QState
+from PySide6.QtGui import QTransform, QMovie
 
 from gui.steps.base_step import BaseStep
 from gui.state import ChecklistBaseState
 from gui.constants.strings import AppStrings
 from gui.constants.colors import AppColors
-from gui.constants.icons import IconPaths
+from gui.constants.icons import IconPaths, AnimationPaths
 from gui.utils.icon_utils import get_svg_pixmap
 from gui.utils.style_utils import apply_shadow
 from logic.worker import start_worker_task
@@ -57,12 +67,12 @@ class StepFileExportOptions:
 class ExportStatusWidget(QFrame):
     def __init__(self, parent=None):
         super().__init__(parent)
+        self.current_anim = None
         self.setFixedSize(100, 100)
 
         # --- PIXMAPS ---
-        self.progress_pixmap = get_svg_pixmap(
-            IconPaths.ENTRY_PARTIAL, AppColors.CANVAS, size=48
-        )
+        self.loading_movie = QMovie(AnimationPaths.LOADING)
+        self.loading_movie.setScaledSize(QSize(70, 70))
         self.success_pixmap = get_svg_pixmap(
             IconPaths.SUCCESS, AppColors.CANVAS, size=48
         )
@@ -78,12 +88,86 @@ class ExportStatusWidget(QFrame):
         layout.setAlignment(Qt.AlignCenter)
 
     def applyStatus(self, status):
+        self.label.clear()
+        if self.current_anim:
+            self.current_anim.stop()
+
         if status == "status-loading":
-            self.label.setPixmap(self.progress_pixmap)
+            self.label.setMovie(self.loading_movie)
+            self.loading_movie.start()
         elif status == "status-success":
             self.label.setPixmap(self.success_pixmap)
+            self._start_success_anim()
         elif status == "status-error":
             self.label.setPixmap(self.error_pixmap)
+            self._start_error_anim()
+
+    def _start_loading_anim(self):
+        # Smooth rotation animation
+        self.current_anim = QVariantAnimation(self)
+        self.current_anim.setDuration(1200)  # One lap time (1.2 sec)
+        self.current_anim.setStartValue(0)  # 0 degrees
+        self.current_anim.setEndValue(360)  # 360 degrees
+        self.current_anim.setLoopCount(-1)  # Infinite rotation
+
+        def rotate_pixmap(angle):
+            # Get the base pixmap
+            original_pixmap = get_svg_pixmap(
+                IconPaths.LOADING, AppColors.PRIMARY, size=48
+            )
+            # Create a rotation transformation
+            transform = QTransform().rotate(angle)
+            rotated_pixmap = original_pixmap.transformed(
+                transform, Qt.SmoothTransformation
+            )
+            # The pixmap may change size when rotated (diagonally),
+            # so we keep it in the middle of the label
+            self.label.setPixmap(rotated_pixmap)
+
+        self.current_anim.valueChanged.connect(rotate_pixmap)
+        self.current_anim.start()
+
+    def _start_success_anim(self):
+        # Pulse animation
+        self.current_anim = QVariantAnimation(self)
+        self.current_anim.setDuration(600)  # Total pulse time
+        self.current_anim.setStartValue(48)  # Initial size (size=48)
+        self.current_anim.setEndValue(48)  # Finally it comes back to 48
+        # In the middle (0.2nd second) the icon reaches a maximum of 72 pixels.
+        self.current_anim.setKeyValueAt(0.2, 72)
+        # OutElastic gives a spring effect
+        self.current_anim.setEasingCurve(QEasingCurve.OutElastic)
+
+        # We redraw the pixmap with every change.
+        def update_pixmap(value):
+            pix = get_svg_pixmap(IconPaths.SUCCESS, AppColors.CANVAS, size=int(value))
+            self.label.setPixmap(pix)
+
+        self.current_anim.valueChanged.connect(update_pixmap)
+        self.current_anim.start()
+
+    def _start_error_anim(self):
+        orig_geo = self.label.geometry()
+        self.current_anim = QSequentialAnimationGroup()
+        for i in range(3):
+            # Shake left
+            anim1 = QPropertyAnimation(self.label, b"geometry")
+            anim1.setDuration(50)
+            anim1.setEndValue(orig_geo.translated(-5, 0))
+            # Shake right
+            anim2 = QPropertyAnimation(self.label, b"geometry")
+            anim2.setDuration(50)
+            anim2.setEndValue(orig_geo.translated(5, 0))
+            # Add to the group
+            self.current_anim.addAnimation(anim1)
+            self.current_anim.addAnimation(anim2)
+        # Return to original position at the end
+        final_anim = QPropertyAnimation(self.label, b"geometry")
+        final_anim.setDuration(50)
+        final_anim.setEndValue(orig_geo)
+        self.current_anim.addAnimation(final_anim)
+        # Start the shake animation
+        self.current_anim.start()
 
 
 class StepFileExport(BaseStep[T]):
@@ -96,6 +180,7 @@ class StepFileExport(BaseStep[T]):
         self.result_file = None
         self.exporter = exporter
         self.options = options
+        self.last_error = ("", "")
         super().__init__(state, parent=None)
 
     def setup_ui(self):
@@ -185,9 +270,13 @@ class StepFileExport(BaseStep[T]):
         )
         st_error.entered.connect(lambda: self.set_frame_status("status-error"))
         st_error.entered.connect(
-            lambda: self.title_lbl.setText(self.options.error_title)
+            lambda: self.title_lbl.setText(
+                self.last_error[0] or self.options.error_title
+            )
         )
-        st_error.entered.connect(lambda: self.desc_lbl.setText(self.options.error_desc))
+        st_error.entered.connect(
+            lambda: self.desc_lbl.setText(self.last_error[1] or self.options.error_desc)
+        )
         st_error.assignProperty(self.progress_bar, "visible", False)
         st_error.assignProperty(self.btn_save, "visible", True)
 
@@ -223,7 +312,7 @@ class StepFileExport(BaseStep[T]):
                 self.exporter.export, self._export_finished, self._export_failed
             )
         except Exception as e:
-            QMessageBox.critical(self, "Қате", f"Экспорт кезінде қате: {e}")
+            self.last_error = ("Қате", f"Экспорт кезінде қате: {e}")
             self.sig_error_state.emit()
 
     def validate_before_next(self):
@@ -248,7 +337,7 @@ class StepFileExport(BaseStep[T]):
         self.sig_result_state.emit()
 
     def _export_failed(self, error):
-        QMessageBox.critical(self, "Қате", f"Экспорт кезінде қате: {error}")
+        self.last_error = ("Қате", f"Экспорт кезінде қате: {error}")
         self.sig_error_state.emit()
 
     def on_save(self):

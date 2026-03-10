@@ -2,6 +2,7 @@ from pathlib import Path
 
 # The path to the main folder of the project (root)
 ICON_DIR = Path(__file__).parent.parent / "resources" / "icons"
+ANIM_DIR = Path(__file__).parent.parent / "resources" / "animations"
 
 
 class IconPaths:
@@ -25,3 +26,7 @@ class IconPaths:
     # Smart Entry icons
     ENTRY_COMPLETED = str(ICON_DIR / "circle-check-big.svg")
     ENTRY_PARTIAL = str(ICON_DIR / "circle-dashed.svg")
+
+
+class AnimationPaths:
+    LOADING = str(ANIM_DIR / "loading.gif")
