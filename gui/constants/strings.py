@@ -19,6 +19,15 @@ class AppStrings:
     CARD_ENTRY_TITLE = "Smart Entry"
     CARD_ENTRY_DESC = "Create student data tables with an intuitive grid."
 
+    EXPORT_BTN_LBL_SAVE_FILE = "Нәтижені жүктеу (сақтау)"
+    EXPORT_DIALOG_TITLE_ASK_FILE_PATH = "Құжатты қайда сақтау керек?"
+    EXPORT_SUCCESS_TITLE_SAVE_FILE = "Сақтау сәтті аяқталды!"
+    EXPORT_SUCCESS_DESC_SAVE_FILE = "Құжат сақталды: {}"
+    EXPORT_ERROR_TITLE = "Қате!"
+    EXPORT_ERROR_DESC = "Экспорт кезінде қате: {}"
+    EXPORT_WARNING_TITLE = "Ескерту"
+    EXPORT_WARNING_DESC_NOT_PROCESSED_RESULT_FILE = "Құжатты дайындау керек!"
+
 
 GENERATOR_OPTIONS = [
     {

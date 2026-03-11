@@ -11,7 +11,6 @@ from PySide6.QtWidgets import (
     QFrame,
 )
 from PySide6.QtCore import (
-    QPoint,
     Qt,
     Signal,
     QPropertyAnimation,
@@ -207,7 +206,7 @@ class StepFileExport(BaseStep[T]):
         progress_bar_layout.addWidget(self.progress_bar)
         progress_bar_layout.addStretch()
 
-        self.btn_save = QPushButton("Нәтижені жүктеу")
+        self.btn_save = QPushButton(AppStrings.EXPORT_BTN_LBL_SAVE_FILE)
         self.btn_save.setProperty("btn-size", "large")
         self.btn_save.setProperty("btn-type", "primary")
         btn_layout = QHBoxLayout()
@@ -312,12 +311,19 @@ class StepFileExport(BaseStep[T]):
                 self.exporter.export, self._export_finished, self._export_failed
             )
         except Exception as e:
-            self.last_error = ("Қате", f"Экспорт кезінде қате: {e}")
+            self.last_error = (
+                AppStrings.EXPORT_ERROR_TITLE,
+                AppStrings.EXPORT_ERROR_DESC.format(str(e)),
+            )
             self.sig_error_state.emit()
 
     def validate_before_next(self):
         if not self.result_file:
-            QMessageBox.warning(self, "Ескерту", "Құжатты жасау керек.")
+            QMessageBox.warning(
+                self,
+                AppStrings.EXPORT_WARNING_TITLE,
+                AppStrings.EXPORT_WARNING_DESC_NOT_PROCESSED_RESULT_FILE,
+            )
             return False
         return True
 
@@ -337,7 +343,10 @@ class StepFileExport(BaseStep[T]):
         self.sig_result_state.emit()
 
     def _export_failed(self, error):
-        self.last_error = ("Қате", f"Экспорт кезінде қате: {error}")
+        self.last_error = (
+            AppStrings.EXPORT_ERROR_TITLE,
+            AppStrings.EXPORT_ERROR_DESC.format(str(error)),
+        )
         self.sig_error_state.emit()
 
     def on_save(self):
@@ -346,7 +355,7 @@ class StepFileExport(BaseStep[T]):
 
         file_path, _ = QFileDialog.getSaveFileName(
             self,
-            "Қайда сақтайсыз?",
+            AppStrings.EXPORT_DIALOG_TITLE_ASK_FILE_PATH,
             self.options.file_name,
             self.options.file_filter,
         )
@@ -359,7 +368,9 @@ class StepFileExport(BaseStep[T]):
         self.result_file.save(file_path)
 
         QMessageBox.information(
-            self, "Сақтау сәтті аяқталды", f"Құжат сақталды:\n{file_path}"
+            self,
+            AppStrings.EXPORT_SUCCESS_TITLE_SAVE_FILE,
+            AppStrings.EXPORT_SUCCESS_DESC_SAVE_FILE.format(file_path),
         )
 
     def set_frame_status(self, status):
