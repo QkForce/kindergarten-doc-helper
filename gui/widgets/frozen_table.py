@@ -3,15 +3,13 @@ from PySide6.QtCore import Qt, QItemSelectionModel, QSize
 
 from gui.widgets.table_delegate import ScoreCellDelegate
 
+HEIGHT = 30
+
 
 class FrozenTable(QTableView):
     def __init__(self, model, parent=None):
         super().__init__(parent)
         self.setModel(model)
-
-        # --- Set delegate for score cells (assuming scores are in column 1) ---
-        self.score_delegate = ScoreCellDelegate(self)
-        self.setItemDelegate(self.score_delegate)
 
         self.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
         self.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
@@ -34,8 +32,14 @@ class FrozenTable(QTableView):
         self.frozen_table.setHorizontalScrollBarPolicy(
             Qt.ScrollBarPolicy.ScrollBarAlwaysOff
         )
-        self.frozen_table.horizontalHeader().setFixedHeight(45)
-        self.horizontalHeader().setFixedHeight(45)
+        self.frozen_table.horizontalHeader().setFixedHeight(HEIGHT)
+        self.horizontalHeader().setFixedHeight(HEIGHT)
+
+        self.verticalHeader().setDefaultSectionSize(HEIGHT)
+        self.frozen_table.verticalHeader().setDefaultSectionSize(HEIGHT)
+
+        self.verticalHeader().setMinimumSectionSize(HEIGHT)
+        self.frozen_table.verticalHeader().setMinimumSectionSize(HEIGHT)
 
         # Синхронизация прокрутки
         self.verticalScrollBar().valueChanged.connect(
@@ -60,11 +64,15 @@ class FrozenTable(QTableView):
         self.frozen_table.horizontalHeader().show()
         self.frozen_table.horizontalHeader().setStretchLastSection(False)
 
+        # Set delegates for both tables
+        self.common_delegate = ScoreCellDelegate(self)
+        self.setItemDelegate(self.common_delegate)
+        self.frozen_table.setItemDelegate(self.common_delegate)
+
         # overlay поверх содержимого
-        self.setShowGrid(False)
+        # self.setShowGrid(False)
         self.frozen_table.setShowGrid(False)
         self.frozen_table.raise_()
-
 
     def _sync_selection(self, current, previous):
         if current.isValid():

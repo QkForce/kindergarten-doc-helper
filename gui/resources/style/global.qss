@@ -193,44 +193,43 @@ QComboBox QAbstractItemView {
 QTableWidget {
     border: 0px;
     border-radius: 3px;
-    background-color: #F9FAFB;
+    background-color: @CANVAS;
 }
 
 QHeaderView::section:horizontal {
-    background-color: #D1D5DB;
+    background-color: @BORDER;
     padding: 4px;
     font-weight: bold;
     border: 0px;
-    color: #374151;
+    color: @TEXT;
 }
 
 QTableView::item {
     padding: 5px 5px 5px 5px;
     font-weight: 400;
     font-size: 14px;
-    color: black;
+    color: @TEXT;
     border: 0px;
-    border-top: 1px solid #D1D5DB;
 }
 
 /* Table View */
 QTableView {
     border: 0px;
     border-radius: 3px;
-    background-color: #F9FAFB;
+    background-color: @CANVAS;
 }
 
 QHeaderView::section:horizontal {
-    background-color: #D1D5DB;
+    background-color: @BORDER;
     padding: 4px;
     font-weight: bold;
     border: 0px;
-    color: #374151;
+    color: @TEXT;
 }
 
 QTableView::item:selected {
-    background-color: #E6E6E6;
-    color: black;
+    background-color: @SELECTED;
+    color: @CANVAS;
 }
 
 /* ------ Scroll Bar ------ */

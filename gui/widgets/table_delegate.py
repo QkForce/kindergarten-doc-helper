@@ -7,62 +7,70 @@ from gui.constants.colors import AppColors
 
 class ScoreCellDelegate(QStyledItemDelegate):
     def paint(self, painter, option, index):
+        # UserRole-ден мәнді аламыз (ұпайлар үшін 1,2,3; аты-жөні үшін None болуы мүмкін)
         score = index.data(Qt.UserRole)
         text = str(index.data(Qt.DisplayRole) or "")
-
-        style_map = {
-            1: {
-                "bg": AppColors.SOFT_GREEN_BG,
-                "border": AppColors.SOFT_GREEN_BORDER,
-                "text": AppColors.SCORE_HIGH_TEXT,
-            },
-            2: {
-                "bg": AppColors.SOFT_YELLOW_BG,
-                "border": AppColors.SOFT_YELLOW_BORDER,
-                "text": AppColors.SCORE_MID_TEXT,
-            },
-            3: {
-                "bg": AppColors.SOFT_RED_BG,
-                "border": AppColors.SOFT_RED_BORDER,
-                "text": AppColors.SCORE_LOW_TEXT,
-            },
-        }
 
         painter.save()
         painter.setRenderHint(QPainter.Antialiasing)
 
-        rect = option.rect.adjusted(3, 3, -3, -3)
+        # 1. Горизонталь сызық (Екі кестеге де ортақ)
+        line_pen = QPen(QColor(AppColors.BORDER), 0.5)
+        painter.setPen(line_pen)
+        painter.drawLine(option.rect.bottomLeft(), option.rect.bottomRight())
 
-        if score in style_map:
-            style = style_map[score]
+        # 2. Мазмұнды салу (Content)
+        if isinstance(score, int) and score > 0:
+            # Бұл - ҰПАЙЛАР (Шаршы салу логикасы)
+            margin = 5
+            rect = option.rect.adjusted(margin, margin, -margin, -margin)
 
-            # 1. Фонды бояу
-            bg_color = QColor(style["bg"])
-            if option.state & QStyle.State_Selected:
-                bg_color = QColor(AppColors.CELL_SELECTED_BG)
+            style_map = {
+                1: {
+                    "bg": AppColors.SOFT_RED_BG,
+                    "border": AppColors.SOFT_RED_BORDER,
+                    "text": AppColors.SCORE_LOW_TEXT,
+                },
+                2: {
+                    "bg": AppColors.SOFT_YELLOW_BG,
+                    "border": AppColors.SOFT_YELLOW_BORDER,
+                    "text": AppColors.SCORE_MID_TEXT,
+                },
+                3: {
+                    "bg": AppColors.SOFT_GREEN_BG,
+                    "border": AppColors.SOFT_GREEN_BORDER,
+                    "text": AppColors.SCORE_HIGH_TEXT,
+                },
+            }
 
-            painter.setBrush(QBrush(bg_color))
+            style = style_map.get(score)
+            if style:
+                bg_color = QColor(style["bg"])
+                if option.state & QStyle.State_Selected:
+                    bg_color = QColor(AppColors.CELL_SELECTED_BG)
 
-            # 2. Жиекті (Border) салу
-            painter.setPen(QPen(QColor(style["border"]), 1))
-            painter.drawRoundedRect(rect, 5, 5)
+                painter.setBrush(QBrush(bg_color))
+                painter.setPen(QPen(QColor(style["border"]), 1))
+                painter.drawRoundedRect(rect, 4, 4)
 
-            # 3. Мәтінді жазу
-            painter.setPen(QColor(style["text"]))
-            # Қалыңдықты реттеу (қажет болса)
-            font = painter.font()
-            font.setBold(True)
-            painter.setFont(font)
-
-            painter.drawText(rect, Qt.AlignCenter, text)
+                painter.setPen(QColor(style["text"]))
+                font = painter.font()
+                font.setBold(True)
+                painter.setFont(font)
+                painter.drawText(rect, Qt.AlignCenter, text)
         else:
-            # Баға жоқ болса - стандартты Sidebar фоны
-            painter.setBrush(QBrush(QColor(AppColors.SIDEBAR)))
-            painter.setPen(QPen(QColor(AppColors.BORDER), 1))
-            painter.drawRoundedRect(rect, 5, 5)
-            painter.drawText(rect, Qt.AlignCenter, text)
+            # Бұл - БАЛАЛАРДЫҢ АТЫ-ЖӨНІ (Тек мәтін)
+            rect = option.rect.adjusted(
+                10, 0, -10, 0
+            )  # Сол жақтан аздап шегініс (padding)
+
+            if option.state & QStyle.State_Selected:
+                painter.fillRect(option.rect, QColor(AppColors.CELL_SELECTED_BG))
+
+            painter.setPen(QColor(AppColors.TEXT_MAIN))
+            painter.drawText(rect, Qt.AlignVCenter | Qt.AlignLeft, text)
 
         painter.restore()
 
-        def sizeHint(self, option, index):
-            return QSize(45, 45)
+    def sizeHint(self, option, index):
+        return QSize(30, 30)
