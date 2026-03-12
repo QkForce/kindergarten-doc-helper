@@ -9,6 +9,13 @@ class AppColors:
     BORDER = "#E2E8F0"  # Жиектер (slate-200)
     SIDEBAR = "#F8FAFC"  # Sidebar фоны (slate-50)
 
+    SOFT_RED_BG = "#FFF1F2"  # Өте ақшыл қызыл (Rose 50)
+    SOFT_RED_BORDER = "#FECDD3"  # Rose 200
+    SOFT_YELLOW_BG = "#FFFBEB"  # Өте ақшыл сары (Amber 50)
+    SOFT_YELLOW_BORDER = "#FDE68A"  # Amber 200
+    SOFT_GREEN_BG = "#F0FDF4"  # Өте ақшыл жасыл (Emerald 50)
+    SOFT_GREEN_BORDER = "#BBF7D0"  # Emerald 200
+
     # Scoring colors
     SCORE_LOW_BG = "#FB7185"
     SCORE_LOW_BORDER = "#FFE4E6"
@@ -26,3 +33,9 @@ class AppColors:
     SUCCESS = "#10B981"  # Emerald 500
     WARNING = "#F59E0B"  # Amber 500
     ERROR = "#EF4444"  # Red 500
+
+    CELL_BACKGROUND = SIDEBAR
+    CELL_BACKGROUND_SELECTED = BORDER
+    CELL_BORDER = BORDER
+    CELL_TEXT = TEXT_MAIN
+    CELL_SELECTED_BG = "#E2E8F0"

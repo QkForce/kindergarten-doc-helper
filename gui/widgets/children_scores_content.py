@@ -3,7 +3,6 @@ from PySide6.QtWidgets import (
     QVBoxLayout,
     QTableView,
     QHeaderView,
-    QHeaderView,
     QLabel,
 )
 from PySide6.QtGui import QColor, QStandardItemModel, QStandardItem
@@ -46,7 +45,8 @@ class ChildrenScoresWidget(QWidget):
             row.append(QStandardItem(child["name"]))
             for code in metric_codes:
                 value = child.get(code, -1)
-                item = QStandardItem(self._convert_score(value))
+                item = QStandardItem(str(value) if value > 0 else "")
+                item.setData(value, Qt.UserRole)
                 if value < 1:
                     color = QColor(255, 230, 230)
                     has_errors = True
@@ -59,11 +59,3 @@ class ChildrenScoresWidget(QWidget):
         self.has_errors = has_errors
         self.table.resizeColumnsToContents()
         self.table.setup_columns_visibility()
-
-    def _convert_score(self, value):
-        if value == 1:
-            return "✅"
-        elif value == 2 or value == 3:
-            return "*"
-        else:
-            return "_"

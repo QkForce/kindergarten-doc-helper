@@ -1,14 +1,22 @@
 from PySide6.QtWidgets import QTableView, QAbstractItemView
 from PySide6.QtCore import Qt, QItemSelectionModel, QSize
 
+from gui.widgets.table_delegate import ScoreCellDelegate
+
 
 class FrozenTable(QTableView):
     def __init__(self, model, parent=None):
         super().__init__(parent)
         self.setModel(model)
+
+        # --- Set delegate for score cells (assuming scores are in column 1) ---
+        self.score_delegate = ScoreCellDelegate(self)
+        self.setItemDelegate(self.score_delegate)
+
         self.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
         self.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
         self.verticalHeader().hide()
+        super().setShowGrid(False)
 
         # Создаём frozen_table (первая колонка)
         self.frozen_table = QTableView(self)
@@ -26,8 +34,8 @@ class FrozenTable(QTableView):
         self.frozen_table.setHorizontalScrollBarPolicy(
             Qt.ScrollBarPolicy.ScrollBarAlwaysOff
         )
-        self.frozen_table.horizontalHeader().setFixedHeight(35)
-        self.horizontalHeader().setFixedHeight(35)
+        self.frozen_table.horizontalHeader().setFixedHeight(45)
+        self.horizontalHeader().setFixedHeight(45)
 
         # Синхронизация прокрутки
         self.verticalScrollBar().valueChanged.connect(
@@ -53,7 +61,10 @@ class FrozenTable(QTableView):
         self.frozen_table.horizontalHeader().setStretchLastSection(False)
 
         # overlay поверх содержимого
+        self.setShowGrid(False)
+        self.frozen_table.setShowGrid(False)
         self.frozen_table.raise_()
+
 
     def _sync_selection(self, current, previous):
         if current.isValid():
