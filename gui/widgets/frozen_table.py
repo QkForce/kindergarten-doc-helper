@@ -1,9 +1,7 @@
 from PySide6.QtWidgets import QTableView, QAbstractItemView
-from PySide6.QtCore import Qt, QItemSelectionModel, QSize
+from PySide6.QtCore import Qt, QItemSelectionModel
 
-from gui.widgets.table_delegate import ScoreCellDelegate
-
-HEIGHT = 30
+from gui.widgets.table_delegate import ScoreCellDelegate, CELL_HEIGHT
 
 
 class FrozenTable(QTableView):
@@ -32,14 +30,14 @@ class FrozenTable(QTableView):
         self.frozen_table.setHorizontalScrollBarPolicy(
             Qt.ScrollBarPolicy.ScrollBarAlwaysOff
         )
-        self.frozen_table.horizontalHeader().setFixedHeight(HEIGHT)
-        self.horizontalHeader().setFixedHeight(HEIGHT)
+        self.frozen_table.horizontalHeader().setFixedHeight(CELL_HEIGHT)
+        self.horizontalHeader().setFixedHeight(CELL_HEIGHT)
 
-        self.verticalHeader().setDefaultSectionSize(HEIGHT)
-        self.frozen_table.verticalHeader().setDefaultSectionSize(HEIGHT)
+        self.verticalHeader().setDefaultSectionSize(CELL_HEIGHT)
+        self.frozen_table.verticalHeader().setDefaultSectionSize(CELL_HEIGHT)
 
-        self.verticalHeader().setMinimumSectionSize(HEIGHT)
-        self.frozen_table.verticalHeader().setMinimumSectionSize(HEIGHT)
+        self.verticalHeader().setMinimumSectionSize(CELL_HEIGHT)
+        self.frozen_table.verticalHeader().setMinimumSectionSize(CELL_HEIGHT)
 
         # Синхронизация прокрутки
         self.verticalScrollBar().valueChanged.connect(

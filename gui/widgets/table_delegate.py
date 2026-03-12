@@ -4,6 +4,9 @@ from PySide6.QtGui import QColor, QPainter, QPen, QBrush
 
 from gui.constants.colors import AppColors
 
+CELL_WIDTH = 30
+CELL_HEIGHT = 30
+
 
 class ScoreCellDelegate(QStyledItemDelegate):
     def paint(self, painter, option, index):
@@ -73,4 +76,4 @@ class ScoreCellDelegate(QStyledItemDelegate):
         painter.restore()
 
     def sizeHint(self, option, index):
-        return QSize(30, 30)
+        return QSize(CELL_WIDTH, CELL_HEIGHT)
