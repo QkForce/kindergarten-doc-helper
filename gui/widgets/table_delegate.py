@@ -1,11 +1,11 @@
 from PySide6.QtWidgets import QStyledItemDelegate, QStyle
-from PySide6.QtCore import Qt, QSize
+from PySide6.QtCore import Qt, QSize, QRect
 from PySide6.QtGui import QColor, QPainter, QPen, QBrush
 
 from gui.constants.colors import AppColors
 
-CELL_WIDTH = 30
-CELL_HEIGHT = 30
+CELL_WIDTH = 25
+CELL_HEIGHT = 25
 
 
 class ScoreCellDelegate(QStyledItemDelegate):
@@ -25,8 +25,13 @@ class ScoreCellDelegate(QStyledItemDelegate):
         # 2. Мазмұнды салу (Content)
         if isinstance(score, int) and score > 0:
             # Бұл - ҰПАЙЛАР (Шаршы салу логикасы)
-            margin = 5
-            rect = option.rect.adjusted(margin, margin, -margin, -margin)
+            side = min(option.rect.width(), option.rect.height()) - 6  # 6px - margin
+            rect = QRect(
+                option.rect.left() + (option.rect.width() - side) // 2,
+                option.rect.top() + (option.rect.height() - side) // 2,
+                side,
+                side,
+            )
 
             style_map = {
                 1: {
