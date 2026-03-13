@@ -39,11 +39,10 @@ class StepDocxFillSetup(BaseStep[FillerState]):
         self.state.control_type = self.combo_control_types.currentData()
 
         # Layout setup
-        layout = QVBoxLayout(self)
-        layout.addWidget(self.file_select_widget)
-        layout.addWidget(control_types_label)
-        layout.addWidget(self.combo_control_types)
-        layout.addStretch()
+        self.layout.addWidget(self.file_select_widget)
+        self.layout.addWidget(control_types_label)
+        self.layout.addWidget(self.combo_control_types)
+        self.layout.addStretch()
 
     def setup_state_machine(self):
         return

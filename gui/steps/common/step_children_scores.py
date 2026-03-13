@@ -35,10 +35,9 @@ class StepChildrenScores(BaseStep[T]):
             "• Немесе файлдағы деректердің дұрыстығына көз жеткізіңіз",
         )
 
-        layout = QVBoxLayout(self)
-        layout.addWidget(self.loading_plug)
-        layout.addWidget(self.content_widget)
-        layout.addWidget(self.empty_plug)
+        self.layout.addWidget(self.loading_plug)
+        self.layout.addWidget(self.content_widget)
+        self.layout.addWidget(self.empty_plug)
 
         self.loading_plug.hide()
         self.content_widget.hide()

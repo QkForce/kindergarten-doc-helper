@@ -19,9 +19,8 @@ class StepDocxTemplate(BaseStep[GeneratorState]):
             "Document Files (*.docx)",
         )
 
-        layout = QVBoxLayout(self)
-        layout.addWidget(self.file_select_widget)
-        layout.addStretch()
+        self.layout.addWidget(self.file_select_widget)
+        self.layout.addStretch()
 
     def setup_state_machine(self):
         return

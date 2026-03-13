@@ -53,6 +53,7 @@ class WizardWidget(QWidget, Generic[T]):
         self.progress_description.setWordWrap(True)
         self.progress_description.setObjectName("progress_description")
         panel_layout.addWidget(self.progress_description)
+        panel_layout.addSpacing(20)
 
         # STACKED WIDGET (lazy load)
         self.stack = QStackedWidget()

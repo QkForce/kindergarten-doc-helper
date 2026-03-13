@@ -14,8 +14,6 @@ T = TypeVar("T", bound=ChecklistBaseState)
 
 class StepFileSelect(BaseStep[T]):
     def setup_ui(self):
-        self.layout = QVBoxLayout(self)
-
         # Excel файлды таңдау
         self.file_select_widget = FilePickerWidget("Мониторинг файлы")
         self.file_select_widget.setSizePolicy(

@@ -1,5 +1,5 @@
 from typing import TypeVar, Generic
-from PySide6.QtWidgets import QWidget
+from PySide6.QtWidgets import QWidget, QVBoxLayout
 
 T = TypeVar("T")
 
@@ -8,6 +8,8 @@ class BaseStep(QWidget, Generic[T]):
     def __init__(self, state: T, parent=None):
         super().__init__(parent)
         self.state = state
+        self.layout = QVBoxLayout(self)
+        self.layout.setContentsMargins(0, 0, 0, 0)
         self.setup_ui()
         self.setup_state_machine()
         self.connect_signals()

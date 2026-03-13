@@ -34,12 +34,9 @@ class StepChildAssessment(BaseStep[SmartEntryState]):
             "• Немесе файлдағы деректердің дұрыстығына көз жеткізіңіз",
         )
 
-        layout = QVBoxLayout(self)
-        layout.setContentsMargins(0, 0, 0, 0)  # Remove margins
-        layout.setSpacing(0)  # Remove spacing between widgetss
-        layout.addWidget(self.loading_plug)
-        layout.addWidget(self.content_widget)
-        layout.addWidget(self.empty_plug)
+        self.layout.addWidget(self.loading_plug)
+        self.layout.addWidget(self.content_widget)
+        self.layout.addWidget(self.empty_plug)
 
         self.loading_plug.hide()
         self.content_widget.hide()
