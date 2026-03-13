@@ -30,9 +30,9 @@ class ScoreCellDelegate(QStyledItemDelegate):
 
             style_map = {
                 1: {
-                    "bg": AppColors.SOFT_RED_BG,
-                    "border": AppColors.SOFT_RED_BORDER,
-                    "text": AppColors.SCORE_LOW_TEXT,
+                    "bg": AppColors.SOFT_GREEN_BG,
+                    "border": AppColors.SOFT_GREEN_BORDER,
+                    "text": AppColors.SCORE_HIGH_TEXT,
                 },
                 2: {
                     "bg": AppColors.SOFT_YELLOW_BG,
@@ -40,9 +40,9 @@ class ScoreCellDelegate(QStyledItemDelegate):
                     "text": AppColors.SCORE_MID_TEXT,
                 },
                 3: {
-                    "bg": AppColors.SOFT_GREEN_BG,
-                    "border": AppColors.SOFT_GREEN_BORDER,
-                    "text": AppColors.SCORE_HIGH_TEXT,
+                    "bg": AppColors.SOFT_RED_BG,
+                    "border": AppColors.SOFT_RED_BORDER,
+                    "text": AppColors.SCORE_LOW_TEXT,
                 },
             }
 
