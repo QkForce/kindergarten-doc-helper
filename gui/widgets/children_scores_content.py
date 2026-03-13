@@ -17,7 +17,6 @@ CELL_WIDTH = 25
 class ChildrenScoresWidget(QWidget):
     def __init__(self):
         super().__init__()
-        layout = QVBoxLayout(self)
 
         sub_title = QLabel("Балалардың метрика бойынша бағалары:")
         sub_title.setProperty("lbl-level", "h3")
@@ -32,10 +31,11 @@ class ChildrenScoresWidget(QWidget):
         self.lbl_status = QLabel(f"Бос бағалар:")
         self.lbl_status.setProperty("lbl-level", "h3")
 
+        layout = QVBoxLayout(self)
+        layout.setContentsMargins(0, 0, 0, 0)
         layout.addWidget(sub_title)
         layout.addWidget(self.table)
         layout.addWidget(self.lbl_status)
-        self.setContentsMargins(0, 0, 0, 0)
 
     def set_data(self, children_scores, metric_codes):
         headers = ["Баланың аты-жөні"] + metric_codes
