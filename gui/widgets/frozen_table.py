@@ -68,9 +68,11 @@ class FrozenTable(QTableView):
         self.frozen_table.setItemDelegate(self.common_delegate)
 
         # overlay поверх содержимого
-        # self.setShowGrid(False)
+        self.setShowGrid(False)
         self.frozen_table.setShowGrid(False)
         self.frozen_table.raise_()
+        self.setObjectName("main_table")
+        self.frozen_table.setObjectName("frozen_column")
 
     def _sync_selection(self, current, previous):
         if current.isValid():
@@ -104,8 +106,12 @@ class FrozenTable(QTableView):
             return
         col_width = self.horizontalHeader().sectionSize(0)
         header_height = self.horizontalHeader().height()
-        h = self.viewport().height() + header_height
-        self.frozen_table.setGeometry(0, 0, col_width, h)
+        self.frozen_table.setGeometry(
+            self.frameWidth(),
+            self.frameWidth(),
+            col_width,
+            self.viewport().height() + header_height,
+        )
         self.frozen_table.setColumnWidth(0, col_width)
 
     def resizeEvent(self, event):

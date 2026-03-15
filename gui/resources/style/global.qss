@@ -190,22 +190,31 @@ QComboBox QAbstractItemView {
 
 /* ------ Table Widget ------ */
 
-QTableWidget, QTableView {
-    border: 0px;
-    border-radius: 3px;
+QTableView#main_table {
+    border: 1px solid @BORDER;
+    border-radius: 8px;
     background-color: @CANVAS;
-    gridline-color: transparent;
 }
 
-QHeaderView::section:horizontal {
+QTableView#frozen_column {
+    border: none;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 0px;
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+    background-color: @CANVAS;
+}
+
+QTableView QHeaderView {
+    border: none;
+    border-top-left-radius: 9px;
+    border-top-right-radius: 0px;
     background-color: @HEADER_CELL_BACKGROUND;
-    padding: 0px;
-    margin: 0px;
-    font-weight: bold;
-    font-size: 11px;
-    border: 0px;
-    color: @CELL_TEXT;
-    min-height: 25px;
+}
+
+QTableView QHeaderView::section:horizontal {
+    border: none;
+    background-color: transparent;
 }
 
 QTableView::item {
