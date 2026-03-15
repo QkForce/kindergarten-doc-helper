@@ -198,6 +198,7 @@ QTableView#main_table {
 
 QTableView#frozen_column {
     border: none;
+    border-right: 1px solid @BORDER;
     border-top-left-radius: 8px;
     border-top-right-radius: 0px;
     border-bottom-left-radius: 0px;
@@ -207,9 +208,12 @@ QTableView#frozen_column {
 
 QTableView QHeaderView {
     border: none;
-    border-top-left-radius: 9px;
+    border-bottom: 1px solid @BORDER;
+    border-top-left-radius: 8px;
     border-top-right-radius: 0px;
     background-color: @HEADER_CELL_BACKGROUND;
+    font-weight: bold;
+    color: @TEXT_MAIN;
 }
 
 QTableView QHeaderView::section:horizontal {
