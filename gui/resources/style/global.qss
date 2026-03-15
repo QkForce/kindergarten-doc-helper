@@ -272,6 +272,7 @@ QScrollBar::sub-page:vertical {
 
 QAbstractScrollArea::corner {
     background: @SCROLLBAR_TRACK;
+    border-bottom-right-radius: 8px;
     border: none;
 }
 
