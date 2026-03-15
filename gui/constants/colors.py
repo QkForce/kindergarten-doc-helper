@@ -34,8 +34,14 @@ class AppColors:
     WARNING = "#F59E0B"  # Amber 500
     ERROR = "#EF4444"  # Red 500
 
+    # Table colors
     HEADER_CELL_BACKGROUND = SIDEBAR
     CELL_BACKGROUND_SELECTED = BORDER
     CELL_BORDER = BORDER
     CELL_TEXT = TEXT_MAIN
     CELL_SELECTED_BG = BORDER
+
+    # Scrollbar colors
+    SCROLLBAR_TRACK = SIDEBAR
+    SCROLLBAR_HANDLE = "#D1D5DB" # Slate-300 (бейтарап сұр)
+    SCROLLBAR_HOVER_HANDLE = TEXT_MUTED
