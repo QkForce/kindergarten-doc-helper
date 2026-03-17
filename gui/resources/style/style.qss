@@ -82,11 +82,18 @@ QScrollArea {
 
 /* SMART ENTRY */
 
-QFrame#child_selector {
-    border: 1px solid #e0e0e0;
+QWidget#children_assessment_widget {
+    background-color: @CANVAS;
+    border: 1px solid @BORDER;
     border-radius: 24px;
+}
+
+QFrame#child_selector {
     background-color: @SIDEBAR;
     padding: 2px;
+    border-right: 1px solid @BORDER;
+    border-top-left-radius: 24px;
+    border-bottom-left-radius: 24px;
 }
 QFrame#child_selector > QLabel {
     background-color: transparent;
@@ -119,6 +126,12 @@ QFrame#assessment_area QScrollArea,
 QFrame#assessment_area QScrollArea > QWidget > QWidget {
     background: transparent;
     border: none;
+}
+
+QFrame#assessment_header {
+    border-bottom: 1px solid @BORDER;
+    background-color: @CANVAS;
+    border-top-right-radius: 24px;
 }
 
 QLabel#child_name_lbl {

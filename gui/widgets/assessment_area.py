@@ -35,13 +35,15 @@ class AssessmentArea(QFrame):
         score_toggle_layout.addWidget(score_toggle_lbl)
         score_toggle_layout.addWidget(self.score_toggle)
         score_toggle_frame = QFrame()
-        score_toggle_frame.setContentsMargins(0, 0, 0, 0)
         score_toggle_frame.setObjectName("bulk_score_toggle_frame")
         score_toggle_frame.setLayout(score_toggle_layout)
 
         header_layout = QHBoxLayout()
         header_layout.addWidget(self.child_name_lbl, stretch=1)
         header_layout.addWidget(score_toggle_frame)
+        header_frame = QFrame()
+        header_frame.setObjectName("assessment_header")
+        header_frame.setLayout(header_layout)
 
         # Create a ScrollArea
         self.scroll_area = QScrollArea()
@@ -58,7 +60,8 @@ class AssessmentArea(QFrame):
         # Add to main layout
         layout = QVBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)
-        layout.addLayout(header_layout)
+        layout.setSpacing(0)
+        layout.addWidget(header_frame)
         layout.addWidget(self.scroll_area)
 
     def on_bulk_score(self, score):
