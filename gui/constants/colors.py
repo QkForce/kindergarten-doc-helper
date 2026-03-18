@@ -43,17 +43,17 @@ class AppColors:
     SIDEBAR = Palette.Slate50  # Sidebar фоны (slate-50)
 
     # Scoring colors
+    SCORE_BTN_BASE_BG = Palette.Slate100
+    SCORE_BTN_BASE_HOVER_BG = Palette.Slate50
+    SCORE_BTN_BASE_TEXT = Palette.Slate400
+
+    SCORE_BTN_DOMAIN_BG = Palette.Slate800
+    SCORE_BTN_DOMAIN_HOVER_BG = Palette.Slate100
+    SCORE_BTN_DOMAIN_TEXT = Palette.Slate400
+
     SCORE_HIGH_BG = Palette.Emerald500  # Emerald 500
-    SCORE_HIGH_BORDER = Palette.Emerald100  # Emerald 100
-    SCORE_HIGH_TEXT = Palette.Emerald600  # Emerald 600
-
     SCORE_MID_BG = Palette.Amber500  # Amber 500
-    SCORE_MID_BORDER = Palette.Amber100  # Amber 100
-    SCORE_MID_TEXT = Palette.Amber600  # Amber 600
-
     SCORE_LOW_BG = Palette.Rose500  # Rose 500
-    SCORE_LOW_BORDER = Palette.Rose100  # Rose 100
-    SCORE_LOW_TEXT = Palette.Rose600  # Rose 600
 
     # Status colors
     SUCCESS = Palette.Emerald500  # Emerald 500

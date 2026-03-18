@@ -8,7 +8,7 @@ from PySide6.QtWidgets import (
 )
 from PySide6.QtCore import Qt, Signal
 
-from gui.widgets.score_toggle import ScoreToggle
+from gui.widgets.score_toggle import ScoreToggle, ScoreButtonType
 from gui.widgets.assessment.domain_block import DomainBlock
 from logic.assessment_tools import bulk_update, get_common_score_type
 
@@ -29,7 +29,9 @@ class AssessmentArea(QFrame):
 
         score_toggle_lbl = QLabel("Жаппай бағалау:")
         score_toggle_lbl.setObjectName("score_toggle_lbl")
-        self.score_toggle = ScoreToggle(size=20, spacing=2)
+        self.score_toggle = ScoreToggle(
+            btn_type=ScoreButtonType.BASE, size=20, spacing=2
+        )
         self.score_toggle.scoreChanged.connect(self.on_bulk_score)
         score_toggle_layout = QHBoxLayout()
         score_toggle_layout.addWidget(score_toggle_lbl)

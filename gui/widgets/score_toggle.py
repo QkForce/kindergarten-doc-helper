@@ -1,16 +1,23 @@
+from enum import Enum
+
 from PySide6.QtWidgets import (
     QWidget,
     QHBoxLayout,
     QButtonGroup,
     QPushButton,
 )
-from PySide6.QtCore import Signal
+from PySide6.QtCore import Qt, Signal
+
+
+class ScoreButtonType(Enum):
+    BASE = "base"
+    DOMAIN = "domain"
 
 
 class ScoreToggle(QWidget):
     scoreChanged = Signal(int)
 
-    def __init__(self, size=24, spacing=4, parent=None):
+    def __init__(self, btn_type=ScoreButtonType.BASE, size=24, spacing=4, parent=None):
         super().__init__(parent)
         self.layout = QHBoxLayout(self)
         self.layout.setSpacing(spacing)
@@ -25,6 +32,8 @@ class ScoreToggle(QWidget):
             btn.setFixedSize(size, size)
             btn.setCheckable(True)
             btn.setObjectName(f"score_btn_{val}")
+            btn.setProperty("class", f"score_btn")
+            btn.setProperty("mode", btn_type.value)
 
             self.group.addButton(btn, val)
             self.layout.addWidget(btn)
@@ -39,7 +48,12 @@ class ScoreToggle(QWidget):
         self.blockSignals(True)
         try:
             if score in self.buttons:
-                self.buttons[score].setChecked(True)
+                btn = self.buttons[score]
+                btn.setChecked(True)
+                btn.setProperty("score", score)
+                btn.style().unpolish(btn)
+                btn.style().polish(btn)
+                btn.update()
             elif score == 0:
                 checked_btn = self.group.checkedButton()
                 if checked_btn:

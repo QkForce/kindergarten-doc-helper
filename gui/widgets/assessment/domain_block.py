@@ -7,7 +7,7 @@ from PySide6.QtWidgets import (
 from PySide6.QtCore import Signal
 
 from gui.widgets.assessment.subject_block import SubjectBlock
-from gui.widgets.score_toggle import ScoreToggle
+from gui.widgets.score_toggle import ScoreToggle, ScoreButtonType
 from logic.assessment_tools import set_subjects_score, get_domain_score_type
 from gui.constants.strings import DOMAIN_NAMES
 from gui.utils.style_utils import apply_shadow
@@ -29,7 +29,9 @@ class DomainBlock(QFrame):
         layout.setSpacing(0)
 
         title = QLabel(DOMAIN_NAMES.get(self.domain_name, self.domain_name))
-        self.score_toggle = ScoreToggle(size=18, spacing=2)
+        self.score_toggle = ScoreToggle(
+            btn_type=ScoreButtonType.DOMAIN, size=18, spacing=2
+        )
         self.score_toggle.setObjectName("domain_score_toggle")
         self.score_toggle.scoreChanged.connect(self.on_bulk_score)
 

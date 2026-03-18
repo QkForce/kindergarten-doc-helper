@@ -96,24 +96,30 @@ QPushButton:disabled {
     color: #9ca3af;
 }
 
-QPushButton#score_btn_1 {
-    background-color: @CANVAS;
-    border: 1px solid @SCORE_HIGH_BORDER;
-    color: @SCORE_HIGH_TEXT;
+QPushButton.score_btn[mode="base"] {
+    background-color: @SCORE_BTN_BASE_BG;
+    color: @SCORE_BTN_BASE_TEXT;
+    font-weight: bold;
+    border-radius: 6px;
+    outline: none;
+}
+QPushButton.score_btn[mode="base"]:hover {
+    background-color: @SCORE_BTN_BASE_HOVER_BG;
+    color: @SCORE_BTN_BASE_TEXT;
     font-weight: bold;
     border-radius: 6px;
 }
-QPushButton#score_btn_2 {
-    background-color: @CANVAS;
-    border: 1px solid @SCORE_MID_BORDER;
-    color: @SCORE_MID_TEXT;
+
+QPushButton.score_btn[mode="domain"] {
+    background-color: @SCORE_BTN_DOMAIN_BG;
+    color: @SCORE_BTN_DOMAIN_TEXT;
     font-weight: bold;
     border-radius: 6px;
+    outline: none;
 }
-QPushButton#score_btn_3 {
-    background-color: @CANVAS;
-    border: 1px solid @SCORE_LOW_BORDER;
-    color: @SCORE_LOW_TEXT;
+QPushButton.score_btn[mode="domain"]:hover {
+    background-color: @SCORE_BTN_DOMAIN_HOVER_BG;
+    color: @SCORE_BTN_DOMAIN_TEXT;
     font-weight: bold;
     border-radius: 6px;
 }

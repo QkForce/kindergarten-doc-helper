@@ -1,7 +1,7 @@
-from PySide6.QtWidgets import QFrame, QVBoxLayout, QHBoxLayout, QLabel
+from PySide6.QtWidgets import QFrame, QVBoxLayout, QLabel
 from PySide6.QtCore import Qt, Signal
 
-from gui.widgets.score_toggle import ScoreToggle
+from gui.widgets.score_toggle import ScoreToggle, ScoreButtonType
 
 
 class MetricItem(QFrame):
@@ -17,7 +17,9 @@ class MetricItem(QFrame):
 
         title = QLabel(self.metric_name)
         title.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.score_toggle = ScoreToggle(size=14, spacing=2)
+        self.score_toggle = ScoreToggle(
+            btn_type=ScoreButtonType.BASE, size=14, spacing=2
+        )
         self.score_toggle.setObjectName("metric_score_toggle")
         self.score_toggle.scoreChanged.connect(
             lambda score: self.on_score_updated.emit(self.metric_name, score)
