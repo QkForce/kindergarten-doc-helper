@@ -1,4 +1,4 @@
-from config.metrics_schema_new import METRICS_SCHEMA
+from config.metrics_schema import METRICS_SCHEMA
 from gui.widgets.items.child_item import AssessmentStatus
 
 

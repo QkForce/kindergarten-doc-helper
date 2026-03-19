@@ -3,18 +3,20 @@ from typing import Dict, List
 
 
 def prepare_child_metrics(
-    child_data: Dict, age_group_data: Dict[str, Dict[str, Dict]]
+    child_data: Dict, age_group_data: Dict[str, Dict[str, Dict[str, Dict[str, str]]]]
 ) -> Dict[str, Dict]:
     child_metrics = {}
-    for metric_group in age_group_data.keys():
-        child_metric = {}
-        for metric_code, data in age_group_data[metric_group].items():
-            child_metric[metric_code] = {
+    for domain_name in age_group_data.keys():
+        child_metric = {
+            metric_code: {
                 "description": data["original"],
                 "transformed_description": data["transformed"],
                 "rate": child_data.get(metric_code, None),
             }
-        child_metrics[metric_group] = child_metric
+            for subjects in age_group_data[domain_name].values()
+            for metric_code, data in subjects.items()
+        }
+        child_metrics[domain_name] = child_metric
     return child_metrics
 
 
@@ -33,20 +35,20 @@ def get_transformed_description(metric_group_data: Dict[str, Dict]) -> str:
 
 
 def prepare_child_grow_card_data(
-    child_data: Dict, age_group_data: Dict[str, Dict[str, Dict]]
+    child_data: Dict, age_group_data: Dict[str, Dict[str, Dict[str, Dict]]]
 ):
     child_metrics = prepare_child_metrics(child_data, age_group_data)
     child_card_data = {"fullname": child_data["name"]}
-    for metric_group in age_group_data.keys():
+    for domain_name in age_group_data.keys():
         transformed_description = get_transformed_description(
-            child_metrics[metric_group]
+            child_metrics[domain_name]
         )
-        child_card_data[metric_group] = transformed_description
+        child_card_data[domain_name] = transformed_description
     return child_card_data
 
 
 def prepare_all_children_grow_card_data(
-    children_data: List[Dict], age_group_data: Dict[str, Dict[str, Dict]]
+    children_data: List[Dict], age_group_data: Dict[str, Dict[str, Dict[str, Dict]]]
 ) -> List[Dict[str, str]]:
     all_children_card_data_list = []
     for child_data in children_data:
