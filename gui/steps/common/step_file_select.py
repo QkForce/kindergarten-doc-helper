@@ -1,12 +1,12 @@
 from typing import TypeVar
 
-from PySide6.QtWidgets import QLabel, QVBoxLayout, QComboBox, QMessageBox, QSizePolicy
+from PySide6.QtWidgets import QLabel, QComboBox, QMessageBox, QSizePolicy
 from openpyxl import load_workbook
 
 from gui.steps.base_step import BaseStep
 from gui.widgets.file_picker import FilePickerWidget
 from gui.state import ChecklistBaseState
-from gui.constants.strings import AppStrings
+from gui.constants.strings import AppStrings, AGE_GROUPS
 
 
 T = TypeVar("T", bound=ChecklistBaseState)
@@ -28,17 +28,9 @@ class StepFileSelect(BaseStep[T]):
         sheet_label.setBuddy(self.combo_sheet)
         sheet_label.setProperty("lbl-level", "lbl")
 
-        # Топ түрі
-
+        # Топ түрін таңдау
         self.combo_group = QComboBox()
-        self.group_types = {
-            "early_age": "Бөбек (ерте жас)",
-            "junior": "Кіші топ",
-            "middle": "Ортаңғы топ",
-            "senior": "Ересек топ",
-            "preschool": "Мектепке даярлық тобы",
-        }
-        for key, display_text in self.group_types.items():
+        for key, display_text in AGE_GROUPS.items():
             self.combo_group.addItem(display_text, key)
 
         group_type_label = QLabel("Топ түрі:")
