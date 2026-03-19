@@ -5,7 +5,7 @@ from logic.xlsx_tools import fill_assessment_table
 
 
 class Exporter:
-    def set_data(self, state: ChecklistBaseState, age_group_data, progress_callback):
+    def set_data(self, state: ChecklistBaseState, progress_callback):
         pass
 
     def export(self):
@@ -13,12 +13,12 @@ class Exporter:
 
 
 class DocxGenerateExporter(Exporter):
-    def set_data(self, state: ChecklistBaseState, age_group_data, progress_callback):
+    def set_data(self, state: ChecklistBaseState, progress_callback):
         self.state = state
-        self.age_group_data = age_group_data
+        self.age_group_data = state.age_group_data
         self.progress_callback = progress_callback
         self.all_children_data = prepare_all_children_grow_card_data(
-            state.children_scores, age_group_data
+            state.children_scores, state.age_group_data
         )
 
     def export(self):
@@ -31,12 +31,12 @@ class DocxGenerateExporter(Exporter):
 
 
 class DocxFillExporter(Exporter):
-    def set_data(self, state: ChecklistBaseState, age_group_data, progress_callback):
+    def set_data(self, state: ChecklistBaseState, progress_callback):
         self.state = state
-        self.age_group_data = age_group_data
+        self.age_group_data = state.age_group_data
         self.progress_callback = progress_callback
         self.all_children_data = prepare_all_children_grow_card_data(
-            state.children_scores, age_group_data
+            state.children_scores, state.age_group_data
         )
 
     def export(self):
@@ -50,7 +50,7 @@ class DocxFillExporter(Exporter):
 
 
 class SmartEntryExporter(Exporter):
-    def set_data(self, state: ChecklistBaseState, age_group_data, progress_callback):
+    def set_data(self, state: ChecklistBaseState, progress_callback):
         self.children_data = [
             {
                 "name": name,
@@ -65,7 +65,7 @@ class SmartEntryExporter(Exporter):
         ]
         self.metrics_codes = [
             metric_code
-            for metrics in age_group_data.values()
+            for metrics in state.age_group_data.values()
             for metric_code in metrics.keys()
         ]
         self.state = state

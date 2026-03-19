@@ -30,7 +30,6 @@ from gui.constants.icons import IconPaths, AnimationPaths
 from gui.utils.icon_utils import get_svg_pixmap
 from gui.utils.style_utils import apply_shadow
 from logic.worker import start_worker_task
-from logic.config_tools import get_age_group_data
 
 T = TypeVar("T", bound=ChecklistBaseState)
 
@@ -300,10 +299,8 @@ class StepFileExport(BaseStep[T]):
         try:
             self.sig_progress_state.emit()
             self.result_file = None
-            age_group_data = get_age_group_data(self.state.age_group)
             self.exporter.set_data(
                 self.state,
-                age_group_data,
                 self.sig_progress.emit,
             )
             start_worker_task(
