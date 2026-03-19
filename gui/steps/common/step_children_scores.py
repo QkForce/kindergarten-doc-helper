@@ -1,6 +1,6 @@
 from typing import TypeVar
 
-from PySide6.QtWidgets import QVBoxLayout, QMessageBox
+from PySide6.QtWidgets import QMessageBox
 from PySide6.QtStateMachine import QStateMachine, QState
 from PySide6.QtCore import Signal
 
@@ -12,7 +12,6 @@ from gui.state import ChecklistBaseState
 from gui.constants.strings import AppStrings
 from logic.loaders.universal_checklist_loader import UniversalChecklistLoader
 from logic.worker import start_worker_task
-from logic.config_tools import get_all_metric_codes
 
 T = TypeVar("T", bound=ChecklistBaseState)
 
@@ -134,8 +133,7 @@ class StepChildrenScores(BaseStep[T]):
 
     def _process_result(self, children_scores):
         if children_scores and len(children_scores) > 0:
-            metric_codes = get_all_metric_codes(self.state.age_group)
-            self.content_widget.set_data(children_scores, metric_codes)
+            self.content_widget.set_data(children_scores, self.state.metric_codes)
             self.sig_result.emit()
         else:
             self.sig_empty.emit()
