@@ -1,6 +1,6 @@
 from gui.state import ChecklistBaseState
 from logic.docx_tools import create_children_grow_cards, fill_all_children_in_big_file
-from logic.metrics_tools import prepare_all_children_grow_card_data
+from logic.metrics_tools import build_all_grow_cards
 from logic.xlsx_tools import fill_assessment_table
 
 
@@ -17,7 +17,7 @@ class DocxGenerateExporter(Exporter):
         self.state = state
         self.age_group_data = state.age_group_data
         self.progress_callback = progress_callback
-        self.all_children_data = prepare_all_children_grow_card_data(
+        self.all_children_data = build_all_grow_cards(
             state.children_scores, state.age_group_data
         )
 
@@ -35,7 +35,7 @@ class DocxFillExporter(Exporter):
         self.state = state
         self.age_group_data = state.age_group_data
         self.progress_callback = progress_callback
-        self.all_children_data = prepare_all_children_grow_card_data(
+        self.all_children_data = build_all_grow_cards(
             state.children_scores, state.age_group_data
         )
 

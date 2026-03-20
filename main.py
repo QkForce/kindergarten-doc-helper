@@ -1,5 +1,5 @@
 from logic.xlsx_tools import load_metrics_from_excel
-from logic.metrics_tools import prepare_all_children_grow_card_data
+from logic.metrics_tools import build_all_grow_cards
 from logic.docx_tools import create_children_grow_cards
 from config.config import (
     XLSX_FILE_PATH,
@@ -23,7 +23,7 @@ if __name__ == "__main__":
         ROW_START,
         ROW_END,
     )
-    all_children_grow_card_data = prepare_all_children_grow_card_data(
+    all_children_grow_card_data = build_all_grow_cards(
         children_data, AGE_GROUP_DATA
     )
     merged_doc = create_children_grow_cards(

@@ -2,7 +2,7 @@ import random
 from typing import Dict, List
 
 
-def prepare_child_grow_card_data(child: Dict, age_group_data: Dict) -> Dict:
+def build_grow_card(child: Dict, age_group_data: Dict) -> Dict:
     card = {"fullname": child["name"]}
     for domain, subjects in age_group_data.items():
         candidates = [
@@ -15,9 +15,5 @@ def prepare_child_grow_card_data(child: Dict, age_group_data: Dict) -> Dict:
     return card
 
 
-def prepare_all_children_grow_card_data(
-    children_data: List[Dict], age_group_data: Dict
-) -> List[Dict]:
-    return [
-        prepare_child_grow_card_data(child, age_group_data) for child in children_data
-    ]
+def build_all_grow_cards(children_data: List[Dict], age_group_data: Dict) -> List[Dict]:
+    return [build_grow_card(child, age_group_data) for child in children_data]
