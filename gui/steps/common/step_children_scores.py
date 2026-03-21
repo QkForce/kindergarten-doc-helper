@@ -7,7 +7,6 @@ from PySide6.QtCore import Signal
 from gui.steps.base_step import BaseStep
 from gui.widgets.children_scores_content import ChildrenScoresWidget
 from gui.widgets.status_placeholder import StatusPlaceholder, ViewState
-from gui.widgets.empty_plug import EmptyPlug
 from gui.state import ChecklistBaseState
 from gui.constants.strings import AppStrings
 from logic.loaders.universal_checklist_loader import UniversalChecklistLoader
