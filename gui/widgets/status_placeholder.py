@@ -55,8 +55,8 @@ class StatusPlaceholder(QWidget):
         layout.setSpacing(15)
         layout.addStretch()
         layout.addWidget(self.icon_frame, alignment=Qt.AlignCenter)
-        layout.addWidget(self.title_lbl)
-        layout.addWidget(self.desc_lbl)
+        layout.addWidget(self.title_lbl, alignment=Qt.AlignCenter)
+        layout.addWidget(self.desc_lbl, alignment=Qt.AlignCenter)
         layout.addStretch()
 
     def setState(self, state: ViewState, title: str = "", description: str = ""):
