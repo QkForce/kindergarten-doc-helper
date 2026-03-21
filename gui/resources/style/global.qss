@@ -178,10 +178,9 @@ QComboBox::drop-down {
     padding-right: 5px;
 }
 QComboBox::down-arrow {
-    image: url(gui/resources/icons/arrow_down.png);
-    width: 12px;
-    height: 12px;
-    /* background-color: white; */
+    image: url(gui/resources/icons/chevron-down.svg);
+    width: 16px;
+    height: 16px;
 }
 /* QComboBox тізімі */
 QComboBox QAbstractItemView {
