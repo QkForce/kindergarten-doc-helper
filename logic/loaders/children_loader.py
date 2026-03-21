@@ -23,8 +23,23 @@ class ChildrenLoader:
             "фамилия имя отчество",
             "балалар",
         ]
+        self.stop_words = [
+            "барлығы",
+            "қорытынды",
+            "ескерту",
+            "жоғары",
+            "орташа",
+            "төмен",
+        ]
         self.header_candidates = [normalize_text(x) for x in self.header_candidates]
         self.threshold = threshold
+
+    def is_stop_word(self, value: any) -> bool:
+        txt = normalize_text(value)
+        if not txt:
+            return False
+        # Кез келген тоқтату сөзі ұяшық мәтінінің ішінде кездессе
+        return any(word in txt for word in self.stop_words)
 
     def detect_header(self, sheet: Worksheet) -> Optional[Tuple[int, int]]:
         for row in sheet.iter_rows(
@@ -44,7 +59,9 @@ class ChildrenLoader:
 
         # 1. start_row табу
         for r in range(header_row + 1, sheet.max_row):
-            if not is_empty(sheet, r, header_col):
+            if not is_empty(sheet, r, header_col) and not self.is_stop_word(
+                sheet.cell(row=r, column=header_col).value
+            ):
                 start_row = r
                 break
         else:
@@ -52,7 +69,9 @@ class ChildrenLoader:
 
         # 2. end_row табу
         for r in range(start_row + 1, sheet.max_row):
-            if is_empty(sheet, r, header_col):
+            if is_empty(sheet, r, header_col) or self.is_stop_word(
+                sheet.cell(row=r, column=header_col).value
+            ):
                 end_row = r - 1
                 break
         else:
