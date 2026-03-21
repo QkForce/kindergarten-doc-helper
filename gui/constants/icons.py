@@ -17,6 +17,7 @@ class IconPaths:
 
     # Status icons
     SUCCESS = str(ICON_DIR / "circle-check.svg")
+    EMPTY = str(ICON_DIR / "search-x.svg")
     ERROR = str(ICON_DIR / "circle-alert.svg")
 
     # Other icons

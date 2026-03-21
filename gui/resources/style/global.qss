@@ -348,6 +348,11 @@ QFrame[frame-style="status-success"] {
     border-radius: 30px;
     background-color: @SUCCESS;
 }
+QFrame[frame-style="status-empty"] {
+    border: 1px solid @BORDER;
+    border-radius: 30px;
+    background-color: @WARNING;
+}
 QFrame[frame-style="status-error"] {
     border: 1px solid @BORDER;
     border-radius: 30px;
