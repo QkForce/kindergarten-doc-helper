@@ -1,11 +1,10 @@
-from PySide6.QtWidgets import QVBoxLayout, QMessageBox
+from PySide6.QtWidgets import QMessageBox
 from PySide6.QtStateMachine import QStateMachine, QState
 from PySide6.QtCore import Signal
 
 from gui.steps.base_step import BaseStep
 from gui.widgets.children_assessment_content import ChildrenAssessmentWidget
-from gui.widgets.loading_plug import LoadingPlug
-from gui.widgets.empty_plug import EmptyPlug
+from gui.widgets.status_placeholder import StatusPlaceholder, ViewState
 from gui.state import SmartEntryState
 from gui.constants.strings import AppStrings
 from logic.loaders.children_loader import ChildrenLoader
@@ -20,27 +19,16 @@ class StepChildAssessment(BaseStep[SmartEntryState]):
     sig_error = Signal()
 
     def setup_ui(self):
-        self.loading_plug = LoadingPlug(
-            "Балалардың аты-жөндері жүктелуде... Күте тұрыңыз.",
-            "Файлдағы балалардың есімдері оқылуда.",
-        )
+        self.status_placeholder = StatusPlaceholder()
         self.content_widget = ChildrenAssessmentWidget()
         self.content_widget.on_scores_updated.connect(
             lambda scores: setattr(self.state, "children_scores", scores)
         )
-        self.empty_plug = EmptyPlug(
-            "Балалардың есімдері табылмады",
-            "• Файлда балалардың есімдері бар екеніне көз жеткізіңіз<br>"
-            "• Немесе файлдағы деректердің дұрыстығына көз жеткізіңіз",
-        )
 
-        self.layout.addWidget(self.loading_plug)
+        self.layout.addWidget(self.status_placeholder)
         self.layout.addWidget(self.content_widget)
-        self.layout.addWidget(self.empty_plug)
 
-        self.loading_plug.hide()
         self.content_widget.hide()
-        self.empty_plug.hide()
 
     def setup_state_machine(self):
         self.machine = QStateMachine()
@@ -52,24 +40,41 @@ class StepChildAssessment(BaseStep[SmartEntryState]):
         self.state_error = QState()
 
         # --- Loading state ---
-        self.state_loading.assignProperty(self.loading_plug, "visible", True)
+        self.state_loading.entered.connect(
+            lambda: self.status_placeholder.setState(
+                ViewState.LOADING,
+                AppStrings.LOADING_CHILDREN_SCORES_TITLE,
+                AppStrings.LOADING_CHILDREN_SCORES_DESC,
+            )
+        )
+        self.state_loading.assignProperty(self.status_placeholder, "visible", True)
         self.state_loading.assignProperty(self.content_widget, "visible", False)
-        self.state_loading.assignProperty(self.empty_plug, "visible", False)
 
         # --- Result state ---
-        self.state_result.assignProperty(self.loading_plug, "visible", False)
+        self.state_result.assignProperty(self.status_placeholder, "visible", False)
         self.state_result.assignProperty(self.content_widget, "visible", True)
-        self.state_result.assignProperty(self.empty_plug, "visible", False)
 
         # --- No items ---
-        self.state_empty.assignProperty(self.loading_plug, "visible", False)
+        self.state_empty.entered.connect(
+            lambda: self.status_placeholder.setState(
+                ViewState.EMPTY,
+                AppStrings.EMPTY_CHILDREN_SCORES_TITLE,
+                AppStrings.EMPTY_CHILDREN_SCORES_DESC,
+            )
+        )
+        self.state_empty.assignProperty(self.status_placeholder, "visible", True)
         self.state_empty.assignProperty(self.content_widget, "visible", False)
-        self.state_empty.assignProperty(self.empty_plug, "visible", True)
 
         # --- Error state ---
-        self.state_error.assignProperty(self.loading_plug, "visible", False)
+        self.state_error.entered.connect(
+            lambda: self.status_placeholder.setState(
+                ViewState.ERROR,
+                AppStrings.ERROR_CHILDREN_SCORES_TITLE,
+                AppStrings.ERROR_CHILDREN_SCORES_DESC,
+            )
+        )
+        self.state_error.assignProperty(self.status_placeholder, "visible", True)
         self.state_error.assignProperty(self.content_widget, "visible", False)
-        self.state_error.assignProperty(self.empty_plug, "visible", True)
 
         # --- Transitions ---
         self.state_loading.addTransition(self.sig_result, self.state_result)
