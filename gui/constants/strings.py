@@ -29,9 +29,7 @@ class AppStrings:
     )
 
     ERROR_CHILDREN_SCORES_TITLE = "Балалардың бағаларын жүктеу кезінде қате"
-    ERROR_CHILDREN_SCORES_DESC = (
-        "Балалардың бағаларын жүктеу кезінде қате пайда болды. Қайтадан көріңіз."
-    )
+    ERROR_CHILDREN_SCORES_DESC = "Автоматты жүктеу кезінде қате: {}"
 
     EXPORT_BTN_LBL_SAVE_FILE = "Нәтижені жүктеу (сақтау)"
     EXPORT_DIALOG_TITLE_ASK_FILE_PATH = "Құжатты қайда сақтау керек?"

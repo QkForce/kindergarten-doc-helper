@@ -22,6 +22,7 @@ class StepChildrenScores(BaseStep[T]):
     sig_error = Signal()
 
     def setup_ui(self):
+        self.last_error = None
         self.status_placeholder = StatusPlaceholder()
         self.content_widget = ChildrenScoresWidget()
 
@@ -70,7 +71,7 @@ class StepChildrenScores(BaseStep[T]):
             lambda: self.status_placeholder.setState(
                 ViewState.ERROR,
                 AppStrings.ERROR_CHILDREN_SCORES_TITLE,
-                AppStrings.ERROR_CHILDREN_SCORES_DESC,
+                AppStrings.ERROR_CHILDREN_SCORES_DESC.format(self.last_error),
             )
         )
         self.state_error.assignProperty(self.status_placeholder, "visible", True)
@@ -108,7 +109,7 @@ class StepChildrenScores(BaseStep[T]):
             start_worker_task(self.loader.load_auto, self._loaded, self._load_failed)
         except Exception as e:
             print(e)
-            QMessageBox.critical(self, "Қате", f"Автоматты жүктеу кезінде қате: {e}")
+            self.last_error = str(e)
             self.sig_error.emit()
 
     def validate_before_next(self):
@@ -134,8 +135,8 @@ class StepChildrenScores(BaseStep[T]):
         self._process_result(result["children_scores"])
 
     def _load_failed(self, err):
+        self.last_error = str(err)
         self.sig_error.emit()
-        QMessageBox.critical(self, "Қате", f"Автоматты жүктеу кезінде қате: {err}")
 
     def _process_result(self, children_scores):
         if children_scores and len(children_scores) > 0:

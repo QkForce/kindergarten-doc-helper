@@ -19,6 +19,7 @@ class StepChildAssessment(BaseStep[SmartEntryState]):
     sig_error = Signal()
 
     def setup_ui(self):
+        self.last_error = None
         self.status_placeholder = StatusPlaceholder()
         self.content_widget = ChildrenAssessmentWidget()
         self.content_widget.on_scores_updated.connect(
@@ -70,7 +71,7 @@ class StepChildAssessment(BaseStep[SmartEntryState]):
             lambda: self.status_placeholder.setState(
                 ViewState.ERROR,
                 AppStrings.ERROR_CHILDREN_SCORES_TITLE,
-                AppStrings.ERROR_CHILDREN_SCORES_DESC,
+                AppStrings.ERROR_CHILDREN_SCORES_DESC.format(self.last_error),
             )
         )
         self.state_error.assignProperty(self.status_placeholder, "visible", True)
@@ -106,7 +107,7 @@ class StepChildAssessment(BaseStep[SmartEntryState]):
             start_worker_task(self.loader.load_auto, self._loaded, self._load_failed)
         except Exception as e:
             print(e)
-            QMessageBox.critical(self, "Қате", f"Автоматты жүктеу кезінде қате: {e}")
+            self.last_error = str(e)
             self.sig_error.emit()
 
     def validate_before_next(self):
@@ -130,5 +131,5 @@ class StepChildAssessment(BaseStep[SmartEntryState]):
             self.sig_empty.emit()
 
     def _load_failed(self, err):
+        self.last_error = str(err)
         self.sig_error.emit()
-        QMessageBox.critical(self, "Қате", f"Автоматты жүктеу кезінде қате: {err}")
