@@ -6,7 +6,7 @@ from PySide6.QtCore import Signal
 
 from gui.steps.base_step import BaseStep
 from gui.widgets.children_scores_content import ChildrenScoresWidget
-from gui.widgets.loading_plug import LoadingPlug
+from gui.widgets.status_placeholder import StatusPlaceholder, ViewState
 from gui.widgets.empty_plug import EmptyPlug
 from gui.state import ChecklistBaseState
 from gui.constants.strings import AppStrings
@@ -23,24 +23,13 @@ class StepChildrenScores(BaseStep[T]):
     sig_error = Signal()
 
     def setup_ui(self):
-        self.loading_plug = LoadingPlug(
-            "Балалардың бағалары жүктелуде... Күте тұрыңыз.",
-            "Файлдағы балалардың бағалары оқылуда.",
-        )
+        self.status_placeholder = StatusPlaceholder()
         self.content_widget = ChildrenScoresWidget()
-        self.empty_plug = EmptyPlug(
-            "Балалардың бағалары табылмады",
-            "• Файлда балалардың бағалары бар екеніне көз жеткізіңіз<br>"
-            "• Немесе файлдағы деректердің дұрыстығына көз жеткізіңіз",
-        )
 
-        self.layout.addWidget(self.loading_plug)
+        self.layout.addWidget(self.status_placeholder)
         self.layout.addWidget(self.content_widget)
-        self.layout.addWidget(self.empty_plug)
 
-        self.loading_plug.hide()
         self.content_widget.hide()
-        self.empty_plug.hide()
 
     def setup_state_machine(self):
         self.machine = QStateMachine()
@@ -52,24 +41,41 @@ class StepChildrenScores(BaseStep[T]):
         self.state_error = QState()
 
         # --- Loading state ---
-        self.state_loading.assignProperty(self.loading_plug, "visible", True)
+        self.state_loading.entered.connect(
+            lambda: self.status_placeholder.setState(
+                ViewState.LOADING,
+                AppStrings.LOADING_CHILDREN_SCORES_TITLE,
+                AppStrings.LOADING_CHILDREN_SCORES_DESC,
+            )
+        )
+        self.state_loading.assignProperty(self.status_placeholder, "visible", True)
         self.state_loading.assignProperty(self.content_widget, "visible", False)
-        self.state_loading.assignProperty(self.empty_plug, "visible", False)
 
         # --- Result state ---
-        self.state_result.assignProperty(self.loading_plug, "visible", False)
+        self.state_result.assignProperty(self.status_placeholder, "visible", False)
         self.state_result.assignProperty(self.content_widget, "visible", True)
-        self.state_result.assignProperty(self.empty_plug, "visible", False)
 
         # --- No items ---
-        self.state_empty.assignProperty(self.loading_plug, "visible", False)
+        self.state_empty.entered.connect(
+            lambda: self.status_placeholder.setState(
+                ViewState.EMPTY,
+                AppStrings.EMPTY_CHILDREN_SCORES_TITLE,
+                AppStrings.EMPTY_CHILDREN_SCORES_DESC,
+            )
+        )
+        self.state_empty.assignProperty(self.status_placeholder, "visible", True)
         self.state_empty.assignProperty(self.content_widget, "visible", False)
-        self.state_empty.assignProperty(self.empty_plug, "visible", True)
 
         # --- Error state ---
-        self.state_error.assignProperty(self.loading_plug, "visible", False)
+        self.state_error.entered.connect(
+            lambda: self.status_placeholder.setState(
+                ViewState.ERROR,
+                AppStrings.ERROR_CHILDREN_SCORES_TITLE,
+                AppStrings.ERROR_CHILDREN_SCORES_DESC,
+            )
+        )
+        self.state_error.assignProperty(self.status_placeholder, "visible", True)
         self.state_error.assignProperty(self.content_widget, "visible", False)
-        self.state_error.assignProperty(self.empty_plug, "visible", True)
 
         # --- Transitions ---
         self.state_loading.addTransition(self.sig_result, self.state_result)
@@ -95,6 +101,7 @@ class StepChildrenScores(BaseStep[T]):
 
     def run_auto_load(self):
         try:
+            self.sig_loading.emit()
             self.has_errors = False
             self.loader = UniversalChecklistLoader(
                 self.state.workbook[self.state.sheet_name]

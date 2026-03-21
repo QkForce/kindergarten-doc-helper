@@ -19,6 +19,20 @@ class AppStrings:
     CARD_ENTRY_TITLE = "Smart Entry"
     CARD_ENTRY_DESC = "Create student data tables with an intuitive grid."
 
+    LOADING_CHILDREN_SCORES_TITLE = "Балалардың бағалары жүктелуде..."
+    LOADING_CHILDREN_SCORES_DESC = "Файлдағы балалардың бағалары оқылуда. Күте тұрыңыз."
+
+    EMPTY_CHILDREN_SCORES_TITLE = "Балалардың бағалары табылмады"
+    EMPTY_CHILDREN_SCORES_DESC = (
+        "• Файлда балалардың бағалары бар екеніне көз жеткізіңіз<br>"
+        "• Немесе файлдағы деректердің дұрыстығына көз жеткізіңіз"
+    )
+
+    ERROR_CHILDREN_SCORES_TITLE = "Балалардың бағаларын жүктеу кезінде қате"
+    ERROR_CHILDREN_SCORES_DESC = (
+        "Балалардың бағаларын жүктеу кезінде қате пайда болды. Қайтадан көріңіз."
+    )
+
     EXPORT_BTN_LBL_SAVE_FILE = "Нәтижені жүктеу (сақтау)"
     EXPORT_DIALOG_TITLE_ASK_FILE_PATH = "Құжатты қайда сақтау керек?"
     EXPORT_SUCCESS_TITLE_SAVE_FILE = "Сақтау сәтті аяқталды!"
