@@ -4,7 +4,9 @@ from PySide6.QtWidgets import (
     QVBoxLayout,
 )
 from PySide6.QtCore import Qt
+
 from gui.widgets.spinner import Spinner
+from gui.constants.colors import AppColors
 
 
 class LoadingPlug(QWidget):
@@ -13,9 +15,10 @@ class LoadingPlug(QWidget):
         self.title = title
         self.description = description
 
-        spinner = Spinner()
-        spinner.setFixedWidth(72)
-        spinner.setFixedHeight(72)
+        spinner = Spinner(color=AppColors.PRIMARY, size=48)
+        spinner.start_animation()
+        spinner.setFixedWidth(100)
+        spinner.setFixedHeight(100)
         title = QLabel(title)
         title.setProperty("lbl-level", "h2")
         description = QLabel(description)
