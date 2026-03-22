@@ -31,9 +31,9 @@ class SubjectBlock(QFrame):
         title = QLabel(SUBJECT_NAMES.get(self.subject_name, self.subject_name))
         pixmap = get_svg_pixmap(IconPaths.CHEVRON_DOWN, AppColors.ICON_MAIN, 16)
         self.chevron_icon = RotatingIcon(pixmap)
-        line = QFrame()
-        line.setObjectName("separator")
-        line.setFrameShape(QFrame.Shape.HLine)
+        self.line = QFrame()
+        self.line.setObjectName("separator")
+        self.line.setFrameShape(QFrame.Shape.HLine)
         self.score_toggle = ScoreToggle(
             btn_type=ScoreButtonType.BASE, size=16, spacing=2
         )
@@ -46,7 +46,8 @@ class SubjectBlock(QFrame):
         header_layout.addWidget(title, stretch=1)
         header_layout.addWidget(self.score_toggle)
 
-        body_layout = QHBoxLayout()
+        self.body_frame = QFrame()
+        body_layout = QHBoxLayout(self.body_frame)
         for i, mn in enumerate(self.metrics.keys()):
             metric_item = MetricItem(metric_name=mn)
             metric_item.on_score_updated.connect(self.handle_child_update)
@@ -56,8 +57,8 @@ class SubjectBlock(QFrame):
                 body_layout.addStretch(1)
 
         layout.addLayout(header_layout)
-        layout.addWidget(line)
-        layout.addLayout(body_layout, stretch=1)
+        layout.addWidget(self.line)
+        layout.addWidget(self.body_frame, stretch=1)
         layout.addStretch(1)
 
     def mousePressEvent(self, event):
@@ -68,7 +69,8 @@ class SubjectBlock(QFrame):
         self.is_expanded = not self.is_expanded
         target_angle = 0 if self.is_expanded else -90
         self.chevron_icon.rotate(target_angle)
-        print(f"Status: {'Expanded' if self.is_expanded else 'Collapsed'}")
+        self.line.setVisible(self.is_expanded)
+        self.body_frame.setVisible(self.is_expanded)
 
     def on_bulk_score(self, score):
         set_metrics_score(self.metrics, score)
