@@ -24,13 +24,13 @@ class SubjectBlock(QFrame):
         self.subject_name = subject_name
         self.metrics = metrics
         self.metric_items = {}
-        self.is_expanded = True
+        self.is_expanded = False
         self.setObjectName("subject_block")
         layout = QVBoxLayout(self)
 
         title = QLabel(SUBJECT_NAMES.get(self.subject_name, self.subject_name))
         pixmap = get_svg_pixmap(IconPaths.CHEVRON_DOWN, AppColors.ICON_MAIN, 16)
-        self.chevron_icon = RotatingIcon(pixmap)
+        self.chevron_icon = RotatingIcon(pixmap, -90)
         self.line = QFrame()
         self.line.setObjectName("separator")
         self.line.setFrameShape(QFrame.Shape.HLine)
@@ -55,6 +55,9 @@ class SubjectBlock(QFrame):
             body_layout.addWidget(metric_item)
             if i < len(self.metrics) - 1:
                 body_layout.addStretch(1)
+
+        self.line.setVisible(self.is_expanded)
+        self.body_frame.setVisible(self.is_expanded)
 
         layout.addLayout(header_layout)
         layout.addWidget(self.line)

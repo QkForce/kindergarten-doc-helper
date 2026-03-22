@@ -3,10 +3,10 @@ from PySide6.QtGui import QPainter, QTransform
 
 
 class RotatingIcon(QLabel):
-    def __init__(self, pixmap, parent=None):
+    def __init__(self, pixmap, initial_angle=0, parent=None):
         super().__init__(parent)
         self.src_pixmap = pixmap
-        self.angle = 0
+        self.angle = initial_angle
         self.setPixmap(self.src_pixmap)
 
     def rotate(self, angle):
