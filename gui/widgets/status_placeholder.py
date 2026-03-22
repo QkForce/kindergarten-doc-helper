@@ -40,11 +40,11 @@ class StatusPlaceholder(QWidget):
 
         # 2. Мәтіндер
         self.title_lbl = QLabel()
-        self.title_lbl.setProperty("lbl-level", "h2")
+        self.title_lbl.setObjectName("status_placeholder_title")
         self.title_lbl.setAlignment(Qt.AlignCenter)
 
         self.desc_lbl = QLabel()
-        self.desc_lbl.setProperty("lbl-level", "h3-normal")
+        self.desc_lbl.setObjectName("status_placeholder_desc")
         self.desc_lbl.setWordWrap(True)
         self.desc_lbl.setAlignment(Qt.AlignCenter)
         self.desc_lbl.setFixedWidth(300)

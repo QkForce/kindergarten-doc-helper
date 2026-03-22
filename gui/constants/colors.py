@@ -65,6 +65,9 @@ class AppColors:
     WARNING = Palette.Amber500  # Amber 500
     ERROR = Palette.Rose500  # Red 500
 
+    STATUS_TITLE = Palette.Slate800
+    STATUS_DESC = Palette.Slate400
+
     # Table colors
     HEADER_CELL_BACKGROUND = Palette.Slate50
     CELL_BACKGROUND_SELECTED = Palette.Slate200

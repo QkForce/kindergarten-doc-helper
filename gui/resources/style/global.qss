@@ -1,19 +1,8 @@
 /* ------ Labels ------ */
-QLabel[lbl-level="h2"] {
-    color: #374151;
-    font-weight: bold;
-    font-size: 16px;
-}
 
 QLabel[lbl-level="h3"] {
     color: #374151;
     font-weight: bold;
-    font-size: 14px;
-}
-
-QLabel[lbl-level="h3-normal"] {
-    color: #374151;
-    font-weight: normal;
     font-size: 14px;
 }
 
@@ -27,6 +16,20 @@ QLabel[lbl-level="lbl"] {
     font-size: 12px;
     /* font-family: "Arial"; */
     color: #626872;
+}
+
+QLabel#status_placeholder_title {
+    color: @STATUS_TITLE;
+    font-weight: bold;
+    font-size: 16px;
+    margin-top: 5px;
+}
+
+QLabel#status_placeholder_desc {
+    color: @STATUS_DESC;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 1.4;
 }
 
 /* ------ Buttons ------ */
