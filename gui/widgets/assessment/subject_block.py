@@ -6,6 +6,7 @@ from PySide6.QtWidgets import (
 )
 from PySide6.QtCore import Signal
 
+from gui.widgets.rotating_icon import RotatingIcon
 from gui.widgets.score_toggle import ScoreToggle, ScoreButtonType
 from gui.widgets.assessment.metric_item import MetricItem
 from gui.constants.strings import SUBJECT_NAMES
@@ -23,13 +24,13 @@ class SubjectBlock(QFrame):
         self.subject_name = subject_name
         self.metrics = metrics
         self.metric_items = {}
+        self.is_expanded = True
         self.setObjectName("subject_block")
         layout = QVBoxLayout(self)
 
         title = QLabel(SUBJECT_NAMES.get(self.subject_name, self.subject_name))
-        chevron_icon = QLabel()
         pixmap = get_svg_pixmap(IconPaths.CHEVRON_DOWN, AppColors.ICON_MAIN, 16)
-        chevron_icon.setPixmap(pixmap)
+        self.chevron_icon = RotatingIcon(pixmap)
         line = QFrame()
         line.setObjectName("separator")
         line.setFrameShape(QFrame.Shape.HLine)
@@ -40,7 +41,7 @@ class SubjectBlock(QFrame):
         self.score_toggle.scoreChanged.connect(self.on_bulk_score)
 
         header_layout = QHBoxLayout()
-        header_layout.addWidget(chevron_icon)
+        header_layout.addWidget(self.chevron_icon)
         header_layout.addSpacing(4)
         header_layout.addWidget(title, stretch=1)
         header_layout.addWidget(self.score_toggle)
@@ -58,6 +59,16 @@ class SubjectBlock(QFrame):
         layout.addWidget(line)
         layout.addLayout(body_layout, stretch=1)
         layout.addStretch(1)
+
+    def mousePressEvent(self, event):
+        self.toggle_expand()
+        super().mousePressEvent(event)
+
+    def toggle_expand(self):
+        self.is_expanded = not self.is_expanded
+        target_angle = 0 if self.is_expanded else -90
+        self.chevron_icon.rotate(target_angle)
+        print(f"Status: {'Expanded' if self.is_expanded else 'Collapsed'}")
 
     def on_bulk_score(self, score):
         set_metrics_score(self.metrics, score)
