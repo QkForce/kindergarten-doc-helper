@@ -8,8 +8,11 @@ from PySide6.QtCore import Signal
 
 from gui.widgets.score_toggle import ScoreToggle, ScoreButtonType
 from gui.widgets.assessment.metric_item import MetricItem
-from logic.assessment_tools import set_metrics_score, get_subject_score_type
 from gui.constants.strings import SUBJECT_NAMES
+from gui.constants.icons import IconPaths
+from gui.constants.colors import AppColors
+from gui.utils.icon_utils import get_svg_pixmap
+from logic.assessment_tools import set_metrics_score, get_subject_score_type
 
 
 class SubjectBlock(QFrame):
@@ -24,6 +27,9 @@ class SubjectBlock(QFrame):
         layout = QVBoxLayout(self)
 
         title = QLabel(SUBJECT_NAMES.get(self.subject_name, self.subject_name))
+        chevron_icon = QLabel()
+        pixmap = get_svg_pixmap(IconPaths.CHEVRON_DOWN, AppColors.ICON_MAIN, 16)
+        chevron_icon.setPixmap(pixmap)
         line = QFrame()
         line.setObjectName("separator")
         line.setFrameShape(QFrame.Shape.HLine)
@@ -34,6 +40,8 @@ class SubjectBlock(QFrame):
         self.score_toggle.scoreChanged.connect(self.on_bulk_score)
 
         header_layout = QHBoxLayout()
+        header_layout.addWidget(chevron_icon)
+        header_layout.addSpacing(4)
         header_layout.addWidget(title, stretch=1)
         header_layout.addWidget(self.score_toggle)
 

@@ -41,6 +41,7 @@ class AppColors:
     TEXT_MUTED = Palette.Slate400  # Көмекші мәтін (slate-400)
     BORDER = Palette.Slate200  # Жиектер (slate-200)
     SIDEBAR = Palette.Slate50  # Sidebar фоны (slate-50)
+    ICON_MAIN = Palette.Slate800  # Негізгі икондар (slate-800)
 
     # Scoring colors
     SCORE_BTN_BASE_BG = Palette.Slate100
