@@ -1,95 +1,78 @@
 from typing import List, Callable, TypeVar, Generic
 
 from PySide6.QtWidgets import (
-    QWidget,
     QVBoxLayout,
     QHBoxLayout,
     QPushButton,
-    QProgressBar,
     QLabel,
     QStackedWidget,
     QFrame,
 )
-from PySide6.QtCore import Qt
 
 from gui.types import Step
 
 T = TypeVar("T")
 
 
-class WizardWidget(QWidget, Generic[T]):
+class WizardWidget(QFrame, Generic[T]):
     def __init__(self, steps: List[Step], state: T, on_finish: Callable):
         super().__init__()
         self._step_configs = steps
         self.state = state
         self.on_finish = on_finish
+        self.setObjectName("wizard_container")
 
-        # OUTER CONTAINER
-        self.outer_layout = QHBoxLayout(self)
-        self.outer_layout.setObjectName("outer_container")
-        self.outer_layout.setAlignment(Qt.AlignCenter)
+        # HEADER
+        logo_btn = QPushButton("K")
+        logo_btn.setObjectName("wizard_logo")
+        logo_btn.setFixedSize(32, 32)
+        # logo_btn.clicked.connect(self.go_home)
 
-        # CENTRAL PANEL (DESIGN KEPT)
-        self.central_panel = QFrame()
-        self.central_panel.setObjectName("central_panel")
-        self.central_panel.setMinimumWidth(600)
-        self.central_panel.setMinimumHeight(500)
-        panel_layout = QVBoxLayout(self.central_panel)
-
-        # PROGRESS
-        self.progress_title = QLabel("Кезең 1 / 5")
-        self.progress_title.setWordWrap(True)
-        self.progress_title.setObjectName("progress_title")
-        panel_layout.addWidget(self.progress_title)
-
-        self.progress_bar = QProgressBar()
-        self.progress_bar.setRange(0, 100)
-        self.progress_bar.setValue(0)
-        self.progress_bar.setFixedHeight(10)
-        self.progress_bar.setTextVisible(False)
-        panel_layout.addWidget(self.progress_bar)
-
-        self.progress_description = QLabel()
-        self.progress_description.setWordWrap(True)
-        self.progress_description.setObjectName("progress_description")
-        panel_layout.addWidget(self.progress_description)
-        panel_layout.addSpacing(20)
+        header_frame = QFrame()
+        header_frame.setObjectName("wizard_header_frame")
+        header_frame.setContentsMargins(0, 10, 0, 10)
+        header_layout = QHBoxLayout(header_frame)
+        header_layout.addWidget(logo_btn)
+        header_layout.addStretch()
 
         # STACKED WIDGET (lazy load)
         self.stack = QStackedWidget()
-        panel_layout.addWidget(self.stack)
+        self.stack.setObjectName("central_panel")
+        self.stack.setMinimumWidth(600)
+        self.stack.setMinimumHeight(500)
 
         # Step placeholders (None – not yet created)
         self.steps = [None] * len(self._step_configs)
 
         # NAVIGATION BUTTONS
-        nav = QHBoxLayout()
-        nav.setSpacing(16)
-        nav.setContentsMargins(0, 10, 0, 0)
-
         self.btn_back = QPushButton("Артқа")
-        self.btn_next = QPushButton("Келесі")
-
+        self.btn_back.setMinimumWidth(200)
         self.btn_back.setProperty("btn-type", "neutral")
-        self.btn_next.setProperty("btn-type", "primary")
-
         self.btn_back.setProperty("btn-size", "large")
-        self.btn_next.setProperty("btn-size", "large")
-
         self.btn_back.setFlat(False)
-        self.btn_next.setFlat(False)
-
         self.btn_back.clicked.connect(self.on_back)
+
+        self.btn_next = QPushButton("Келесі")
+        self.btn_next.setMinimumWidth(200)
+        self.btn_next.setProperty("btn-type", "primary")
+        self.btn_next.setProperty("btn-size", "large")
+        self.btn_next.setFlat(False)
         self.btn_next.clicked.connect(self.on_next)
 
-        nav.addWidget(self.btn_back)
-        nav.addWidget(self.btn_next)
-        panel_layout.addLayout(nav)
+        nav_frame = QFrame()
+        nav_frame.setObjectName("wizard_nav_frame")
+        nav_layout = QHBoxLayout(nav_frame)
+        nav_layout.setContentsMargins(0, 10, 0, 10)
+        nav_layout.addWidget(self.btn_back)
+        nav_layout.addStretch()
+        nav_layout.addWidget(self.btn_next)
 
-        # finalize layout
-        self.outer_layout.addStretch(10)
-        self.outer_layout.addWidget(self.central_panel, 80)
-        self.outer_layout.addStretch(10)
+        # MAIN LAYOUT
+        layout = QVBoxLayout(self)
+        layout.setContentsMargins(20, 0, 20, 0)
+        layout.addWidget(header_frame)
+        layout.addWidget(self.stack)
+        layout.addWidget(nav_frame)
 
         # initial step
         self.current_step = 0
@@ -159,13 +142,13 @@ class WizardWidget(QWidget, Generic[T]):
         if widget:
             self.stack.setCurrentWidget(widget)
 
-        step_config = self._step_configs[self.current_step]
+        # step_config = self._step_configs[self.current_step]
 
         # progress
         total = len(self._step_configs)
-        self.progress_bar.setValue(int((self.current_step + 1) / total * 100))
-        self.progress_title.setText(step_config.title)
-        self.progress_description.setText(step_config.description)
+        # self.progress_bar.setValue(int((self.current_step + 1) / total * 100))
+        # self.progress_title.setText(step_config.title)
+        # self.progress_description.setText(step_config.description)
 
         # back button
         is_first = self.current_step == 0
