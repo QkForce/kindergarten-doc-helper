@@ -9,15 +9,30 @@ from PySide6.QtWidgets import (
     QFrame,
 )
 
+from gui.constants.colors import AppColors
 from gui.types import Step
 from gui.widgets.step_indicator import StepIndicator
+from gui.utils.icon_utils import get_svg_pixmap
 
 T = TypeVar("T")
 
 
+class ModuleOptions:
+    def __init__(self, title: str, icon_path: str):
+        self.title = title
+        self.icon_path = icon_path
+
+
 class WizardWidget(QFrame, Generic[T]):
-    def __init__(self, steps: List[Step], state: T, on_finish: Callable):
+    def __init__(
+        self,
+        steps: List[Step],
+        state: T,
+        on_finish: Callable,
+        module_options: ModuleOptions,
+    ):
         super().__init__()
+        self.current_step = 0
         self._step_configs = steps
         self.state = state
         self.on_finish = on_finish
@@ -29,6 +44,22 @@ class WizardWidget(QFrame, Generic[T]):
         logo_btn.setFixedSize(32, 32)
         # logo_btn.clicked.connect(self.go_home)
 
+        chevron_icon = QLabel("❯")
+        chevron_icon.setObjectName("wizard_chevron_icon")
+
+        module_pixmap = get_svg_pixmap(module_options.icon_path, AppColors.PRIMARY, 20)
+        module_icon = QLabel()
+        module_icon.setPixmap(module_pixmap)
+        module_label = QLabel(module_options.title)
+
+        module_label_frame = QFrame()
+        module_label_frame.setFixedHeight(30)
+        module_label_frame.setObjectName("wizard_module_label_frame")
+        module_label_layout = QHBoxLayout(module_label_frame)
+        module_label_layout.setContentsMargins(5, 0, 5, 0)
+        module_label_layout.addWidget(module_icon)
+        module_label_layout.addWidget(module_label)
+
         self.step_indicator = StepIndicator(
             [step.title for step in steps], current_step=0
         )
@@ -38,6 +69,10 @@ class WizardWidget(QFrame, Generic[T]):
         header_frame.setContentsMargins(0, 10, 0, 10)
         header_layout = QHBoxLayout(header_frame)
         header_layout.addWidget(logo_btn)
+        header_layout.addSpacing(10)
+        header_layout.addWidget(chevron_icon)
+        header_layout.addSpacing(10)
+        header_layout.addWidget(module_label_frame)
         header_layout.addStretch()
         header_layout.addWidget(self.step_indicator)
 
@@ -80,8 +115,6 @@ class WizardWidget(QFrame, Generic[T]):
         layout.addWidget(self.stack)
         layout.addWidget(nav_frame)
 
-        # initial step
-        self.current_step = 0
         self.update_ui()  # initial UI (this will lazy-create first step)
 
     # --- lazy loader ---

@@ -4,10 +4,11 @@ from gui.steps.common.step_file_select import StepFileSelect
 from gui.steps.common.step_children_scores import StepChildrenScores
 from gui.steps.step_docx_fill_setup import StepDocxFillSetup
 from gui.steps.common.step_file_export import StepFileExport, StepFileExportOptions
-from gui.widgets.wizard_widget import WizardWidget
+from gui.widgets.wizard_widget import WizardWidget, ModuleOptions
 from gui.state import FillerState
 from gui.types import Step
 from gui.constants.strings import FILLER_OPTIONS
+from gui.constants.icons import IconPaths
 from logic.exporter import DocxFillExporter
 
 
@@ -37,7 +38,13 @@ class FillerPage(WizardWidget[FillerState]):
                 factory=factory,
             )
             steps.append(step)
-        super().__init__(steps=steps, state=state, on_finish=on_finish)
+        module_options = ModuleOptions(
+            title="Generator",
+            icon_path=IconPaths.FEATURE_TEMPLATE_FILLER,
+        )
+        super().__init__(
+            steps=steps, state=state, on_finish=on_finish, module_options=module_options
+        )
 
     def get_progress_title(self, lbl, current, total):
         return f"Файлға жазу процесі: {current}/{total}"

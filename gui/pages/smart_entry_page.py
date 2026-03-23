@@ -3,11 +3,12 @@ from typing import Callable
 from gui.steps.common.step_file_select import StepFileSelect
 from gui.steps.step_child_assessment import StepChildAssessment
 from gui.steps.common.step_file_export import StepFileExport, StepFileExportOptions
-from gui.widgets.wizard_widget import WizardWidget
+from gui.widgets.wizard_widget import WizardWidget, ModuleOptions
 from gui.state import SmartEntryState
 from logic.exporter import SmartEntryExporter
 from gui.types import Step
 from gui.constants.strings import SMART_ENTRY_OPTIONS
+from gui.constants.icons import IconPaths
 
 
 class SmartEntryPage(WizardWidget[SmartEntryState]):
@@ -37,7 +38,13 @@ class SmartEntryPage(WizardWidget[SmartEntryState]):
                 factory=factory,
             )
             steps.append(step)
-        super().__init__(steps=steps, state=state, on_finish=on_finish)
+        module_options = ModuleOptions(
+            title="Smart Entry",
+            icon_path=IconPaths.FEATURE_ENTRY_XLSX,
+        )
+        super().__init__(
+            steps=steps, state=state, on_finish=on_finish, module_options=module_options
+        )
 
     def get_progress_title(self, lbl, current, total):
         if current == 0 and total == 0:
