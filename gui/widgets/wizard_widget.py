@@ -10,6 +10,7 @@ from PySide6.QtWidgets import (
 )
 
 from gui.types import Step
+from gui.widgets.step_indicator import StepIndicator
 
 T = TypeVar("T")
 
@@ -28,12 +29,17 @@ class WizardWidget(QFrame, Generic[T]):
         logo_btn.setFixedSize(32, 32)
         # logo_btn.clicked.connect(self.go_home)
 
+        self.step_indicator = StepIndicator(
+            [step.title for step in steps], current_step=0
+        )
+
         header_frame = QFrame()
         header_frame.setObjectName("wizard_header_frame")
         header_frame.setContentsMargins(0, 10, 0, 10)
         header_layout = QHBoxLayout(header_frame)
         header_layout.addWidget(logo_btn)
         header_layout.addStretch()
+        header_layout.addWidget(self.step_indicator)
 
         # STACKED WIDGET (lazy load)
         self.stack = QStackedWidget()
@@ -146,6 +152,7 @@ class WizardWidget(QFrame, Generic[T]):
 
         # progress
         total = len(self._step_configs)
+        self.step_indicator.setCurrentStep(self.current_step)
         # self.progress_bar.setValue(int((self.current_step + 1) / total * 100))
         # self.progress_title.setText(step_config.title)
         # self.progress_description.setText(step_config.description)

@@ -55,6 +55,38 @@ QFrame#wizard_header_frame {
     border-bottom: 1px solid @BORDER;
 }
 
+QLabel#step_indicator_circle[indicator-type=done] {
+    color: @SUCCESS;
+    font-size: 10px;
+    font-weight: normal;
+}
+QLabel#step_indicator_circle[indicator-type=current] {
+    color: @PRIMARY;
+    font-size: 10px;
+    font-weight: bold;
+}
+QLabel#step_indicator_circle[indicator-type=todo] {
+    color: @TEXT_MUTED;
+    font-size: 10px;
+    font-weight: normal;
+}
+
+QLabel#step_indicator_label[indicator-type=done] {
+    color: @TEXT_MUTED;
+    font-size: 10px;
+    font-weight: normal;
+}
+QLabel#step_indicator_label[indicator-type=current] {
+    color: @TEXT_MAIN;
+    font-size: 10px;
+    font-weight: bold;
+}
+QLabel#step_indicator_label[indicator-type=todo] {
+    color: @TEXT_MUTED;
+    font-size: 10px;
+    font-weight: normal;
+}
+
 QStackedWidget#central_panel {
     background-color: @CANVAS;
     border: none;
