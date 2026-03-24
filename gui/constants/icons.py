@@ -21,7 +21,10 @@ class IconPaths:
     ERROR = str(ICON_DIR / "circle-alert.svg")
 
     # Other icons
+    HOUSE = str(ICON_DIR / "house.svg")
     CHEVRON_DOWN = str(ICON_DIR / "chevron-down.svg")
+    CHEVRON_LEFT = str(ICON_DIR / "chevron-left.svg")
+    CHEVRON_RIGHT = str(ICON_DIR / "chevron-right.svg")
     DROP_DOWN = str(ICON_DIR / "arrow_drop_down.png")
     DROP_UP = str(ICON_DIR / "arrow_drop_up.png")
 

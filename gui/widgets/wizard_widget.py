@@ -8,8 +8,11 @@ from PySide6.QtWidgets import (
     QStackedWidget,
     QFrame,
 )
+from PySide6.QtGui import QIcon
+from PySide6.QtCore import Qt, QSize
 
 from gui.constants.colors import AppColors
+from gui.constants.icons import IconPaths
 from gui.types import Step
 from gui.widgets.step_indicator import StepIndicator
 from gui.utils.icon_utils import get_svg_pixmap
@@ -189,10 +192,19 @@ class WizardWidget(QFrame, Generic[T]):
 
         # back button
         is_first = self.current_step == 0
-        self.btn_back.setText("Басты бетке" if is_first else "Артқа")
+        left_btn_icon = IconPaths.HOUSE if is_first else IconPaths.CHEVRON_LEFT
+        left_btn_icon = get_svg_pixmap(left_btn_icon, AppColors.ICON_MAIN, 16)
+        self.btn_back.setText("  Басты бет" if is_first else "  Артқа")
+        self.btn_back.setIcon(QIcon(left_btn_icon))
+        self.btn_back.setIconSize(QSize(16, 16))
         self.btn_back.style().polish(self.btn_back)
 
         # next button
         is_last = self.current_step == total - 1
-        self.btn_next.setText("Аяқтау" if is_last else "Келесі")
+        right_btn_icon = None if is_last else IconPaths.CHEVRON_RIGHT
+        right_btn_icon = get_svg_pixmap(right_btn_icon, AppColors.CANVAS, 16)
+        self.btn_next.setText("Аяқтау  " if is_last else "Келесі  ")
+        self.btn_next.setIcon(QIcon(right_btn_icon))
+        self.btn_next.setIconSize(QSize(16, 16))
+        self.btn_next.setLayoutDirection(Qt.RightToLeft)
         self.btn_next.style().polish(self.btn_next)
