@@ -68,6 +68,30 @@ class AppColors:
     STATUS_TITLE = Palette.Slate800
     STATUS_DESC = Palette.Slate400
 
+    # Button colors
+    BTN_PRIMARY_BG = Palette.Slate900
+    BTN_PRIMARY_HOVER = Palette.Blue700
+    BTN_PRIMARY_PRESSED = Palette.Blue600
+
+    BTN_GHOST_TEXT = Palette.Slate400
+    BTN_GHOST_HOVER_TEXT = Palette.Slate800
+    BTN_GHOST_PRESSED_TEXT = Palette.Slate900
+
+    BTN_SUCCESS_BG = Palette.Emerald600
+    BTN_SUCCESS_PRESSED = Palette.Emerald500
+
+    BTN_DANGER_BG = Palette.Rose600
+    BTN_DANGER_PRESSED = Palette.Rose500
+
+    BTN_NEUTRAL_BG = Palette.Slate100
+    BTN_NEUTRAL_BORDER = Palette.Slate300
+    BTN_NEUTRAL_TEXT = Palette.Slate800
+    BTN_NEUTRAL_PRESSED = Palette.Slate200
+
+    BTN_DISABLED_BG = Palette.Slate100
+    BTN_DISABLED_BORDER = Palette.Slate200
+    BTN_DISABLED_TEXT = Palette.Slate400
+
     # Table colors
     HEADER_CELL_BACKGROUND = Palette.Slate50
     CELL_BACKGROUND_SELECTED = Palette.Slate200

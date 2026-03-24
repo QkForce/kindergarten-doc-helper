@@ -41,62 +41,75 @@ QPushButton[btn-size="small"] {
     border-radius: 3px;
 }
 
-
 QPushButton[btn-size="large"] {
     padding: 10px;
     font-size: 14px;
     font-weight: bold;
     border-radius: 8px;
-    qproperty-iconSize: 24px;
+    qproperty-iconSize: 16px;
 }
 
 QPushButton[btn-type="primary"] {
-    background-color: #4f46e5;
-    color: white;
+    background-color: @BTN_PRIMARY_BG;
+    color: @CANVAS;
+}
+QPushButton[btn-type="primary"]:hover {
+    background-color: @BTN_PRIMARY_HOVER;
 }
 QPushButton[btn-type="primary"]:pressed {
-    background-color: #312e81;
+    background-color: @BTN_PRIMARY_PRESSED;
+}
+
+QPushButton[btn-type="ghost"] {
+    background-color: transparent;
+    color: @BTN_GHOST_TEXT;
+}
+QPushButton[btn-type="ghost"]:hover {
+    color: @BTN_GHOST_HOVER_TEXT;
+}
+QPushButton[btn-type="ghost"]:pressed {
+    color: @BTN_GHOST_PRESSED_TEXT;
 }
 
 QPushButton[btn-type="success"] {
-    background-color: #16A34A;
-    color: white;
+    background-color: @BTN_SUCCESS_BG;
+    color: @CANVAS;
 }
 QPushButton[btn-type="success"]:pressed {
-    background-color: #166534;
+    background-color: @BTN_SUCCESS_PRESSED;
 }
 
 QPushButton[btn-type="neutral"] {
-    background-color: #e5e7eb;
-    border: 1px solid #d1d5db;
-    color: #374151;
+    background-color: @BTN_NEUTRAL_BG;
+    border: 1px solid @BTN_NEUTRAL_BORDER;
+    color: @BTN_NEUTRAL_TEXT;
 }
 QPushButton[btn-type="neutral"]:pressed {
-    background-color: #9ca3af;
+    background-color: @BTN_NEUTRAL_PRESSED;
 }
 
 QPushButton[btn-type="link"] {
-    color: #374151;
-    font-size: 14px;
-    border: 0px;
     background-color: transparent;
+    border: 0px;
+    color: @BTN_NEUTRAL_TEXT;
+    font-size: 14px;
 }
 QPushButton[btn-type="link"]:pressed {
-    color: #1f2937;
+    color: @BTN_NEUTRAL_PRESSED;
 }
 
 QPushButton[btn-type="danger"] {
-    background-color: #DC2626;
-    color: white;
+    background-color: @BTN_DANGER_BG;
+    color: @CANVAS;
 }
 QPushButton[btn-type="danger"]:pressed {
-    background-color: #991b1b;
+    background-color: @BTN_DANGER_PRESSED;
 }
 
 QPushButton:disabled {
-    background-color: #f3f4f6;
-    border: 1px solid #e5e7eb;
-    color: #9ca3af;
+    background-color: @BTN_DISABLED_BG;
+    border: 1px solid @BTN_DISABLED_BORDER;
+    color: @BTN_DISABLED_TEXT;
 }
 
 QPushButton.score_btn[mode="base"] {

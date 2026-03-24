@@ -91,7 +91,7 @@ class WizardWidget(QFrame, Generic[T]):
         # NAVIGATION BUTTONS
         self.btn_back = QPushButton("Артқа")
         self.btn_back.setMinimumWidth(200)
-        self.btn_back.setProperty("btn-type", "neutral")
+        self.btn_back.setProperty("btn-type", "ghost")
         self.btn_back.setProperty("btn-size", "large")
         self.btn_back.setFlat(False)
         self.btn_back.clicked.connect(self.handle_back_click)
@@ -193,7 +193,7 @@ class WizardWidget(QFrame, Generic[T]):
         # back button
         is_first = self.current_step == 0
         left_btn_icon = IconPaths.HOUSE if is_first else IconPaths.CHEVRON_LEFT
-        left_btn_icon = get_svg_pixmap(left_btn_icon, AppColors.ICON_MAIN, 16)
+        left_btn_icon = get_svg_pixmap(left_btn_icon, AppColors.BTN_GHOST_TEXT, 16)
         self.btn_back.setText("  Басты бет" if is_first else "  Артқа")
         self.btn_back.setIcon(QIcon(left_btn_icon))
         self.btn_back.setIconSize(QSize(16, 16))
