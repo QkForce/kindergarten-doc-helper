@@ -188,12 +188,5 @@ class WizardWidget(QFrame, Generic[T]):
 
         # next button
         is_last = self.current_step == total - 1
-        if is_last:
-            self.btn_next.setText("Аяқтау")
-            self.btn_next.setEnabled(True)
-            self.btn_next.setProperty("btn-type", "primary")
-        else:
-            self.btn_next.setText("Келесі")
-            self.btn_next.setEnabled(True)
-            self.btn_next.setProperty("btn-type", "primary")
+        self.btn_next.setText("Аяқтау" if is_last else "Келесі")
         self.btn_next.style().polish(self.btn_next)
