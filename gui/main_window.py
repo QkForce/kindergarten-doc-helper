@@ -12,12 +12,12 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
 
-        # 1. WINDOW
+        # WINDOW
         self.setWindowTitle(AppStrings.APP_NAME)
         self.setMinimumSize(950, 650)
         center_on_screen(self)
 
-        # 2. MAIN STACK
+        # MAIN STACK
         self.central_widget = QWidget()
         self.setCentralWidget(self.central_widget)
 
@@ -27,32 +27,38 @@ class MainWindow(QMainWindow):
         self.stack = QStackedWidget()
         self.layout.addWidget(self.stack)
 
-        # 3. PAGES
-        self.init_pages()
+        # SHOW HUB
+        self.show_hub()
 
-    def init_pages(self):
-        # Index 0: HUB PAGE
-        self.hub_page = HubPage()
-        self.hub_page.generator_requested.connect(lambda: self.switch_page(1))
-        self.hub_page.template_requested.connect(lambda: self.switch_page(2))
-        self.hub_page.entry_requested.connect(lambda: self.switch_page(3))
-        self.stack.addWidget(self.hub_page)
+    def show_hub(self):
+        self._clear_stack()
 
-        # Index 1: GENERATOR FLOW
-        self.generator_page = GeneratorPage(on_finish=lambda: self.switch_page(0))
-        self.stack.addWidget(self.generator_page)
+        hub = HubPage()
+        hub.generator_requested.connect(self.show_generator)
+        hub.template_requested.connect(self.show_filler)
+        hub.entry_requested.connect(self.show_smart_entry)
 
-        # Index 2: TEMPLATE FILLER
-        self.template_page = FillerPage(on_finish=lambda: self.switch_page(0))
-        self.stack.addWidget(self.template_page)
+        self.stack.addWidget(hub)
+        self.stack.setCurrentWidget(hub)
 
-        # Index 3: SMART ENTRY
-        self.entry_page = SmartEntryPage(on_finish=lambda: self.switch_page(0))
-        self.stack.addWidget(self.entry_page)
+    def show_generator(self):
+        page = GeneratorPage(on_finish=self.show_hub)
+        self._add_and_switch(page)
 
-        # First page - Hub
-        self.stack.setCurrentIndex(0)
+    def show_filler(self):
+        page = FillerPage(on_finish=self.show_hub)
+        self._add_and_switch(page)
 
-    def switch_page(self, index: int):
-        if 0 <= index < self.stack.count():
-            self.stack.setCurrentIndex(index)
+    def show_smart_entry(self):
+        page = SmartEntryPage(on_finish=self.show_hub)
+        self._add_and_switch(page)
+
+    def _add_and_switch(self, widget):
+        self.stack.addWidget(widget)
+        self.stack.setCurrentWidget(widget)
+
+    def _clear_stack(self):
+        while self.stack.count() > 0:
+            widget = self.stack.widget(0)
+            self.stack.removeWidget(widget)
+            widget.deleteLater()

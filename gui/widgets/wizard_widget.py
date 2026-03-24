@@ -42,7 +42,7 @@ class WizardWidget(QFrame, Generic[T]):
         logo_btn = QPushButton("K")
         logo_btn.setObjectName("wizard_logo")
         logo_btn.setFixedSize(32, 32)
-        # logo_btn.clicked.connect(self.go_home)
+        logo_btn.clicked.connect(self.close_wizard)
 
         chevron_icon = QLabel("❯")
         chevron_icon.setObjectName("wizard_chevron_icon")
@@ -98,7 +98,7 @@ class WizardWidget(QFrame, Generic[T]):
         self.btn_next.setProperty("btn-type", "primary")
         self.btn_next.setProperty("btn-size", "large")
         self.btn_next.setFlat(False)
-        self.btn_next.clicked.connect(self.on_next)
+        self.btn_next.clicked.connect(self.handle_next_click)
 
         nav_frame = QFrame()
         nav_frame.setObjectName("wizard_nav_frame")
@@ -134,13 +134,6 @@ class WizardWidget(QFrame, Generic[T]):
             self.update_ui()
 
     def on_next(self):
-        current_widget = self.get_step(self.current_step)
-        if current_widget is None:
-            return
-
-        if not current_widget.validate_before_next():
-            return
-
         if self.current_step >= len(self.steps) - 1:
             return
 
@@ -151,29 +144,31 @@ class WizardWidget(QFrame, Generic[T]):
         if next_widget and hasattr(next_widget, "run_auto_load"):
             next_widget.run_auto_load()
 
-    def _on_finish(self):
+    def handle_next_click(self):
         current_widget = self.get_step(self.current_step)
+        if current_widget is None:
+            return
         if not current_widget.validate_before_next():
             return
+        is_last = self.current_step == len(self._step_configs) - 1
+        if is_last:
+            self.close_wizard()
+        else:
+            self.on_next()
 
-        self.on_finish()
+    def close_wizard(self):
+        if hasattr(self.state, "reset"):
+            self.state.reset()
 
-        # Delete all widgets in the stack
         while self.stack.count() > 0:
             widget = self.stack.widget(0)
             self.stack.removeWidget(widget)
             widget.deleteLater()
 
-        # Clear list
         self.steps = [None] * len(self._step_configs)
-
-        # Reset state
-        if hasattr(self.state, "reset"):
-            self.state.reset()
-
-        # Return to step one
         self.current_step = 0
-        self.update_ui()
+
+        self.on_finish()
 
     def update_ui(self):
         # ensure current widget is created and show it
@@ -181,14 +176,9 @@ class WizardWidget(QFrame, Generic[T]):
         if widget:
             self.stack.setCurrentWidget(widget)
 
-        # step_config = self._step_configs[self.current_step]
-
         # progress
         total = len(self._step_configs)
         self.step_indicator.setCurrentStep(self.current_step)
-        # self.progress_bar.setValue(int((self.current_step + 1) / total * 100))
-        # self.progress_title.setText(step_config.title)
-        # self.progress_description.setText(step_config.description)
 
         # back button
         is_first = self.current_step == 0
@@ -198,18 +188,12 @@ class WizardWidget(QFrame, Generic[T]):
 
         # next button
         is_last = self.current_step == total - 1
-        try:
-            self.btn_next.clicked.disconnect()
-        except RuntimeError:
-            pass
         if is_last:
             self.btn_next.setText("Аяқтау")
             self.btn_next.setEnabled(True)
             self.btn_next.setProperty("btn-type", "primary")
-            self.btn_next.clicked.connect(self._on_finish)
         else:
             self.btn_next.setText("Келесі")
             self.btn_next.setEnabled(True)
             self.btn_next.setProperty("btn-type", "primary")
-            self.btn_next.clicked.connect(self.on_next)
         self.btn_next.style().polish(self.btn_next)
