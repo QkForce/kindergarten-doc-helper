@@ -91,7 +91,7 @@ class WizardWidget(QFrame, Generic[T]):
         self.btn_back.setProperty("btn-type", "neutral")
         self.btn_back.setProperty("btn-size", "large")
         self.btn_back.setFlat(False)
-        self.btn_back.clicked.connect(self.on_back)
+        self.btn_back.clicked.connect(self.handle_back_click)
 
         self.btn_next = QPushButton("Келесі")
         self.btn_next.setMinimumWidth(200)
@@ -144,6 +144,13 @@ class WizardWidget(QFrame, Generic[T]):
         if next_widget and hasattr(next_widget, "run_auto_load"):
             next_widget.run_auto_load()
 
+    def handle_back_click(self):
+        is_first = self.current_step == 0
+        if is_first:
+            self.close_wizard()
+        else:
+            self.on_back()
+
     def handle_next_click(self):
         current_widget = self.get_step(self.current_step)
         if current_widget is None:
@@ -182,8 +189,7 @@ class WizardWidget(QFrame, Generic[T]):
 
         # back button
         is_first = self.current_step == 0
-        self.btn_back.setEnabled(not is_first)
-        self.btn_back.setProperty("btn-type", "disabled" if is_first else "neutral")
+        self.btn_back.setText("Басты бетке" if is_first else "Артқа")
         self.btn_back.style().polish(self.btn_back)
 
         # next button
