@@ -60,15 +60,18 @@ QPushButton[btn-type="primary"]:pressed {
     background-color: @BTN_PRIMARY_PRESSED;
 }
 
-QPushButton[btn-type="ghost"] {
+IconButton[btn-type="ghost"] {
     background-color: transparent;
     color: @BTN_GHOST_TEXT;
+    qproperty-hoverColor: @BTN_GHOST_HOVER_TEXT;
+    border: 1px solid transparent;
 }
-QPushButton[btn-type="ghost"]:hover {
+IconButton[btn-type="ghost"]:hover {
     color: @BTN_GHOST_HOVER_TEXT;
 }
-QPushButton[btn-type="ghost"]:pressed {
+IconButton[btn-type="ghost"]:pressed {
     color: @BTN_GHOST_PRESSED_TEXT;
+    qproperty-iconColor: @BTN_GHOST_PRESSED_TEXT;
 }
 
 QPushButton[btn-type="success"] {

@@ -15,6 +15,7 @@ from gui.constants.colors import AppColors
 from gui.constants.icons import IconPaths
 from gui.types import Step
 from gui.widgets.step_indicator import StepIndicator
+from gui.widgets.icon_button import IconButton
 from gui.utils.icon_utils import get_svg_pixmap
 
 T = TypeVar("T")
@@ -89,7 +90,7 @@ class WizardWidget(QFrame, Generic[T]):
         self.steps = [None] * len(self._step_configs)
 
         # NAVIGATION BUTTONS
-        self.btn_back = QPushButton("Артқа")
+        self.btn_back = IconButton(IconPaths.CHEVRON_LEFT, "Артқа")
         self.btn_back.setMinimumWidth(200)
         self.btn_back.setProperty("btn-type", "ghost")
         self.btn_back.setProperty("btn-size", "large")
@@ -193,10 +194,8 @@ class WizardWidget(QFrame, Generic[T]):
         # back button
         is_first = self.current_step == 0
         left_btn_icon = IconPaths.HOUSE if is_first else IconPaths.CHEVRON_LEFT
-        left_btn_icon = get_svg_pixmap(left_btn_icon, AppColors.BTN_GHOST_TEXT, 16)
+        self.btn_back.setIconPath(left_btn_icon)
         self.btn_back.setText("  Басты бет" if is_first else "  Артқа")
-        self.btn_back.setIcon(QIcon(left_btn_icon))
-        self.btn_back.setIconSize(QSize(16, 16))
         self.btn_back.style().polish(self.btn_back)
 
         # next button
@@ -205,6 +204,5 @@ class WizardWidget(QFrame, Generic[T]):
         right_btn_icon = get_svg_pixmap(right_btn_icon, AppColors.CANVAS, 16)
         self.btn_next.setText("Аяқтау  " if is_last else "Келесі  ")
         self.btn_next.setIcon(QIcon(right_btn_icon))
-        self.btn_next.setIconSize(QSize(16, 16))
         self.btn_next.setLayoutDirection(Qt.RightToLeft)
         self.btn_next.style().polish(self.btn_next)

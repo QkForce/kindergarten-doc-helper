@@ -73,9 +73,9 @@ class AppColors:
     BTN_PRIMARY_HOVER = Palette.Blue700
     BTN_PRIMARY_PRESSED = Palette.Blue600
 
-    BTN_GHOST_TEXT = Palette.Slate400
-    BTN_GHOST_HOVER_TEXT = Palette.Slate800
-    BTN_GHOST_PRESSED_TEXT = Palette.Slate900
+    BTN_GHOST_TEXT = Palette.Slate400 # #94A3B8
+    BTN_GHOST_HOVER_TEXT = Palette.Slate800 # #1E293B
+    BTN_GHOST_PRESSED_TEXT = Palette.Slate900 # #0F172A
 
     BTN_SUCCESS_BG = Palette.Emerald600
     BTN_SUCCESS_PRESSED = Palette.Emerald500
