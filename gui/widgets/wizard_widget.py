@@ -48,7 +48,9 @@ class WizardWidget(QFrame, Generic[T]):
         logo_btn.setFixedSize(32, 32)
         logo_btn.clicked.connect(self.close_wizard)
 
-        chevron_icon = QLabel("❯")
+        chevron_pixmap = get_svg_pixmap(IconPaths.CHEVRON_RIGHT, AppColors.PRIMARY, 16)
+        chevron_icon = QLabel()
+        chevron_icon.setPixmap(chevron_pixmap)
         chevron_icon.setObjectName("wizard_chevron_icon")
 
         module_pixmap = get_svg_pixmap(module_options.icon_path, AppColors.PRIMARY, 20)
