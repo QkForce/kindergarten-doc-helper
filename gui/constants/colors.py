@@ -12,6 +12,8 @@ class Palette:
     Blue600 = "#2563EB"
     Blue700 = "#1D4ED8"
 
+    Indigo100 = "#E0E7FF"
+
     Rose50 = "#FFF1F2"
     Rose100 = "#FFE4E6"
     Rose200 = "#FECDD3"
@@ -73,9 +75,9 @@ class AppColors:
     BTN_PRIMARY_HOVER = Palette.Blue700
     BTN_PRIMARY_PRESSED = Palette.Blue600
 
-    BTN_GHOST_TEXT = Palette.Slate400 # #94A3B8
-    BTN_GHOST_HOVER_TEXT = Palette.Slate800 # #1E293B
-    BTN_GHOST_PRESSED_TEXT = Palette.Slate900 # #0F172A
+    BTN_GHOST_TEXT = Palette.Slate400  # #94A3B8
+    BTN_GHOST_HOVER_TEXT = Palette.Slate800  # #1E293B
+    BTN_GHOST_PRESSED_TEXT = Palette.Slate900  # #0F172A
 
     BTN_SUCCESS_BG = Palette.Emerald600
     BTN_SUCCESS_PRESSED = Palette.Emerald500
@@ -91,6 +93,13 @@ class AppColors:
     BTN_DISABLED_BG = Palette.Slate100
     BTN_DISABLED_BORDER = Palette.Slate200
     BTN_DISABLED_TEXT = Palette.Slate400
+
+    # ComboBox colors
+    SELECTION_BG = Palette.Slate200
+
+    # Progress bar colors
+    PROGRESS_BG = Palette.Indigo100
+    PROGRESS_INDICATOR = Palette.Blue600
 
     # Table colors
     HEADER_CELL_BACKGROUND = Palette.Slate50

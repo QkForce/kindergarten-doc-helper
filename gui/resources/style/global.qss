@@ -1,7 +1,7 @@
 /* ------ Labels ------ */
 
 QLabel[lbl-level="h3"] {
-    color: #374151;
+    color: @TEXT_MAIN;
     font-weight: bold;
     font-size: 14px;
 }
@@ -15,7 +15,7 @@ QLabel[lbl-level="lbl"] {
     font-weight: 400;
     font-size: 12px;
     /* font-family: "Arial"; */
-    color: #626872;
+    color: @TEXT_MUTED;
 }
 
 QLabel#status_placeholder_title {
@@ -159,9 +159,9 @@ QPushButton#score_btn_3:checked {
 /* QTextEdit */
 
 QTextEdit[textedit-style="box"] {
-    border: 1px solid #D1D5DB;
+    border: 1px solid @BORDER;
     border-radius: 8px;
-    background-color: #F9FAFB;
+    background-color: @CANVAS;
     padding: 6px;
     font-size: 14px;
 }
@@ -170,20 +170,20 @@ QTextEdit[textedit-style="box"] {
 
 QProgressBar {
     border: none;
-    background-color: #e0e7ff;     /* indigo-100 */
+    background-color: @PROGRESS_BG;
     border-radius: 3px;
 }
 
 QProgressBar::chunk {
-    background-color: #4f46e5;     /* indigo-600 */
+    background-color: @PROGRESS_INDICATOR;
     border-radius: 3px;
 }
 
 /* --------- QComboBox --------- */
 
 QComboBox {
-    border: 1px solid #D1D5DB;
-    background-color: #F2F3F5;
+    border: 1px solid @BORDER;
+    background-color: @BG;
     border-radius: 8px;
     padding: 6px 6px 6px 10px;
     font-size: 14px;
@@ -191,7 +191,7 @@ QComboBox {
 }
 QComboBox::drop-down {
     border: 0px;
-    background-color: #F2F3F5;
+    background-color: @BG;
     width: 20px;
     border-radius: 8px;
     padding-right: 5px;
@@ -203,11 +203,11 @@ QComboBox::down-arrow {
 }
 /* QComboBox тізімі */
 QComboBox QAbstractItemView {
-    border: 1px solid #D1D5DB;
+    border: 1px solid @BORDER;
     border-radius: 6px;
-    background-color: white;
-    selection-background-color: #aaddff;
-    color: #333;
+    background-color: @CANVAS;
+    selection-background-color: @SELECTION_BG;
+    color: @TEXT_MAIN;
     margin-top: 3px;
     padding: 6px 6px 6px 6px;
 }
@@ -351,7 +351,7 @@ QSpinBox::down-arrow {
 /* QFrame */
 
 QFrame[frame-style="box"] {
-    border: 1px solid #D1D5DB;
+    border: 1px solid @BORDER;
     border-radius: 8px;
     padding: 0px;
     margin: 0px;
