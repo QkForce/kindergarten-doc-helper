@@ -72,3 +72,19 @@ def create_default_scoring_dict(age_group):
         for domain, subjects in METRICS_SCHEMA[age_group].items()
     }
     return scoring_dict
+
+
+def create_source_scoring_dict(age_group, scores):
+    # scores = [{"name": "Child 1", "code-1": 2, "code-2": 3}, ...]
+    scoring_dict = {}
+    for item in scores:
+        name = item["name"]
+        scoring_dict[name] = {}
+        for dn, subjects in METRICS_SCHEMA[age_group].items():
+            scoring_dict[name][dn] = {}
+            for sn, metrics in subjects.items():
+                scoring_dict[name][dn][sn] = {}
+                for code in metrics.keys():
+                    score = item.get(code, 0)
+                    scoring_dict[name][dn][sn][code] = score
+    return scoring_dict

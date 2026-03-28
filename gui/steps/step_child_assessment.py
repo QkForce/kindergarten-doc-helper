@@ -1,4 +1,3 @@
-from PySide6.QtWidgets import QMessageBox
 from PySide6.QtStateMachine import QStateMachine, QState
 from PySide6.QtCore import Signal
 
@@ -7,9 +6,9 @@ from gui.widgets.children_assessment_content import ChildrenAssessmentWidget
 from gui.widgets.status_placeholder import StatusPlaceholder, ViewState
 from gui.state import SmartEntryState
 from gui.constants.strings import AppStrings
-from logic.loaders.children_loader import ChildrenLoader
+from logic.loaders.universal_checklist_loader import UniversalChecklistLoader
 from logic.worker import start_worker_task
-from logic.assessment_tools import create_default_scoring_dict
+from logic.assessment_tools import create_source_scoring_dict
 
 
 class StepChildAssessment(BaseStep[SmartEntryState]):
@@ -103,7 +102,9 @@ class StepChildAssessment(BaseStep[SmartEntryState]):
         try:
             self.sig_loading.emit()
             self.has_errors = False
-            self.loader = ChildrenLoader(self.state.workbook[self.state.sheet_name])
+            self.loader = UniversalChecklistLoader(
+                self.state.workbook[self.state.sheet_name]
+            )
             start_worker_task(self.loader.load_auto, self._loaded, self._load_failed)
         except Exception as e:
             print(e)
@@ -115,16 +116,17 @@ class StepChildAssessment(BaseStep[SmartEntryState]):
 
     def _loaded(self, result):
         # Set state data
-        children, start_row, end_row, name_col = result
-        self.state.children_start_row = start_row
-        self.state.children_end_row = end_row
-        self.state.children_col = name_col
-        self.state.children_scores = {
-            name: create_default_scoring_dict(self.state.age_group) for name in children
-        }
+        c_start, c_end, c_col = result["children_data"]
+        self.state.children_start_row = c_start
+        self.state.children_end_row = c_end
+        self.state.children_col = c_col
+        scores = result["children_scores"]
+        self.state.children_scores = create_source_scoring_dict(
+            self.state.age_group, scores
+        )
 
         # Update UI
-        if children and len(children) > 0:
+        if scores and len(scores) > 0:
             self.content_widget.applyData(self.state.children_scores)
             self.sig_result.emit()
         else:
