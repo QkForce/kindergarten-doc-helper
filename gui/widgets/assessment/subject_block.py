@@ -19,12 +19,12 @@ from logic.assessment_tools import set_metrics_score, get_subject_score_type
 class SubjectBlock(QFrame):
     on_score_updated = Signal(str, dict)  # subject_name, metrics
 
-    def __init__(self, subject_name: str, metrics: dict):
+    def __init__(self, subject_name: str, metrics: dict, is_expanded=False):
         super().__init__()
         self.subject_name = subject_name
         self.metrics = metrics
         self.metric_items = {}
-        self.is_expanded = False
+        self.is_expanded = is_expanded
         self.setObjectName("subject_block")
         layout = QVBoxLayout(self)
 

@@ -45,7 +45,10 @@ class DomainBlock(QFrame):
         body_layout = QVBoxLayout()
         body_layout.setContentsMargins(0, 0, 0, 0)
         for subject_name in self.subjects.keys():
-            subject_block = SubjectBlock(subject_name, self.subjects[subject_name])
+            is_expanded = False
+            subject_block = SubjectBlock(
+                subject_name, self.subjects[subject_name], is_expanded
+            )
             subject_block.on_score_updated.connect(self.handle_child_update)
             self.subject_blocks[subject_name] = subject_block
             body_layout.addWidget(subject_block)
