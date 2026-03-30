@@ -4,12 +4,15 @@ from PySide6.QtWidgets import (
     QVBoxLayout,
     QHBoxLayout,
     QLabel,
+    QPushButton,
     QWidget,
 )
 from PySide6.QtCore import Qt, Signal
+from PySide6.QtGui import QIcon
 
 from gui.widgets.score_toggle import ScoreToggle, ScoreButtonType
 from gui.widgets.assessment.domain_block import DomainBlock
+from gui.constants.icons import IconPaths
 from logic.assessment_tools import bulk_update, get_common_score_type
 
 
@@ -25,7 +28,10 @@ class AssessmentArea(QFrame):
 
         self.child_name_lbl = QLabel()
         self.child_name_lbl.setObjectName("child_name_lbl")
-        # self.child_name_lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.expand_btn = QPushButton()
+        self.expand_btn.setObjectName("expand_btn")
+        self.expand_btn.setIcon(QIcon(IconPaths.EXPAND))
 
         score_toggle_lbl = QLabel("Жаппай бағалау:")
         score_toggle_lbl.setObjectName("score_toggle_lbl")
@@ -41,7 +47,10 @@ class AssessmentArea(QFrame):
         score_toggle_frame.setLayout(score_toggle_layout)
 
         header_layout = QHBoxLayout()
-        header_layout.addWidget(self.child_name_lbl, stretch=1)
+        header_layout.addWidget(self.child_name_lbl)
+        header_layout.addSpacing(10)
+        header_layout.addWidget(self.expand_btn)
+        header_layout.addStretch()
         header_layout.addWidget(score_toggle_frame)
         header_frame = QFrame()
         header_frame.setObjectName("assessment_header")
