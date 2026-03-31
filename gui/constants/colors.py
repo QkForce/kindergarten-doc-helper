@@ -9,6 +9,7 @@ class Palette:
     Slate800 = "#1E293B"
     Slate900 = "#0F172A"
 
+    Blue50 = "#EFF6FF"
     Blue600 = "#2563EB"
     Blue700 = "#1D4ED8"
 
@@ -93,6 +94,9 @@ class AppColors:
     BTN_DISABLED_BG = Palette.Slate100
     BTN_DISABLED_BORDER = Palette.Slate200
     BTN_DISABLED_TEXT = Palette.Slate400
+
+    BTN_ICON_TEXT = Palette.Slate400
+    BTN_ICON_HOVER_BG = Palette.Blue50
 
     # ComboBox colors
     SELECTION_BG = Palette.Slate200
