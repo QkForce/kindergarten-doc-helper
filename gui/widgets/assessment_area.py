@@ -26,6 +26,7 @@ class AssessmentArea(QFrame):
 
     def __init__(self):
         super().__init__()
+        self.is_expanded = False
         self.setObjectName("assessment_area")
 
         self.child_name_lbl = QLabel()
@@ -33,6 +34,7 @@ class AssessmentArea(QFrame):
 
         self.expand_btn = QPushButton()
         self.expand_btn.setFixedSize(32, 32)
+        self.expand_btn.clicked.connect(self.handle_expand)
         self.expand_btn.setObjectName("expand_btn")
         expand_icon = get_svg_pixmap(IconPaths.EXPAND, AppColors.BTN_ICON_TEXT, 16)
         self.expand_btn.setIcon(QIcon(expand_icon))
@@ -78,6 +80,15 @@ class AssessmentArea(QFrame):
         layout.setSpacing(0)
         layout.addWidget(header_frame)
         layout.addWidget(self.scroll_area)
+
+    def handle_expand(self):
+        self.is_expanded = not self.is_expanded
+        expand_icon = get_svg_pixmap(
+            IconPaths.EXPAND if self.is_expanded else IconPaths.COLLAPSE,
+            AppColors.BTN_ICON_TEXT,
+            16,
+        )
+        self.expand_btn.setIcon(QIcon(expand_icon))
 
     def on_bulk_score(self, score):
         bulk_update(self.score_dict, score)
