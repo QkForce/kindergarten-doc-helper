@@ -18,7 +18,7 @@ class AssessmentStatus(Enum):
 
 
 class ChildItemWidget(QWidget):
-    def __init__(self, name, status="empty", parent=None):
+    def __init__(self, name, status=AssessmentStatus.NOT_STARTED, parent=None):
         super().__init__(parent)
         self.setObjectName("child_item")
 

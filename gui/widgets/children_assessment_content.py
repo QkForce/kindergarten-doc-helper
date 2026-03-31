@@ -11,6 +11,7 @@ class ChildrenAssessmentWidget(QFrame):
 
     def __init__(self):
         super().__init__()
+        # children_scores = [{"name": "Child 1", "code-1": 2, "code-2": 3}, ...]
         self.children_scores = {}
         self.setObjectName("children_assessment_widget")
 
@@ -28,7 +29,11 @@ class ChildrenAssessmentWidget(QFrame):
 
     def applyData(self, children_scores):
         self.children_scores = children_scores
-        self.selector.applyData(list(children_scores.keys()))
+        selector_data = [
+            (name, get_assessment_status(scores))
+            for name, scores in children_scores.items()
+        ]
+        self.selector.applyData(selector_data)
 
     def handle_child_selection(self, name):
         self.assessment_area.applyChildData(name, self.children_scores[name])

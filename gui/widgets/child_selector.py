@@ -1,3 +1,5 @@
+from typing import List, Tuple
+
 from PySide6.QtWidgets import (
     QVBoxLayout,
     QHBoxLayout,
@@ -37,12 +39,12 @@ class ChildSelector(QFrame):
         layout.addLayout(title_layout)
         layout.addWidget(self.list_widget)
 
-    def applyData(self, children_names):
+    def applyData(self, children: List[Tuple[str, AssessmentStatus]]):
         self.list_widget.clear()
-        self.children_name_list = children_names
-        for i, name in enumerate(children_names):
+        self.children_name_list = [child[0] for child in children]
+        for i, (name, status) in enumerate(children):
             item = QListWidgetItem(self.list_widget)
-            custom_widget = ChildItemWidget(f"{i+1}. {name}")
+            custom_widget = ChildItemWidget(f"{i+1}. {name}", status)
             item.setSizeHint(custom_widget.sizeHint())
 
             self.list_widget.addItem(item)
