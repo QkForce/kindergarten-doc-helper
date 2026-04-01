@@ -52,6 +52,7 @@ class DomainBlock(QFrame):
             subject_block.on_score_updated.connect(self.handle_child_update)
             self.subject_blocks[subject_name] = subject_block
             body_layout.addWidget(subject_block)
+        self.applyData(self.subjects)
 
         layout.addWidget(header_widget)
         layout.addLayout(body_layout, stretch=1)

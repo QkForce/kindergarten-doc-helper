@@ -58,6 +58,7 @@ class SubjectBlock(QFrame):
 
         self.line.setVisible(self.is_expanded)
         self.body_frame.setVisible(self.is_expanded)
+        self.applyData(self.metrics)
 
         layout.addLayout(header_layout)
         layout.addWidget(self.line)
