@@ -34,6 +34,9 @@ class ChildrenAssessmentWidget(QFrame):
             for name, scores in children_scores.items()
         ]
         self.selector.applyData(selector_data)
+        first_child_name = selector_data[0][0] if selector_data else None
+        if first_child_name:
+            self.selector.selectChild(first_child_name)
 
     def handle_child_selection(self, name):
         self.assessment_area.applyChildData(name, self.children_scores[name])

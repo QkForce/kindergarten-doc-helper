@@ -60,6 +60,17 @@ class ChildSelector(QFrame):
             if item in selected_items:
                 self.childSelected.emit(self.children_name_list[i])
 
+    def selectChild(self, child_name):
+        index = (
+            self.children_name_list.index(child_name)
+            if child_name in self.children_name_list
+            else -1
+        )
+        if index == -1:
+            return
+        item = self.list_widget.item(index)
+        self.list_widget.setCurrentItem(item)
+
     def setChildStatus(self, child_name, status: AssessmentStatus):
         index = (
             self.children_name_list.index(child_name)
