@@ -1,7 +1,7 @@
 from unittest.mock import patch
 
 from gui.widgets.items.child_item import AssessmentStatus
-from logic.assessment_tools import (
+from gui.utils.assessment_tools import (
     bulk_update,
     create_default_scoring_dict,
     create_source_scoring_dict,
