@@ -20,12 +20,12 @@ from logic.assessment_tools import bulk_update, get_common_score_type
 
 class AssessmentArea(QFrame):
     on_score_updated = Signal(str, dict)  # child_name, score_dict
-    child_name = ""
-    score_dict = {}
-    domain_blocks = {}
 
     def __init__(self):
         super().__init__()
+        self.child_name = ""
+        self.score_dict = {}
+        self.domain_blocks = {}
         self.is_expanded = False
         self.setObjectName("assessment_area")
 

@@ -14,11 +14,11 @@ from gui.widgets.items.child_item import ChildItemWidget, AssessmentStatus
 
 
 class ChildSelector(QFrame):
-    children_name_list = []
     childSelected = Signal(str)
 
     def __init__(self, parent=None):
         super().__init__(parent)
+        self.children_name_list = []
         self.setObjectName("child_selector")
         self.setFixedWidth(250)
 
