@@ -1,5 +1,5 @@
 from config.metrics_schema import METRICS_SCHEMA
-from gui.widgets.items.child_item import AssessmentStatus
+from gui.types import AssessmentStatus
 
 
 def bulk_update(domains, score):

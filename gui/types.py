@@ -1,4 +1,4 @@
-from enum import Enum
+from enum import Enum, auto
 from dataclasses import dataclass
 from typing import Callable
 from PySide6.QtWidgets import QWidget
@@ -35,6 +35,12 @@ class Subject(Enum):
     MATH = "math"
     LITERACY = "literacy"
     SPEECH_IMMERSION = "speech_immersion"
+
+
+class AssessmentStatus(Enum):
+    NOT_STARTED = auto()
+    IN_PROGRESS = auto()
+    COMPLETED = auto()
 
 
 @dataclass

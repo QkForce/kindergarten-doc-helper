@@ -1,5 +1,3 @@
-from enum import Enum, auto
-
 from PySide6.QtWidgets import (
     QWidget,
     QLabel,
@@ -9,12 +7,7 @@ from PySide6.QtWidgets import (
 from gui.utils.icon_utils import get_svg_pixmap
 from gui.constants.icons import IconPaths
 from gui.constants.colors import AppColors
-
-
-class AssessmentStatus(Enum):
-    NOT_STARTED = auto()
-    IN_PROGRESS = auto()
-    COMPLETED = auto()
+from gui.types import AssessmentStatus
 
 
 class ChildItemWidget(QWidget):
