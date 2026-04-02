@@ -81,5 +81,4 @@ class ChildSelector(QFrame):
             return
         item = self.list_widget.item(index)
         widget = self.list_widget.itemWidget(item)
-        print(f"Setting status for {child_name} to {status}")
         widget.setStatus(status)
