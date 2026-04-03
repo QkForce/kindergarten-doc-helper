@@ -13,7 +13,7 @@ from PySide6.QtCore import Qt, QSize
 
 from gui.constants.colors import AppColors
 from gui.constants.icons import IconPaths
-from gui.types import Step
+from logic.types import Step
 from gui.widgets.step_indicator import StepIndicator
 from gui.widgets.icon_button import IconButton
 from gui.utils.icon_utils import get_svg_pixmap

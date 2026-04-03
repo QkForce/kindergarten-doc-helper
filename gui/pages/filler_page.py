@@ -6,7 +6,7 @@ from gui.steps.step_docx_fill_setup import StepDocxFillSetup
 from gui.steps.common.step_file_export import StepFileExport, StepFileExportOptions
 from gui.widgets.wizard_widget import WizardWidget, ModuleOptions
 from gui.state import FillerState
-from gui.types import Step
+from logic.types import Step
 from gui.constants.strings import FILLER_OPTIONS
 from gui.constants.icons import IconPaths
 from logic.exporter import DocxFillExporter

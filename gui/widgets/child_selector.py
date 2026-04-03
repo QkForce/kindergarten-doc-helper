@@ -10,7 +10,7 @@ from PySide6.QtWidgets import (
 )
 from PySide6.QtCore import Signal
 
-from gui.types import AssessmentStatus
+from logic.types import AssessmentStatus
 from gui.widgets.items.child_item import ChildItemWidget
 
 

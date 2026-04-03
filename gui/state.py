@@ -1,7 +1,7 @@
 from typing import Dict, List, Optional
 from openpyxl.workbook.workbook import Workbook
 
-from gui.types import AgeGroup
+from logic.types import AgeGroup
 from logic.config_tools import get_age_group_data, get_all_metric_codes
 
 

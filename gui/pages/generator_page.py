@@ -6,7 +6,7 @@ from gui.steps.step_docx_template import StepDocxTemplate
 from gui.steps.common.step_file_export import StepFileExport, StepFileExportOptions
 from gui.widgets.wizard_widget import WizardWidget, ModuleOptions
 from gui.state import GeneratorState
-from gui.types import Step
+from logic.types import Step
 from gui.constants.strings import GENERATOR_OPTIONS
 from gui.constants.icons import IconPaths
 from logic.exporter import DocxGenerateExporter

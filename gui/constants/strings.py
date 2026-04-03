@@ -1,4 +1,4 @@
-from gui.types import AgeGroup, Domain, Subject
+from logic.types import AgeGroup, Domain, Subject
 
 
 class AppStrings:

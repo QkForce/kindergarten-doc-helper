@@ -7,7 +7,7 @@ from PySide6.QtWidgets import (
 from gui.utils.icon_utils import get_svg_pixmap
 from gui.constants.icons import IconPaths
 from gui.constants.colors import AppColors
-from gui.types import AssessmentStatus
+from logic.types import AssessmentStatus
 
 
 class ChildItemWidget(QWidget):

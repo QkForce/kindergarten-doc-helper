@@ -6,7 +6,7 @@ from gui.steps.common.step_file_export import StepFileExport, StepFileExportOpti
 from gui.widgets.wizard_widget import WizardWidget, ModuleOptions
 from gui.state import SmartEntryState
 from logic.exporter import SmartEntryExporter
-from gui.types import Step
+from logic.types import Step
 from gui.constants.strings import SMART_ENTRY_OPTIONS
 from gui.constants.icons import IconPaths
 

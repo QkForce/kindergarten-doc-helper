@@ -1,5 +1,5 @@
 from config.metrics_schema import METRICS_SCHEMA
-from gui.types import AssessmentStatus
+from logic.types import AssessmentStatus
 
 
 def bulk_update(domains, score):
