@@ -81,6 +81,16 @@ class AssessmentArea(QFrame):
         layout.addWidget(header_frame)
         layout.addWidget(self.scroll_area)
 
+    def _clear_domain_blocks(self):
+        while self.body_layout.count():
+            item = self.body_layout.takeAt(0)
+            w = item.widget()
+            if w is not None:
+                w.setParent(None)
+                w.deleteLater()
+            del item
+        self.domain_blocks.clear()
+
     def handle_expand(self):
         self.is_expanded = not self.is_expanded
         expand_icon = get_svg_pixmap(
@@ -112,16 +122,13 @@ class AssessmentArea(QFrame):
         self.score_dict = score_dict
         self.child_name_lbl.setText(self.child_name)
 
-        if self.domain_blocks:
-            for domain_name, subjects in self.score_dict.items():
-                self.domain_blocks[domain_name].applyData(subjects)
-        else:
-            for domain_name, subjects in self.score_dict.items():
-                domain_block = DomainBlock(domain_name, subjects)
-                domain_block.on_score_updated.connect(self.handle_child_update)
-                self.domain_blocks[domain_name] = domain_block
-                self.body_layout.addWidget(domain_block)
-            self.body_layout.addStretch()
+        self._clear_domain_blocks()
+        for domain_name, subjects in self.score_dict.items():
+            domain_block = DomainBlock(domain_name, subjects)
+            domain_block.on_score_updated.connect(self.handle_child_update)
+            self.domain_blocks[domain_name] = domain_block
+            self.body_layout.addWidget(domain_block)
+        self.body_layout.addStretch()
 
         cmn_score = get_common_score_type(self.score_dict)
         self.score_toggle.set_score(cmn_score)
