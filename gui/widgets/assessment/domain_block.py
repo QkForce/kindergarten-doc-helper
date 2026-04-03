@@ -8,7 +8,7 @@ from PySide6.QtCore import Signal
 
 from gui.widgets.assessment.subject_block import SubjectBlock
 from gui.widgets.score_toggle import ScoreToggle, ScoreButtonType
-from gui.utils.assessment_tools import set_subjects_score, get_domain_score_type
+from logic.assessment_tools import set_subjects_score, get_domain_score_type
 from gui.constants.strings import DOMAIN_NAMES
 from gui.utils.style_utils import apply_shadow
 

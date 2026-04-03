@@ -13,7 +13,7 @@ from gui.constants.strings import SUBJECT_NAMES
 from gui.constants.icons import IconPaths
 from gui.constants.colors import AppColors
 from gui.utils.icon_utils import get_svg_pixmap
-from gui.utils.assessment_tools import set_metrics_score, get_subject_score_type
+from logic.assessment_tools import set_metrics_score, get_subject_score_type
 
 
 class SubjectBlock(QFrame):

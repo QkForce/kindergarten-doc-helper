@@ -8,7 +8,7 @@ from gui.state import SmartEntryState
 from gui.constants.strings import AppStrings
 from logic.loaders.universal_checklist_loader import UniversalChecklistLoader
 from logic.worker import start_worker_task
-from gui.utils.assessment_tools import create_source_scoring_dict
+from logic.assessment_tools import create_source_scoring_dict
 
 
 class StepChildAssessment(BaseStep[SmartEntryState]):

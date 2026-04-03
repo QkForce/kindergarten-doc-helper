@@ -15,7 +15,7 @@ from gui.widgets.assessment.domain_block import DomainBlock
 from gui.constants.colors import AppColors
 from gui.constants.icons import IconPaths
 from gui.utils.icon_utils import get_svg_pixmap
-from gui.utils.assessment_tools import bulk_update, get_common_score_type
+from logic.assessment_tools import bulk_update, get_common_score_type
 
 
 class AssessmentArea(QFrame):
