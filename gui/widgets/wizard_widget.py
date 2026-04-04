@@ -202,7 +202,7 @@ class WizardWidget(QFrame, Generic[T]):
 
         # next button
         is_last = self.current_step == total - 1
-        right_btn_icon = None if is_last else IconPaths.CHEVRON_RIGHT
+        right_btn_icon = IconPaths.SUCCESS if is_last else IconPaths.CHEVRON_RIGHT
         right_btn_icon = get_svg_pixmap(right_btn_icon, AppColors.CANVAS, 16)
         self.btn_next.setText("Аяқтау  " if is_last else "Келесі  ")
         self.btn_next.setIcon(QIcon(right_btn_icon))
