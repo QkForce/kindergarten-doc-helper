@@ -1,6 +1,5 @@
 from time import sleep
 from openpyxl import load_workbook
-from openpyxl.worksheet.worksheet import Worksheet
 from config.config import AGE_GROUP_DATA
 
 METRIC_CODES = [
@@ -8,6 +7,14 @@ METRIC_CODES = [
     for metric_group_data in AGE_GROUP_DATA.values()
     for code in metric_group_data.keys()
 ]
+
+
+def get_sheet_names(file_path: str):
+    workbook = load_workbook(file_path, read_only=True)
+    try:
+        return workbook.sheetnames
+    finally:
+        workbook.close()
 
 
 def load_metrics_from_excel(file_path, sheet_name, min_row=14, max_row=38):

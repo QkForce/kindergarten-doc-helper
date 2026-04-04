@@ -1,5 +1,6 @@
 from typing import TypeVar
 
+from openpyxl import load_workbook
 from PySide6.QtWidgets import QMessageBox
 from PySide6.QtStateMachine import QStateMachine, QState
 from PySide6.QtCore import Signal
@@ -103,9 +104,9 @@ class StepChildrenScores(BaseStep[T]):
         try:
             self.sig_loading.emit()
             self.has_errors = False
-            self.loader = UniversalChecklistLoader(
-                self.state.workbook[self.state.sheet_name]
-            )
+            self.workbook = load_workbook(self.state.file_path, read_only=True)
+            sheet = self.workbook[self.state.sheet_name]
+            self.loader = UniversalChecklistLoader(sheet)
             start_worker_task(self.loader.load_auto, self._loaded, self._load_failed)
         except Exception as e:
             print(e)
@@ -131,10 +132,14 @@ class StepChildrenScores(BaseStep[T]):
         self.state.children_scores = result["children_scores"]
 
     def _loaded(self, result):
+        if hasattr(self, "workbook"):
+            self.workbook.close()
         self.set_state(result)
         self._process_result(result["children_scores"])
 
     def _load_failed(self, err):
+        if hasattr(self, "workbook"):
+            self.workbook.close()
         self.last_error = str(err)
         self.sig_error.emit()
 

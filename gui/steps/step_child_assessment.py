@@ -1,3 +1,4 @@
+from openpyxl import load_workbook
 from PySide6.QtWidgets import QMessageBox
 from PySide6.QtStateMachine import QStateMachine, QState
 from PySide6.QtCore import Signal
@@ -108,9 +109,9 @@ class StepChildAssessment(BaseStep[SmartEntryState]):
         try:
             self.sig_loading.emit()
             self.loading = True
-            self.loader = UniversalChecklistLoader(
-                self.state.workbook[self.state.sheet_name]
-            )
+            self.workbook = load_workbook(self.state.file_path, read_only=True)
+            sheet = self.workbook[self.state.sheet_name]
+            self.loader = UniversalChecklistLoader(sheet)
             start_worker_task(self.loader.load_auto, self._loaded, self._load_failed)
         except Exception as e:
             print(e)
@@ -140,6 +141,8 @@ class StepChildAssessment(BaseStep[SmartEntryState]):
     def _loaded(self, result):
         # Set state data
         self.loading = False
+        if hasattr(self, "workbook"):
+            self.workbook.close()
         c_start, c_end, c_col = result["children_data"]
         self.state.children_start_row = c_start
         self.state.children_end_row = c_end
@@ -158,5 +161,7 @@ class StepChildAssessment(BaseStep[SmartEntryState]):
 
     def _load_failed(self, err):
         self.loading = False
+        if hasattr(self, "workbook"):
+            self.workbook.close()
         self.last_error = str(err)
         self.sig_error.emit()

@@ -11,7 +11,6 @@ class ChecklistBaseState:
 
     def init(self):
         self.file_path: str = ""
-        self.workbook: Optional[Workbook] = None
         self.sheet_name: str = ""
         self.age_group: Optional[AgeGroup] = None
 

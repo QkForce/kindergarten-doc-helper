@@ -1,12 +1,12 @@
 from typing import TypeVar
 
 from PySide6.QtWidgets import QLabel, QComboBox, QMessageBox, QSizePolicy
-from openpyxl import load_workbook
 
 from gui.steps.base_step import BaseStep
 from gui.widgets.file_picker import FilePickerWidget
 from gui.state import ChecklistBaseState
 from gui.constants.strings import AppStrings, AGE_GROUPS
+from logic.xlsx_tools import get_sheet_names
 
 
 T = TypeVar("T", bound=ChecklistBaseState)
@@ -57,18 +57,16 @@ class StepFileSelect(BaseStep[T]):
 
     def select_excel_file(self, file_path):
         try:
-            wb = load_workbook(file_path, read_only=True)
             self.state.file_path = file_path
-            self.state.workbook = wb
             self.combo_sheet.clear()
-            self.combo_sheet.addItems(wb.sheetnames)
+            self.combo_sheet.addItems(get_sheet_names(file_path))
             self.combo_sheet.setEnabled(True)
         except Exception as e:
             QMessageBox.critical(self, "Қате", f"Файлды оқу кезінде қате:\n{e}")
             self.combo_sheet.setEnabled(False)
 
     def validate_before_next(self):
-        if not self.state.workbook:
+        if not self.state.file_path:
             QMessageBox.warning(self, "Ескерту", "Excel файлын таңдаңыз.")
             return False
 
