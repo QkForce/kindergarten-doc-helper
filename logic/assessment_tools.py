@@ -63,6 +63,28 @@ def get_assessment_status(score_dict) -> AssessmentStatus:
         return AssessmentStatus.COMPLETED
 
 
+def get_children_assessment_status(children_scores: list) -> AssessmentStatus:
+    any_scored = False
+    any_incomplete = False
+
+    for child_scores in children_scores.values():
+        for subjects in child_scores.values():
+            for metrics in subjects.values():
+                for score in metrics.values():
+                    if score and score > 0:
+                        any_scored = True
+                    else:
+                        any_incomplete = True
+                    if any_scored and any_incomplete:
+                        return AssessmentStatus.IN_PROGRESS
+
+    if not any_scored:
+        return AssessmentStatus.NOT_STARTED
+    if not any_incomplete:
+        return AssessmentStatus.COMPLETED
+    return AssessmentStatus.IN_PROGRESS
+
+
 def create_default_scoring_dict(age_group):
     scoring_dict = {
         domain: {

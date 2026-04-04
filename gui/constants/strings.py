@@ -28,6 +28,16 @@ class AppStrings:
         "• Немесе файлдағы деректердің дұрыстығына көз жеткізіңіз"
     )
 
+    ASSESSMENT_WARNING_TITLE = "Ескерту"
+    ASSESSMENT_WARNING_DESC_EMPTY_CHILD_LIST = (
+        "Балалардың тізімі бос. "
+        "Құжатты дайындау үшін тізімде кемінде бір бала болуы керек."
+    )
+    ASSESSMENT_WARNING_DESC_INCOMPLETED = (
+        "Балалардың бағалары толық қойылмаған. "
+        "Құжатты дайындау үшін барлық бағаларды қою керек."
+    )
+
     ERROR_CHILDREN_SCORES_TITLE = "Балалардың бағаларын жүктеу кезінде қате"
     ERROR_CHILDREN_SCORES_DESC = "Автоматты жүктеу кезінде қате: {}"
 

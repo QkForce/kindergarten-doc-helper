@@ -1,3 +1,4 @@
+from PySide6.QtWidgets import QMessageBox
 from PySide6.QtStateMachine import QStateMachine, QState
 from PySide6.QtCore import Signal
 
@@ -7,8 +8,12 @@ from gui.widgets.status_placeholder import StatusPlaceholder, ViewState
 from gui.state import SmartEntryState
 from gui.constants.strings import AppStrings
 from logic.loaders.universal_checklist_loader import UniversalChecklistLoader
+from logic.types import AssessmentStatus
 from logic.worker import start_worker_task
-from logic.assessment_tools import create_source_scoring_dict
+from logic.assessment_tools import (
+    create_source_scoring_dict,
+    get_children_assessment_status,
+)
 
 
 class StepChildAssessment(BaseStep[SmartEntryState]):
@@ -19,6 +24,7 @@ class StepChildAssessment(BaseStep[SmartEntryState]):
 
     def setup_ui(self):
         self.last_error = None
+        self.loading = False
         self.status_placeholder = StatusPlaceholder()
         self.content_widget = ChildrenAssessmentWidget()
         self.content_widget.on_scores_updated.connect(
@@ -101,7 +107,7 @@ class StepChildAssessment(BaseStep[SmartEntryState]):
     def run_auto_load(self):
         try:
             self.sig_loading.emit()
-            self.has_errors = False
+            self.loading = True
             self.loader = UniversalChecklistLoader(
                 self.state.workbook[self.state.sheet_name]
             )
@@ -112,10 +118,28 @@ class StepChildAssessment(BaseStep[SmartEntryState]):
             self.sig_error.emit()
 
     def validate_before_next(self):
+        if self.loading:
+            return False
+        if not self.state.children_scores:
+            QMessageBox.warning(
+                self,
+                AppStrings.ASSESSMENT_WARNING_TITLE,
+                AppStrings.ASSESSMENT_WARNING_DESC_EMPTY_CHILD_LIST,
+            )
+            return False
+        assessment_status = get_children_assessment_status(self.state.children_scores)
+        if assessment_status != AssessmentStatus.COMPLETED:
+            QMessageBox.warning(
+                self,
+                AppStrings.ASSESSMENT_WARNING_TITLE,
+                AppStrings.ASSESSMENT_WARNING_DESC_INCOMPLETED,
+            )
+            return False
         return True
 
     def _loaded(self, result):
         # Set state data
+        self.loading = False
         c_start, c_end, c_col = result["children_data"]
         self.state.children_start_row = c_start
         self.state.children_end_row = c_end
@@ -133,5 +157,6 @@ class StepChildAssessment(BaseStep[SmartEntryState]):
             self.sig_empty.emit()
 
     def _load_failed(self, err):
+        self.loading = False
         self.last_error = str(err)
         self.sig_error.emit()
