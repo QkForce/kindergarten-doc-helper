@@ -24,6 +24,7 @@ class ChecklistBaseState:
         self.metric_end_col: int = 0
 
         # Main Data
+        self.original_children_order: List[str] = []
         self.source_metrics: List[Dict[str, str]] = []
         self.children_scores: List[dict] = []
 

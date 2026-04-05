@@ -159,6 +159,7 @@ class StepChildAssessment(BaseStep[SmartEntryState]):
         self.state.children_scores = create_source_scoring_dict(
             self.state.age_group, scores
         )
+        self.state.original_children_order = list(self.state.children_scores.keys())
 
         # Update UI
         if scores and len(scores) > 0:

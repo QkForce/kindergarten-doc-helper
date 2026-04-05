@@ -57,12 +57,12 @@ class SmartEntryExporter(Exporter):
                 "name": name,
                 **{
                     metric_code: score
-                    for subjects in scores.values()
+                    for subjects in state.children_scores[name].values()
                     for metrics in subjects.values()
                     for metric_code, score in metrics.items()
                 },
             }
-            for name, scores in state.children_scores.items()
+            for name in state.original_children_order
         ]
         self.metrics_codes = get_all_metric_codes(state.age_group)
         self.state = state
