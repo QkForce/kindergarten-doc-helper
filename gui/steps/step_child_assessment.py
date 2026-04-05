@@ -143,10 +143,18 @@ class StepChildAssessment(BaseStep[SmartEntryState]):
         self.loading = False
         if hasattr(self, "workbook"):
             self.workbook.close()
+
         c_start, c_end, c_col = result["children_data"]
         self.state.children_start_row = c_start
         self.state.children_end_row = c_end
         self.state.children_col = c_col
+
+        metrics, code_row, desc_row, start_col, end_col = result["metrics_data"]
+        self.state.metric_code_row = code_row
+        self.state.metric_desc_row = desc_row
+        self.state.metric_start_col = start_col
+        self.state.metric_end_col = end_col
+
         scores = result["children_scores"]
         self.state.children_scores = create_source_scoring_dict(
             self.state.age_group, scores

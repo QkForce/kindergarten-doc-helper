@@ -2,6 +2,7 @@ from gui.state import ChecklistBaseState
 from logic.docx_tools import create_children_grow_cards, fill_all_children_in_big_file
 from logic.metrics_tools import build_all_grow_cards
 from logic.xlsx_tools import fill_assessment_table
+from logic.config_tools import get_all_metric_codes
 
 
 class Exporter:
@@ -63,11 +64,7 @@ class SmartEntryExporter(Exporter):
             }
             for name, scores in state.children_scores.items()
         ]
-        self.metrics_codes = [
-            metric_code
-            for metrics in state.age_group_data.values()
-            for metric_code in metrics.keys()
-        ]
+        self.metrics_codes = get_all_metric_codes(state.age_group)
         self.state = state
         self.progress_callback = progress_callback
 

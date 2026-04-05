@@ -55,7 +55,7 @@ def fill_assessment_table(
     workbook = load_workbook(filename=file_path, read_only=False)
     sheet = workbook[sheet_name]
     current_row = start_row
-    metrics_col = name_col + 1
+    # metrics_col = name_col + 1
     for child in children_data:
         sheet.cell(row=current_row, column=name_col, value=child["name"])
         for metric_index, metric_code in enumerate(metrics_codes):
