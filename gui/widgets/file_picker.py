@@ -61,12 +61,12 @@ class FilePickerWidget(QWidget):
         file_path, _ = QFileDialog.getOpenFileName(
             self, self.caption, self.dir, self.filter
         )
-        if file_path:
-            self.file_label.setText(os.path.basename(file_path))
-            self.fileSelected.emit(file_path)
-        else:
-            self.file_label.setText("Файл таңдалмады")
-            self.fileSelected.emit("")
+
+        if not file_path:
+            return
+
+        self.file_label.setText(os.path.basename(file_path))
+        self.fileSelected.emit(file_path)
 
     def setEnabled(self, arg__1):
         self.btn_browse.setEnabled(arg__1)
