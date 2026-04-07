@@ -25,7 +25,7 @@ class AssessmentArea(QFrame):
         super().__init__()
         self.child_name = ""
         self.score_dict = {}
-        self.domain_blocks = {}
+        self.domain_blocks: dict[str, DomainBlock] = {}
         self.is_expanded = False
         self.setObjectName("assessment_area")
 
@@ -94,11 +94,13 @@ class AssessmentArea(QFrame):
     def handle_expand(self):
         self.is_expanded = not self.is_expanded
         expand_icon = get_svg_pixmap(
-            IconPaths.EXPAND if self.is_expanded else IconPaths.COLLAPSE,
+            IconPaths.COLLAPSE if self.is_expanded else IconPaths.EXPAND,
             AppColors.BTN_ICON_TEXT,
             16,
         )
         self.expand_btn.setIcon(QIcon(expand_icon))
+        for db in self.domain_blocks.values():
+            db.setExpanded(self.is_expanded)
 
     def on_bulk_score(self, score):
         bulk_update(self.score_dict, score)

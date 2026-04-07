@@ -20,7 +20,7 @@ class DomainBlock(QFrame):
         super().__init__()
         self.domain_name = domain_name
         self.subjects = subjects
-        self.subject_blocks = {}
+        self.subject_blocks: dict[str, SubjectBlock] = {}
         self.setObjectName("domain_block")
 
         self.setFrameShape(QFrame.Shape.StyledPanel)
@@ -84,3 +84,7 @@ class DomainBlock(QFrame):
             self.subject_blocks[sn].applyData(metrics)
         cmn_score = get_domain_score_type(self.subjects)
         self.score_toggle.set_score(cmn_score)
+
+    def setExpanded(self, is_expanded):
+        for sb in self.subject_blocks.values():
+            sb.setExpanded(is_expanded)

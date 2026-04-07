@@ -66,11 +66,11 @@ class SubjectBlock(QFrame):
         layout.addStretch(1)
 
     def mousePressEvent(self, event):
-        self.toggle_expand()
+        self.setExpanded(not self.is_expanded)
         super().mousePressEvent(event)
 
-    def toggle_expand(self):
-        self.is_expanded = not self.is_expanded
+    def setExpanded(self, is_expanded):
+        self.is_expanded = is_expanded
         target_angle = 0 if self.is_expanded else -90
         self.chevron_icon.rotate(target_angle)
         self.line.setVisible(self.is_expanded)
