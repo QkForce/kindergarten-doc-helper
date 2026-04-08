@@ -55,20 +55,6 @@ QFrame#wizard_header_frame {
     border-bottom: 1px solid @BORDER;
 }
 
-QLabel#wizard_chevron_icon {
-    color: @TEXT_MUTED;
-    font-size: 12px;
-}
-QFrame#wizard_module_label_frame {
-    background-color: @SIDEBAR;
-    border-radius: 8px;
-}
-QFrame#wizard_module_label_frame QLabel {
-    color: @PRIMARY;
-    text-transform: uppercase;
-    font-weight: bold;
-}
-
 QLabel#step_indicator_circle[indicator-type=done] {
     color: @SUCCESS;
     font-size: 10px;
@@ -118,7 +104,9 @@ QScrollArea {
     background-color: #F9FAFB;
 }
 
-QPushButton#wizard_logo {
+/* Breadcrumb */
+
+QPushButton#breadcrumb_logo {
     background-color: @DARK;
     border-radius: 8px;
     font-size: 18px;
@@ -126,8 +114,24 @@ QPushButton#wizard_logo {
     color: @CANVAS;
     outline: none;
 }
-QPushButton#wizard_logo:hover {
+QPushButton#breadcrumb_logo:hover {
     background-color: @PRIMARY;
+}
+
+QLabel#breadcrumb_chevron_icon {
+    color: @TEXT_MUTED;
+    font-size: 12px;
+}
+
+QFrame#breadcrumb_module_label_frame {
+    background-color: @SIDEBAR;
+    border-radius: 8px;
+}
+
+QFrame#breadcrumb_module_label_frame QLabel {
+    color: @PRIMARY;
+    text-transform: uppercase;
+    font-weight: bold;
 }
 
 /* SMART ENTRY */

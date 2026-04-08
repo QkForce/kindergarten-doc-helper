@@ -4,27 +4,21 @@ from PySide6.QtWidgets import (
     QVBoxLayout,
     QHBoxLayout,
     QPushButton,
-    QLabel,
     QStackedWidget,
     QFrame,
 )
 from PySide6.QtGui import QIcon
-from PySide6.QtCore import Qt, QSize
+from PySide6.QtCore import Qt
 
 from gui.constants.colors import AppColors
 from gui.constants.icons import IconPaths
 from logic.types import Step
 from gui.widgets.step_indicator import StepIndicator
 from gui.widgets.icon_button import IconButton
+from gui.widgets.ui.bread_crumb import BreadCrumb, ModuleOptions
 from gui.utils.icon_utils import get_svg_pixmap
 
 T = TypeVar("T")
-
-
-class ModuleOptions:
-    def __init__(self, title: str, icon_path: str):
-        self.title = title
-        self.icon_path = icon_path
 
 
 class WizardWidget(QFrame, Generic[T]):
@@ -43,28 +37,9 @@ class WizardWidget(QFrame, Generic[T]):
         self.setObjectName("wizard_container")
 
         # HEADER
-        logo_btn = QPushButton("K")
-        logo_btn.setObjectName("wizard_logo")
-        logo_btn.setFixedSize(32, 32)
-        logo_btn.clicked.connect(self.close_wizard)
-
-        chevron_pixmap = get_svg_pixmap(IconPaths.CHEVRON_RIGHT, AppColors.PRIMARY, 16)
-        chevron_icon = QLabel()
-        chevron_icon.setPixmap(chevron_pixmap)
-        chevron_icon.setObjectName("wizard_chevron_icon")
-
-        module_pixmap = get_svg_pixmap(module_options.icon_path, AppColors.PRIMARY, 20)
-        module_icon = QLabel()
-        module_icon.setPixmap(module_pixmap)
-        module_label = QLabel(module_options.title)
-
-        module_label_frame = QFrame()
-        module_label_frame.setFixedHeight(30)
-        module_label_frame.setObjectName("wizard_module_label_frame")
-        module_label_layout = QHBoxLayout(module_label_frame)
-        module_label_layout.setContentsMargins(5, 0, 5, 0)
-        module_label_layout.addWidget(module_icon)
-        module_label_layout.addWidget(module_label)
+        bread_crumb = BreadCrumb(
+            on_click_logo=self.close_wizard, module_options=module_options
+        )
 
         self.step_indicator = StepIndicator(
             [step.title for step in steps], current_step=0
@@ -74,11 +49,7 @@ class WizardWidget(QFrame, Generic[T]):
         header_frame.setObjectName("wizard_header_frame")
         header_frame.setContentsMargins(0, 10, 0, 10)
         header_layout = QHBoxLayout(header_frame)
-        header_layout.addWidget(logo_btn)
-        header_layout.addSpacing(10)
-        header_layout.addWidget(chevron_icon)
-        header_layout.addSpacing(10)
-        header_layout.addWidget(module_label_frame)
+        header_layout.addWidget(bread_crumb)
         header_layout.addStretch()
         header_layout.addWidget(self.step_indicator)
 
