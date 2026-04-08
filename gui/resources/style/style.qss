@@ -1,17 +1,61 @@
-/* HubPage common bg */
+/*--- COMMON STYLES ---*/
+
+QFrame#header_frame {
+    background-color: @CANVAS;
+    border-bottom: 1px solid @BORDER;
+}
+
+QLabel#logo_lbl {
+    font-size: 20px;
+    font-weight: bold;
+    color: @DARK;
+}
+
+/* Breadcrumb */
+
+QPushButton#breadcrumb_logo {
+    background-color: @DARK;
+    border-radius: 8px;
+    font-size: 18px;
+    font-weight: bold;
+    color: @CANVAS;
+    outline: none;
+}
+QPushButton#breadcrumb_logo:hover {
+    background-color: @PRIMARY;
+}
+
+QLabel#breadcrumb_chevron_icon {
+    color: @TEXT_MUTED;
+    font-size: 12px;
+}
+
+QFrame#breadcrumb_module_label_frame {
+    background-color: @SIDEBAR;
+    border-radius: 8px;
+}
+
+QFrame#breadcrumb_module_label_frame QLabel {
+    color: @PRIMARY;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+/*--- HUBPAGE ---*/
+
 QWidget#hub_page {
     background-color: @CANVAS;
 }
 
 #hub_main_title {
-    font-size: 42px;
+    font-size: 32px;
     font-weight: 800;
-    color: #0F172A;
+    color: @DARK;
 }
 
 #hub_subtitle {
-    font-size: 18px;
-    color: #64748B;
+    font-size: 16px;
+    color: @TEXT_MUTED;
 }
 
 /* FeatureCard style */
@@ -43,16 +87,11 @@ QWidget#hub_page {
     line-height: 1.4;
 }
 
-/* WIZARD */
+/*--- WIZARD ---*/
 
 QWidget#wizard_container {
     background-color: @CANVAS;
     border: none;
-}
-
-QFrame#wizard_header_frame {
-    background-color: @CANVAS;
-    border-bottom: 1px solid @BORDER;
 }
 
 QLabel#step_indicator_circle[indicator-type=done] {
@@ -104,37 +143,7 @@ QScrollArea {
     background-color: #F9FAFB;
 }
 
-/* Breadcrumb */
-
-QPushButton#breadcrumb_logo {
-    background-color: @DARK;
-    border-radius: 8px;
-    font-size: 18px;
-    font-weight: bold;
-    color: @CANVAS;
-    outline: none;
-}
-QPushButton#breadcrumb_logo:hover {
-    background-color: @PRIMARY;
-}
-
-QLabel#breadcrumb_chevron_icon {
-    color: @TEXT_MUTED;
-    font-size: 12px;
-}
-
-QFrame#breadcrumb_module_label_frame {
-    background-color: @SIDEBAR;
-    border-radius: 8px;
-}
-
-QFrame#breadcrumb_module_label_frame QLabel {
-    color: @PRIMARY;
-    text-transform: uppercase;
-    font-weight: bold;
-}
-
-/* SMART ENTRY */
+/*--- SMART ENTRY ---*/
 
 QWidget#children_assessment_widget {
     background-color: @CANVAS;

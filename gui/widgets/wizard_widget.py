@@ -46,7 +46,7 @@ class WizardWidget(QFrame, Generic[T]):
         )
 
         header_frame = QFrame()
-        header_frame.setObjectName("wizard_header_frame")
+        header_frame.setObjectName("header_frame")
         header_frame.setContentsMargins(0, 10, 0, 10)
         header_layout = QHBoxLayout(header_frame)
         header_layout.addWidget(bread_crumb)

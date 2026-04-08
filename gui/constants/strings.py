@@ -6,8 +6,8 @@ class AppStrings:
     APP_NAME = "KinderDoc Helper"
 
     # Hub Page Strings
-    HUB_TITLE = "KinderDoc Helper"
-    HUB_SUBTITLE = "Select a tool to get started with your documents"
+    HUB_TITLE = "Жұмыс кеңістігі"
+    HUB_SUBTITLE = "Қажетті құралды таңдап, құжаттарды дайындаңыз"
 
     # Feature Cards
     CARD_GEN_TITLE = "Document Generator"

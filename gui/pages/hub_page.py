@@ -3,6 +3,7 @@ from PySide6.QtWidgets import (
     QVBoxLayout,
     QHBoxLayout,
     QLabel,
+    QPushButton,
 )
 from PySide6.QtCore import Qt, Signal
 
@@ -22,16 +23,25 @@ class HubPage(QFrame):
         self.setObjectName("hub_page")
 
         # 1. Header
+        logo_btn = QPushButton("K")
+        logo_btn.setObjectName("breadcrumb_logo")
+        logo_btn.setFixedSize(32, 32)
+
+        logo_lbl = QLabel("KinderDoc")
+        logo_lbl.setObjectName("logo_lbl")
+
+        header_frame = QFrame()
+        header_frame.setObjectName("header_frame")
+        header_frame.setContentsMargins(0, 10, 0, 10)
+        header_layout = QHBoxLayout(header_frame)
+        header_layout.addWidget(logo_btn)
+        header_layout.addWidget(logo_lbl, 0, Qt.AlignVCenter)
+
         title = QLabel(AppStrings.HUB_TITLE)
         title.setObjectName("hub_main_title")
 
         subtitle = QLabel(AppStrings.HUB_SUBTITLE)
         subtitle.setObjectName("hub_subtitle")
-
-        header_layout = QVBoxLayout()
-        header_layout.setSpacing(8)
-        header_layout.addWidget(title, 0, Qt.AlignCenter)
-        header_layout.addWidget(subtitle, 0, Qt.AlignCenter)
 
         # 2. Cards Grid
         self.card_gen = FeatureCard(
@@ -51,17 +61,20 @@ class HubPage(QFrame):
         )
 
         cards_layout = QHBoxLayout()
-        cards_layout.setSpacing(25)
+        cards_layout.setContentsMargins(10, 20, 10, 20)
         cards_layout.addWidget(self.card_gen)
         cards_layout.addWidget(self.card_tpl)
         cards_layout.addWidget(self.card_entry)
 
         main_layout = QVBoxLayout(self)
-        main_layout.setAlignment(Qt.AlignCenter)
-        main_layout.setContentsMargins(40, 40, 40, 80)
-        main_layout.addLayout(header_layout)
-        main_layout.addSpacing(60)
-        main_layout.addLayout(cards_layout)
+        main_layout.setContentsMargins(10, 0, 10, 10)
+        main_layout.addWidget(header_frame)
+        main_layout.setSpacing(20)
+        main_layout.addWidget(title, 0, Qt.AlignCenter)
+        main_layout.addWidget(subtitle, 0, Qt.AlignCenter)
+        main_layout.addSpacing(20)
+        main_layout.addLayout(cards_layout, 0)
+        main_layout.addStretch()
 
         # Connect card clicks to signals that MainWindow will listen to for navigation
         self.card_gen.clicked.connect(self.generator_requested.emit)
