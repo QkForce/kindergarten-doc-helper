@@ -1,5 +1,5 @@
 from PySide6.QtWidgets import (
-    QWidget,
+    QFrame,
     QVBoxLayout,
     QHBoxLayout,
     QLabel,
@@ -11,7 +11,7 @@ from gui.constants.icons import IconPaths
 from gui.constants.strings import AppStrings
 
 
-class HubPage(QWidget):
+class HubPage(QFrame):
     # Send navigation signals to MainWindow
     generator_requested = Signal()
     template_requested = Signal()
