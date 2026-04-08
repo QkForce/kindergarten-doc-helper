@@ -21,30 +21,19 @@ class HubPage(QFrame):
         super().__init__()
         self.setObjectName("hub_page")
 
-        main_layout = QVBoxLayout(self)
-        main_layout.setAlignment(Qt.AlignCenter)
-        main_layout.setContentsMargins(40, 40, 40, 80)
-
         # 1. Header
-        header_layout = QVBoxLayout()
-        header_layout.setSpacing(8)
-
         title = QLabel(AppStrings.HUB_TITLE)
         title.setObjectName("hub_main_title")
 
         subtitle = QLabel(AppStrings.HUB_SUBTITLE)
         subtitle.setObjectName("hub_subtitle")
 
+        header_layout = QVBoxLayout()
+        header_layout.setSpacing(8)
         header_layout.addWidget(title, 0, Qt.AlignCenter)
         header_layout.addWidget(subtitle, 0, Qt.AlignCenter)
-        main_layout.addLayout(header_layout)
-
-        main_layout.addSpacing(60)
 
         # 2. Cards Grid
-        cards_layout = QHBoxLayout()
-        cards_layout.setSpacing(25)
-
         self.card_gen = FeatureCard(
             AppStrings.CARD_GEN_TITLE,
             AppStrings.CARD_GEN_DESC,
@@ -61,10 +50,17 @@ class HubPage(QFrame):
             IconPaths.FEATURE_ENTRY_XLSX,
         )
 
+        cards_layout = QHBoxLayout()
+        cards_layout.setSpacing(25)
         cards_layout.addWidget(self.card_gen)
         cards_layout.addWidget(self.card_tpl)
         cards_layout.addWidget(self.card_entry)
 
+        main_layout = QVBoxLayout(self)
+        main_layout.setAlignment(Qt.AlignCenter)
+        main_layout.setContentsMargins(40, 40, 40, 80)
+        main_layout.addLayout(header_layout)
+        main_layout.addSpacing(60)
         main_layout.addLayout(cards_layout)
 
         # Connect card clicks to signals that MainWindow will listen to for navigation
