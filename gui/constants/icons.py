@@ -22,6 +22,7 @@ class IconPaths:
 
     # Other icons
     HOUSE = str(ICON_DIR / "house.svg")
+    SETTINGS = str(ICON_DIR / "settings.svg")
     CHEVRON_DOWN = str(ICON_DIR / "chevron-down.svg")
     CHEVRON_LEFT = str(ICON_DIR / "chevron-left.svg")
     CHEVRON_RIGHT = str(ICON_DIR / "chevron-right.svg")

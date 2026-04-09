@@ -11,6 +11,12 @@ QLabel#logo_lbl {
     color: @DARK;
 }
 
+QPushButton#settings_btn {
+    background-color: @CANVAS;
+    border: 1px solid @BORDER;
+    border-radius: 4px;
+}
+
 /* Breadcrumb */
 
 QPushButton#breadcrumb_logo {

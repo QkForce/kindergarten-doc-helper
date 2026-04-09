@@ -6,10 +6,15 @@ from PySide6.QtWidgets import (
     QPushButton,
 )
 from PySide6.QtCore import Qt, Signal
+from PySide6.QtGui import QIcon
 
+from gui.constants.colors import AppColors
 from gui.widgets.feature_card import FeatureCard
+from gui.widgets.icon_button import IconButton
 from gui.constants.icons import IconPaths
 from gui.constants.strings import AppStrings
+from gui.utils.icon_utils import get_svg_pixmap
+from gui.utils.style_utils import apply_shadow
 
 
 class HubPage(QFrame):
@@ -26,9 +31,17 @@ class HubPage(QFrame):
         logo_btn = QPushButton("K")
         logo_btn.setObjectName("breadcrumb_logo")
         logo_btn.setFixedSize(32, 32)
+        apply_shadow(logo_btn, blur_radius=15, offset_y=4)
 
         logo_lbl = QLabel("KinderDoc")
         logo_lbl.setObjectName("logo_lbl")
+
+        settings_btn = IconButton(IconPaths.SETTINGS)
+        settings_btn.setFixedSize(32, 32)
+        settings_btn.setObjectName("settings_btn")
+        settings_icon = get_svg_pixmap(IconPaths.SETTINGS, AppColors.BTN_ICON_TEXT, 16)
+        settings_btn.setIcon(QIcon(settings_icon))
+        apply_shadow(settings_btn, blur_radius=15, offset_y=4)
 
         header_frame = QFrame()
         header_frame.setObjectName("header_frame")
@@ -36,6 +49,8 @@ class HubPage(QFrame):
         header_layout = QHBoxLayout(header_frame)
         header_layout.addWidget(logo_btn)
         header_layout.addWidget(logo_lbl, 0, Qt.AlignVCenter)
+        header_layout.addStretch()
+        header_layout.addWidget(settings_btn, 0, Qt.AlignVCenter)
 
         title = QLabel(AppStrings.HUB_TITLE)
         title.setObjectName("hub_main_title")
