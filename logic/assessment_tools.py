@@ -118,6 +118,6 @@ def create_source_scoring_dict(age_group, scores):
                     score = item.get(code, 0)
                     scoring_dict[name][dn][sn][code] = {
                         "score": score,
-                        "criteria": metric["score_desc_list"],
+                        "criteria": metric["criteria"],
                     }
     return scoring_dict
