@@ -8,6 +8,7 @@ def bulk_update(domains, score):
             for mn in metrics.keys():
                 domains[dn][sn][mn] = {
                     "score": score,
+                    "description": metrics[mn]["description"],
                     "criteria": metrics[mn]["criteria"],
                 }
 
@@ -15,12 +16,20 @@ def bulk_update(domains, score):
 def set_subjects_score(subjects, score):
     for sn, metrics in subjects.items():
         for mn in metrics.keys():
-            subjects[sn][mn] = {"score": score, "criteria": metrics[mn]["criteria"]}
+            subjects[sn][mn] = {
+                "score": score,
+                "description": metrics[mn]["description"],
+                "criteria": metrics[mn]["criteria"],
+            }
 
 
 def set_metrics_score(metrics, score):
     for mn in metrics.keys():
-        metrics[mn] = {"score": score, "criteria": metrics[mn]["criteria"]}
+        metrics[mn] = {
+            "score": score,
+            "description": metrics[mn]["description"],
+            "criteria": metrics[mn]["criteria"],
+        }
 
 
 def get_common_score_type(score_dict):
@@ -118,6 +127,7 @@ def create_source_scoring_dict(age_group, scores):
                     score = item.get(code, 0)
                     scoring_dict[name][dn][sn][code] = {
                         "score": score,
+                        "description": metric["original"],
                         "criteria": metric["criteria"],
                     }
     return scoring_dict

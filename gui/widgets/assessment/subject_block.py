@@ -49,7 +49,11 @@ class SubjectBlock(QFrame):
         self.body_frame = QFrame()
         body_layout = QHBoxLayout(self.body_frame)
         for i, (mn, metric_data) in enumerate(self.metrics.items()):
-            metric_item = MetricItem(metric_name=mn, criteria=metric_data["criteria"])
+            metric_item = MetricItem(
+                metric_name=mn,
+                description=metric_data["description"],
+                criteria=metric_data["criteria"],
+            )
             metric_item.on_score_updated.connect(self.handle_child_update)
             self.metric_items[mn] = metric_item
             body_layout.addWidget(metric_item)
@@ -88,6 +92,7 @@ class SubjectBlock(QFrame):
     def handle_child_update(self, metric_name, score):
         self.metrics[metric_name] = {
             "score": score,
+            "description": self.metrics[metric_name]["description"],
             "criteria": self.metrics[metric_name]["criteria"],
         }
         cmn_score = get_subject_score_type(self.metrics)

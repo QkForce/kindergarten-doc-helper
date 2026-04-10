@@ -7,9 +7,12 @@ from gui.widgets.score_toggle import ScoreToggle, ScoreButtonType
 class MetricItem(QFrame):
     on_score_updated = Signal(str, int)  # metric_name, score
 
-    def __init__(self, metric_name: str, criteria: list, score: int = 0):
+    def __init__(
+        self, metric_name: str, description: str, criteria: list, score: int = 0
+    ):
         super().__init__()
         self.metric_name = metric_name
+        self.description = description
         self.criteria = criteria
         self.setObjectName("metric_item")
 
@@ -18,6 +21,7 @@ class MetricItem(QFrame):
 
         title = QLabel(self.metric_name)
         title.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        title.setToolTip(self.description)
 
         self.score_toggle = ScoreToggle(
             btn_tooltips=self.criteria,
