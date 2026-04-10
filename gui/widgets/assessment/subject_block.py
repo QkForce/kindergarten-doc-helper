@@ -48,8 +48,8 @@ class SubjectBlock(QFrame):
 
         self.body_frame = QFrame()
         body_layout = QHBoxLayout(self.body_frame)
-        for i, mn in enumerate(self.metrics.keys()):
-            metric_item = MetricItem(metric_name=mn)
+        for i, (mn, metric_data) in enumerate(self.metrics.items()):
+            metric_item = MetricItem(metric_name=mn, criteria=metric_data["criteria"])
             metric_item.on_score_updated.connect(self.handle_child_update)
             self.metric_items[mn] = metric_item
             body_layout.addWidget(metric_item)
@@ -78,22 +78,25 @@ class SubjectBlock(QFrame):
 
     def on_bulk_score(self, score):
         set_metrics_score(self.metrics, score)
-        for mn, score in self.metrics.items():
-            self.metric_items[mn].applyData(score)
+        for mn, metric in self.metrics.items():
+            self.metric_items[mn].applyData(metric["score"])
         # Send signal to parent (isn't necessary to send again)
         self.on_score_updated.emit(self.subject_name, self.metrics)
         # It is not necessary to update the score_toggle state here
         # because it called this method, so its state is already up to date.
 
     def handle_child_update(self, metric_name, score):
-        self.metrics[metric_name] = score
+        self.metrics[metric_name] = {
+            "score": score,
+            "criteria": self.metrics[metric_name]["criteria"],
+        }
         cmn_score = get_subject_score_type(self.metrics)
         self.score_toggle.set_score(cmn_score)
         self.on_score_updated.emit(self.subject_name, self.metrics)
 
     def applyData(self, metrics):
         self.metrics = metrics
-        for mn, score in self.metrics.items():
-            self.metric_items[mn].applyData(score)
+        for mn, metric in self.metrics.items():
+            self.metric_items[mn].applyData(metric["score"])
         cmn_score = get_subject_score_type(self.metrics)
         self.score_toggle.set_score(cmn_score)

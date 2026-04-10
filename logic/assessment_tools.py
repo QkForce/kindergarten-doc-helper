@@ -6,27 +6,30 @@ def bulk_update(domains, score):
     for dn, subjects in domains.items():
         for sn, metrics in subjects.items():
             for mn in metrics.keys():
-                domains[dn][sn][mn] = score
+                domains[dn][sn][mn] = {
+                    "score": score,
+                    "criteria": metrics[mn]["criteria"],
+                }
 
 
 def set_subjects_score(subjects, score):
     for sn, metrics in subjects.items():
         for mn in metrics.keys():
-            subjects[sn][mn] = score
+            subjects[sn][mn] = {"score": score, "criteria": metrics[mn]["criteria"]}
 
 
 def set_metrics_score(metrics, score):
     for mn in metrics.keys():
-        metrics[mn] = score
+        metrics[mn] = {"score": score, "criteria": metrics[mn]["criteria"]}
 
 
 def get_common_score_type(score_dict):
     score_types = set(
         [
-            score
+            metric["score"]
             for subjects in score_dict.values()
             for metrics in subjects.values()
-            for score in metrics.values()
+            for metric in metrics.values()
         ]
     )
     return score_types.pop() if len(score_types) == 1 else 0
@@ -34,13 +37,17 @@ def get_common_score_type(score_dict):
 
 def get_domain_score_type(subjects):
     score_types = set(
-        [score for metrics in subjects.values() for score in metrics.values()]
+        [
+            metric["score"]
+            for metrics in subjects.values()
+            for metric in metrics.values()
+        ]
     )
     return score_types.pop() if len(score_types) == 1 else 0
 
 
 def get_subject_score_type(metrics):
-    score_types = set(metrics.values())
+    score_types = set(metric["score"] for metric in metrics.values())
     return score_types.pop() if len(score_types) == 1 else 0
 
 
@@ -50,9 +57,9 @@ def get_assessment_status(score_dict) -> AssessmentStatus:
 
     for subjects in score_dict.values():
         for metrics in subjects.values():
-            for score in metrics.values():
+            for metric in metrics.values():
                 total_metrics += 1
-                if score != 0:
+                if metric["score"] != 0:
                     scored_metrics += 1
 
     if scored_metrics == 0:
@@ -70,7 +77,8 @@ def get_children_assessment_status(children_scores: list) -> AssessmentStatus:
     for child_scores in children_scores.values():
         for subjects in child_scores.values():
             for metrics in subjects.values():
-                for score in metrics.values():
+                for metric in metrics.values():
+                    score = metric["score"]
                     if score and score > 0:
                         any_scored = True
                     else:
@@ -106,7 +114,10 @@ def create_source_scoring_dict(age_group, scores):
             scoring_dict[name][dn] = {}
             for sn, metrics in subjects.items():
                 scoring_dict[name][dn][sn] = {}
-                for code in metrics.keys():
+                for code, metric in metrics.items():
                     score = item.get(code, 0)
-                    scoring_dict[name][dn][sn][code] = score
+                    scoring_dict[name][dn][sn][code] = {
+                        "score": score,
+                        "criteria": metric["score_desc_list"],
+                    }
     return scoring_dict

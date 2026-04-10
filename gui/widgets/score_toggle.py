@@ -17,7 +17,14 @@ class ScoreButtonType(Enum):
 class ScoreToggle(QWidget):
     scoreChanged = Signal(int)
 
-    def __init__(self, btn_type=ScoreButtonType.BASE, size=24, spacing=4, parent=None):
+    def __init__(
+        self,
+        btn_tooltips: list = None,
+        btn_type=ScoreButtonType.BASE,
+        size=24,
+        spacing=4,
+        parent=None,
+    ):
         super().__init__(parent)
         self.layout = QHBoxLayout(self)
         self.layout.setSpacing(spacing)
@@ -42,6 +49,10 @@ class ScoreToggle(QWidget):
             self.group.addButton(btn, val)
             self.layout.addWidget(btn)
             self.buttons[val] = btn
+        if btn_tooltips:
+            for val, tooltip in zip([1, 2, 3], btn_tooltips):
+                if val in self.buttons:
+                    self.buttons[val].setToolTip(tooltip)
 
     def _on_button_clicked(self, score_id):
         if self.current_score == score_id:
