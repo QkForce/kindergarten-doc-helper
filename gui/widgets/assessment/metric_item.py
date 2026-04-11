@@ -2,6 +2,7 @@ from PySide6.QtWidgets import QFrame, QVBoxLayout, QLabel
 from PySide6.QtCore import Qt, Signal
 
 from gui.widgets.score_toggle import ScoreToggle, ScoreButtonType
+from gui.utils.formatter import format_criterion_tooltip
 
 
 class MetricItem(QFrame):
@@ -13,7 +14,10 @@ class MetricItem(QFrame):
         super().__init__()
         self.metric_name = metric_name
         self.description = description
-        self.criteria = criteria
+        self.criteria = [
+            format_criterion_tooltip(i, desc)
+            for i, desc in enumerate(criteria, start=1)
+        ]
         self.setObjectName("metric_item")
 
         self.setFrameShape(QFrame.Shape.StyledPanel)

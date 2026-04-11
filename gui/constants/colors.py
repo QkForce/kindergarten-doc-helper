@@ -98,6 +98,12 @@ class AppColors:
     BTN_ICON_TEXT = Palette.Slate400
     BTN_ICON_HOVER_BG = Palette.Blue50
 
+    # Tooltip colors
+    TOOLTIP_BG = Palette.Slate900
+    TOOLTIP_CRITERION_1 = Palette.Emerald500
+    TOOLTIP_CRITERION_2 = Palette.Amber500
+    TOOLTIP_CRITERION_3 = Palette.Rose500
+
     # ComboBox colors
     SELECTION_BG = Palette.Slate200
 
