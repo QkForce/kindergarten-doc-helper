@@ -1,4 +1,5 @@
 from PySide6.QtWidgets import (
+    QDialog,
     QFrame,
     QVBoxLayout,
     QHBoxLayout,
@@ -15,6 +16,7 @@ from gui.constants.icons import IconPaths
 from gui.constants.strings import AppStrings
 from gui.utils.icon_utils import get_svg_pixmap
 from gui.utils.style_utils import apply_shadow
+from gui.dialogs.settings_dialog import SettingsDialog
 
 
 class HubPage(QFrame):
@@ -39,6 +41,7 @@ class HubPage(QFrame):
         settings_btn = IconButton(IconPaths.SETTINGS)
         settings_btn.setFixedSize(32, 32)
         settings_btn.setObjectName("settings_btn")
+        settings_btn.clicked.connect(self.open_settings)
         settings_icon = get_svg_pixmap(IconPaths.SETTINGS, AppColors.BTN_ICON_TEXT, 16)
         settings_btn.setIcon(QIcon(settings_icon))
         apply_shadow(settings_btn, blur_radius=15, offset_y=4)
@@ -95,3 +98,11 @@ class HubPage(QFrame):
         self.card_gen.clicked.connect(self.generator_requested.emit)
         self.card_tpl.clicked.connect(self.template_requested.emit)
         self.card_entry.clicked.connect(self.entry_requested.emit)
+
+    def open_settings(self):
+        settings_dialog = SettingsDialog(
+            current_settings={"export_path": ""}, parent=self
+        )
+        if settings_dialog.exec() == QDialog.Accepted:
+            new_settings = settings_dialog.get_data()
+            print("New settings:", new_settings)
