@@ -280,3 +280,83 @@ QWidget#metric_score_toggle  #score_button {
     border-radius: 4px;
     font-size: 10px;
 }
+
+
+/* SETTINGS DIALOG */
+
+QFrame#sidebar_frame {
+    background-color: @CANVAS;
+    border-right: 1px solid @BORDER;
+    padding-right: 2px;
+}
+
+QFrame#sidebar_frame > QLabel#sidebar_title {
+    border-top: 1px solid @BORDER;
+    background-color: transparent;
+    font-weight: bold;
+    font-size: 12px;
+    text-transform: uppercase;
+    color: @TEXT_MAIN;
+    padding: 6px 6px 6px 6px;
+}
+
+QFrame#sidebar_frame QListWidget {
+    border: none;
+    background-color: @CANVAS;
+    padding-left: 5px;
+    padding-right: 5px;
+    outline: none;
+}
+
+QFrame#sidebar_frame QListWidget::item {
+    background-color: transparent;
+}
+
+#age_group_item_widget[selected="true"] {
+    border-radius: 6px;
+    background-color: @PRIMARY;
+}
+#age_group_item_widget[selected="true"] QLabel {
+    color: @CANVAS;
+}
+#age_group_item_widget[selected="false"] QLabel {
+    color: @TEXT_MAIN;
+}
+
+#domain_item_widget[selected="true"] {
+    border-radius: 6px;
+    background-color: @PRIMARY;
+}
+#domain_item_widget[selected="true"] QLabel {
+    color: @CANVAS;
+}
+#domain_item_widget[selected="false"] QLabel {
+    color: @TEXT_MAIN;
+}
+
+QFrame#body_frame {
+    background-color: @CANVAS;
+    border: none;
+}
+
+/* settigs_dialog > body */
+
+QFrame#body_header_frame {
+    background-color: @CANVAS;
+    border-top: 1px solid @BORDER;
+    border-bottom: 1px solid @BORDER;
+}
+
+QLabel#breadcrumb_label {
+    background-color: transparent;
+    font-weight: bold;
+    font-size: 12px;
+    color: @PRIMARY;
+}
+
+QFrame#body_frame > QListWidget {
+    border: none;
+    background-color: @CANVAS;
+    padding: 0px 6px 0px 6px;
+    outline: none;
+}
