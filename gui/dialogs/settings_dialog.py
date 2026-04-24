@@ -131,6 +131,7 @@ class SettingsDialog(QDialog):
         for domain in METRICS_SCHEMA[self.selected_age_group].keys():
             item = QListWidgetItem(self.domain_list_widget)
             custom_widget = DomainItemWidget(domain)
+            custom_widget.setFixedWidth(180)
             item.setSizeHint(custom_widget.sizeHint())
             self.domain_list_widget.addItem(item)
             self.domain_list_widget.setItemWidget(item, custom_widget)
@@ -149,6 +150,7 @@ class SettingsDialog(QDialog):
         for age_group in METRICS_SCHEMA.keys():
             item = QListWidgetItem(self.age_group_list_widget)
             custom_widget = AgeGroupItemWidget(age_group)
+            custom_widget.setFixedWidth(180)
             item.setSizeHint(custom_widget.sizeHint())
             self.age_group_list_widget.addItem(item)
             self.age_group_list_widget.setItemWidget(item, custom_widget)

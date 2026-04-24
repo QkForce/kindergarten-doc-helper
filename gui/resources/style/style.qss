@@ -287,7 +287,7 @@ QWidget#metric_score_toggle  #score_button {
 QFrame#sidebar_frame {
     background-color: @CANVAS;
     border-right: 1px solid @BORDER;
-    padding-right: 2px;
+    padding-right: 1px;
 }
 
 QFrame#sidebar_frame > QLabel#sidebar_title {
@@ -303,13 +303,13 @@ QFrame#sidebar_frame > QLabel#sidebar_title {
 QFrame#sidebar_frame QListWidget {
     border: none;
     background-color: @CANVAS;
-    padding-left: 5px;
-    padding-right: 5px;
     outline: none;
 }
 
 QFrame#sidebar_frame QListWidget::item {
     background-color: transparent;
+    margin-left: 5px;
+    margin-right: 5px;
 }
 
 #age_group_item_widget[selected="true"] {
