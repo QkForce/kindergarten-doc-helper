@@ -27,4 +27,6 @@ class DomainItemWidget(QFrame):
         self.setProperty("selected", "true" if is_active else "false")
         self.style().unpolish(self)
         self.style().polish(self)
+        self.label.style().unpolish(self.label)
+        self.label.style().polish(self.label)
         self.update()

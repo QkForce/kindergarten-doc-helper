@@ -312,26 +312,28 @@ QFrame#sidebar_frame QListWidget::item {
     margin-right: 5px;
 }
 
+#age_group_item_widget[selected="false"] QLabel {
+    color: @TEXT_MAIN;
+}
 #age_group_item_widget[selected="true"] {
     border-radius: 6px;
     background-color: @PRIMARY;
 }
 #age_group_item_widget[selected="true"] QLabel {
     color: @CANVAS;
-}
-#age_group_item_widget[selected="false"] QLabel {
-    color: @TEXT_MAIN;
+    font-weight: bold;
 }
 
-#domain_item_widget[selected="true"] {
-    border-radius: 6px;
-    background-color: @PRIMARY;
-}
-#domain_item_widget[selected="true"] QLabel {
-    color: @CANVAS;
-}
 #domain_item_widget[selected="false"] QLabel {
     color: @TEXT_MAIN;
+}
+#domain_item_widget[selected="true"] {
+    border-radius: 6px;
+    border: 1px solid @PRIMARY;
+    background-color: @CANVAS;
+}
+#domain_item_widget[selected="true"] QLabel {
+    font-weight: bold;
 }
 
 QFrame#body_frame {
