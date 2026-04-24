@@ -19,6 +19,7 @@ from gui.constants.strings import AGE_GROUPS, DOMAIN_NAMES
 from gui.utils.icon_utils import get_svg_pixmap
 from gui.widgets.settings.age_group_item_widget import AgeGroupItemWidget
 from gui.widgets.settings.domain_item_widget import DomainItemWidget
+from gui.widgets.settings.subject_block import SubjectBlock
 
 
 class SettingsDialog(QDialog):
@@ -89,8 +90,8 @@ class SettingsDialog(QDialog):
         body_frame.setObjectName("body_frame")
         body_layout = QVBoxLayout(body_frame)
         body_layout.setContentsMargins(0, 0, 0, 0)
-        body_layout.addWidget(body_header_frame)
-        body_layout.addWidget(self.body_list)
+        body_layout.addWidget(body_header_frame, 0)
+        body_layout.addWidget(self.body_list, 1)
 
         layout = QHBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)
@@ -143,7 +144,14 @@ class SettingsDialog(QDialog):
         self.domain_list_widget.setCurrentItem(item)
 
     def update_body_list(self):
-        pass
+        self.body_list.clear()
+        subjects = METRICS_SCHEMA[self.selected_age_group][self.selected_domain]
+        for sn, metrics in subjects.items():
+            item = QListWidgetItem(self.body_list)
+            custom_widget = SubjectBlock(sn, metrics)
+            item.setSizeHint(custom_widget.sizeHint())
+            self.body_list.addItem(item)
+            self.body_list.setItemWidget(item, custom_widget)
 
     def applySettings(self, settings):
         self.age_group_list_widget.clear()
