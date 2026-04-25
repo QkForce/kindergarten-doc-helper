@@ -28,6 +28,7 @@ class SubjectBlock(QFrame):
 
         self.table = QTableWidget()
         self.table.horizontalHeader().setSectionResizeMode(1, QHeaderView.Stretch)
+        self.table.verticalHeader().hide()
         self.table.setColumnCount(5)
         self.table.setHorizontalHeaderLabels(
             [

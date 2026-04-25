@@ -26,7 +26,7 @@ class SettingsDialog(QDialog):
     def __init__(self, current_settings, parent=None):
         super().__init__(parent)
         self.setWindowTitle("Баптаулар")
-        self.setMinimumSize(700, 500)
+        self.setMinimumSize(950, 650)
 
         # SIDEBAR
         age_group_title = QLabel("Жас топтары")
