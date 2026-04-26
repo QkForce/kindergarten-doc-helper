@@ -85,10 +85,9 @@ class SettingsDialog(QDialog):
         body_header_layout.addStretch()
 
         self.body_list = QListWidget()
+        self.body_list.setObjectName("settings_subjects_list")
 
-        body_frame = QFrame()
-        body_frame.setObjectName("body_frame")
-        body_layout = QVBoxLayout(body_frame)
+        body_layout = QVBoxLayout()
         body_layout.setContentsMargins(0, 0, 0, 0)
         body_layout.setSpacing(0)
         body_layout.addWidget(body_header_frame, 0)
@@ -98,7 +97,7 @@ class SettingsDialog(QDialog):
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(0)
         layout.addWidget(sidebar_frame)
-        layout.addWidget(body_frame)
+        layout.addLayout(body_layout)
 
         self.applySettings(current_settings)
 

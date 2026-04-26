@@ -356,20 +356,19 @@ QLabel#breadcrumb_label {
     color: @PRIMARY;
 }
 
-QFrame#body_frame > QListWidget {
+QListWidget#settings_subjects_list {
     border: none;
     background-color: @CANVAS;
     outline: none;
 }
-QFrame#body_frame > QListWidget QScrollBar {
+QListWidget#settings_subjects_list QScrollBar {
     border-radius: 0px;
     padding: 0px;
 }
-
-QFrame#body_frame > QListWidget::item {
+QListWidget#settings_subjects_list::item {
     border-radius: 10px;
 }
-QFrame#body_frame > QListWidget::item:hover {
+QListWidget#settings_subjects_list::item:hover {
     background-color: transparent;
 }
 
