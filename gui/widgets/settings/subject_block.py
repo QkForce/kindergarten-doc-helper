@@ -22,11 +22,13 @@ class SubjectBlock(QFrame):
 
         self.title = QLabel(self.subject_name)
         header_frame = QFrame()
+        header_frame.setObjectName("settings_subject_block_header")
         header_layout = QHBoxLayout(header_frame)
         header_layout.addWidget(self.title)
         header_layout.addStretch()
 
         self.table = QTableWidget()
+        self.table.setShowGrid(False)
         self.table.horizontalHeader().setSectionResizeMode(1, QHeaderView.Stretch)
         self.table.verticalHeader().hide()
         self.table.setColumnCount(5)

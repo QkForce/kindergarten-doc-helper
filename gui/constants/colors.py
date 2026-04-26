@@ -112,11 +112,10 @@ class AppColors:
     PROGRESS_INDICATOR = Palette.Blue600
 
     # Table colors
-    HEADER_CELL_BACKGROUND = Palette.Slate50
-    CELL_BACKGROUND_SELECTED = Palette.Slate200
+    HEADER_CELL_BACKGROUND = Palette.Slate100
     CELL_BORDER = Palette.Slate200
     CELL_TEXT = Palette.Slate800
-    CELL_SELECTED_BG = Palette.Slate200
+    CELL_SELECTED_BG = Palette.Slate50
 
     # Table cell scoring colors
     SOFT_RED_BG = Palette.Rose50  # Өте ақшыл қызыл (Rose 50)
