@@ -90,6 +90,7 @@ class SettingsDialog(QDialog):
         body_frame.setObjectName("body_frame")
         body_layout = QVBoxLayout(body_frame)
         body_layout.setContentsMargins(0, 0, 0, 0)
+        body_layout.setSpacing(0)
         body_layout.addWidget(body_header_frame, 0)
         body_layout.addWidget(self.body_list, 1)
 

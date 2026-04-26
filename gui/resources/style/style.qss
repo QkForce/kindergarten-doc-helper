@@ -359,8 +359,11 @@ QLabel#breadcrumb_label {
 QFrame#body_frame > QListWidget {
     border: none;
     background-color: @CANVAS;
-    padding: 0px 6px 0px 6px;
     outline: none;
+}
+QFrame#body_frame > QListWidget QScrollBar {
+    border-radius: 0px;
+    padding: 0px;
 }
 
 QFrame#body_frame > QListWidget::item {
@@ -372,7 +375,7 @@ QFrame#body_frame > QListWidget::item:hover {
 
 QFrame#settings_subject_block {
     border-radius: 10px;
-    margin-top: 10px;
+    margin: 10px 10px 0px 10px;
 }
 
 QFrame#settings_subject_block_header {
