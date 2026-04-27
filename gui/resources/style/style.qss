@@ -336,11 +336,6 @@ QFrame#sidebar_frame QListWidget::item {
     font-weight: bold;
 }
 
-QFrame#body_frame {
-    background-color: @CANVAS;
-    border: none;
-}
-
 /* settigs_dialog > body */
 
 QFrame#body_header_frame {
@@ -375,6 +370,7 @@ QListWidget#settings_subjects_list::item:hover {
 QFrame#settings_subject_block {
     border-radius: 10px;
     margin: 10px 10px 0px 10px;
+    border-bottom: 1px solid @BORDER;
 }
 
 QFrame#settings_subject_block_header {
@@ -384,6 +380,11 @@ QFrame#settings_subject_block_header {
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
     background-color: @HEADER_CELL_BACKGROUND;
+}
+QFrame#settings_subject_block_header > QLabel {
+    color: @TEXT_MAIN;
+    font-size: 12px;
+    font-weight: bold;
 }
 
 QFrame#settings_subject_block > QTableWidget {
