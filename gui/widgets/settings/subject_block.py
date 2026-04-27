@@ -9,15 +9,13 @@ from PySide6.QtWidgets import (
 )
 from PySide6.QtCore import Qt
 
-from gui.constants.strings import SUBJECT_NAMES
-
 
 class SubjectBlock(QFrame):
-    def __init__(self, subject_key, metrics, parent=None):
+    def __init__(self, id, name, metrics, parent=None):
         super().__init__(parent)
         self.setObjectName("settings_subject_block")
-        self.subject_key = subject_key
-        self.subject_name = SUBJECT_NAMES[subject_key]
+        self.subject_id = id
+        self.subject_name = name
         self.metrics = metrics
 
         self.title = QLabel(self.subject_name)
@@ -52,9 +50,9 @@ class SubjectBlock(QFrame):
 
     def updateTable(self):
         self.table.setRowCount(len(self.metrics))
-        for row, (code, metric) in enumerate(self.metrics.items()):
+        for row, metric in enumerate(self.metrics):
             criteria = metric.get("criteria", ["", "", ""])
-            self.table.setItem(row, 0, QTableWidgetItem(str(code)))
+            self.table.setItem(row, 0, QTableWidgetItem(str(metric.get("code", ""))))
             self.table.setItem(row, 1, QTableWidgetItem(metric.get("transformed", "")))
             self.table.setItem(row, 2, QTableWidgetItem(str(criteria[0])))
             self.table.setItem(row, 3, QTableWidgetItem(str(criteria[1])))

@@ -3,19 +3,14 @@ from PySide6.QtWidgets import (
     QFrame,
     QListWidget,
     QListWidgetItem,
-    QSizePolicy,
     QVBoxLayout,
     QHBoxLayout,
     QLabel,
-    QPushButton,
-    QLineEdit,
 )
-from PySide6.QtCore import QSize, Qt
+from PySide6.QtCore import Qt
 
-from config.config import METRICS_SCHEMA
 from gui.constants.colors import AppColors
 from gui.constants.icons import IconPaths
-from gui.constants.strings import AGE_GROUPS, DOMAIN_NAMES
 from gui.utils.icon_utils import get_svg_pixmap
 from gui.widgets.settings.age_group_item_widget import AgeGroupItemWidget
 from gui.widgets.settings.domain_item_widget import DomainItemWidget
@@ -23,10 +18,11 @@ from gui.widgets.settings.subject_block import SubjectBlock
 
 
 class SettingsDialog(QDialog):
-    def __init__(self, current_settings, parent=None):
+    def __init__(self, settings, parent=None):
         super().__init__(parent)
         self.setWindowTitle("Баптаулар")
         self.setMinimumSize(950, 650)
+        self.settings = settings
 
         # SIDEBAR
         age_group_title = QLabel("Жас топтары")
@@ -99,7 +95,7 @@ class SettingsDialog(QDialog):
         layout.addWidget(sidebar_frame)
         layout.addLayout(body_layout)
 
-        self.applySettings(current_settings)
+        self.applySettings(self.settings)
 
     def on_age_group_selection_changed(self):
         selected_items = self.age_group_list_widget.selectedItems()
@@ -109,9 +105,8 @@ class SettingsDialog(QDialog):
             if widget:
                 widget.setActive(item in selected_items)
             if item in selected_items:
-                age_group_key = widget.age_group_key
-                self.selected_age_group = age_group_key
-                self.breadcrumb_age_group_label.setText(AGE_GROUPS[age_group_key])
+                self.selected_age_group_id = widget.id
+                self.breadcrumb_age_group_label.setText(widget.name)
                 self.update_domain_list()
 
     def on_domain_selection_changed(self):
@@ -122,52 +117,78 @@ class SettingsDialog(QDialog):
             if widget:
                 widget.setActive(item in selected_items)
             if item in selected_items:
-                domain_key = widget.domain_key
-                self.selected_domain = domain_key
-                self.breadcrumb_domain_label.setText(DOMAIN_NAMES[domain_key])
+                self.selected_domain_id = widget.id
+                self.breadcrumb_domain_label.setText(widget.name)
                 self.update_body_list()
 
     def update_domain_list(self):
+        found_age_groups = [
+            ag
+            for ag in self.settings["age_groups"]
+            if ag["id"] == self.selected_age_group_id
+        ]
+        if len(found_age_groups) < 1:
+            return
         self.domain_list_widget.clear()
-        for domain in METRICS_SCHEMA[self.selected_age_group].keys():
+        age_group = found_age_groups[0]
+        domains = age_group["domains"]
+        for domain in domains:
             item = QListWidgetItem(self.domain_list_widget)
-            custom_widget = DomainItemWidget(domain)
+            custom_widget = DomainItemWidget(domain["id"], domain["name"])
             custom_widget.setFixedWidth(180)
             item.setSizeHint(custom_widget.sizeHint())
             self.domain_list_widget.addItem(item)
             self.domain_list_widget.setItemWidget(item, custom_widget)
-        self.selected_domain = next(
-            iter(METRICS_SCHEMA[self.selected_age_group].keys())
-        )
-        self.breadcrumb_domain_label.setText(DOMAIN_NAMES[self.selected_domain])
+        self.selected_domain_id = domains[0]["id"]
+        self.breadcrumb_domain_label.setText(domains[0]["name"])
         item = self.domain_list_widget.item(0)
         self.domain_list_widget.setCurrentItem(item)
 
     def update_body_list(self):
+        found_age_groups = [
+            ag
+            for ag in self.settings["age_groups"]
+            if ag["id"] == self.selected_age_group_id
+        ]
+        if len(found_age_groups) < 1:
+            return
+        age_group = found_age_groups[0]
+        found_domains = [
+            domain
+            for domain in age_group["domains"]
+            if domain["id"] == self.selected_domain_id
+        ]
+        if len(found_domains) < 1:
+            return
+        domain = found_domains[0]
         self.body_list.clear()
-        subjects = METRICS_SCHEMA[self.selected_age_group][self.selected_domain]
-        for sn, metrics in subjects.items():
+        subjects = domain["subjects"]
+        for subject in subjects:
             item = QListWidgetItem(self.body_list)
-            custom_widget = SubjectBlock(sn, metrics)
+            custom_widget = SubjectBlock(
+                subject["id"], subject["name"], subject["metrics"]
+            )
             item.setSizeHint(custom_widget.sizeHint())
             self.body_list.addItem(item)
             self.body_list.setItemWidget(item, custom_widget)
 
     def applySettings(self, settings):
         self.age_group_list_widget.clear()
-        for age_group in METRICS_SCHEMA.keys():
+        for age_group in settings["age_groups"]:
             item = QListWidgetItem(self.age_group_list_widget)
-            custom_widget = AgeGroupItemWidget(age_group)
+            custom_widget = AgeGroupItemWidget(age_group["id"], age_group["name"])
             custom_widget.setFixedWidth(180)
             item.setSizeHint(custom_widget.sizeHint())
             self.age_group_list_widget.addItem(item)
             self.age_group_list_widget.setItemWidget(item, custom_widget)
-        self.selected_age_group = next(iter(METRICS_SCHEMA.keys()))
-        self.breadcrumb_age_group_label.setText(AGE_GROUPS[self.selected_age_group])
+        self.selected_age_group_id = settings["age_groups"][0]["id"]
+        self.breadcrumb_age_group_label.setText(settings["age_groups"][0]["name"])
         item = self.age_group_list_widget.item(0)
         self.age_group_list_widget.setCurrentItem(item)
 
         self.update_domain_list()
 
     def get_data(self):
-        return {"export_path": self.path_input.text()}
+        return {
+            "age_groups": self.settings["age_groups"],
+        }

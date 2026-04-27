@@ -5,19 +5,17 @@ from PySide6.QtWidgets import (
     QSizePolicy,
 )
 
-from gui.constants.strings import AGE_GROUPS
-
 
 class AgeGroupItemWidget(QFrame):
-    def __init__(self, age_group_key, parent=None):
+    def __init__(self, id, name, parent=None):
         super().__init__(parent)
         self.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
         self.setObjectName("age_group_item_widget")
         self.setProperty("selected", "false")
-        self.age_group_key = age_group_key
-        self.age_group_name = AGE_GROUPS[age_group_key]
+        self.id = id
+        self.name = name
 
-        self.label = QLabel(self.age_group_name)
+        self.label = QLabel(self.name)
         self.label.setWordWrap(True)
 
         layout = QHBoxLayout(self)

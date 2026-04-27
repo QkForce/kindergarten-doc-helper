@@ -2,21 +2,18 @@ from PySide6.QtWidgets import (
     QFrame,
     QHBoxLayout,
     QLabel,
-    QSizePolicy,
 )
-
-from gui.constants.strings import DOMAIN_NAMES
 
 
 class DomainItemWidget(QFrame):
-    def __init__(self, domain_key, parent=None):
+    def __init__(self, id, name, parent=None):
         super().__init__(parent)
         self.setObjectName("domain_item_widget")
         self.setProperty("selected", "false")
-        self.domain_key = domain_key
-        self.domain_name = DOMAIN_NAMES[domain_key]
+        self.id = id
+        self.name = name
 
-        self.label = QLabel(self.domain_name)
+        self.label = QLabel(self.name)
         self.label.setWordWrap(True)
 
         layout = QHBoxLayout(self)

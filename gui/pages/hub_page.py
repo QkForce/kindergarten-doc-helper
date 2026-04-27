@@ -17,6 +17,7 @@ from gui.constants.strings import AppStrings
 from gui.utils.icon_utils import get_svg_pixmap
 from gui.utils.style_utils import apply_shadow
 from gui.dialogs.settings_dialog import SettingsDialog
+from logic.config_store import load_config
 
 
 class HubPage(QFrame):
@@ -100,9 +101,8 @@ class HubPage(QFrame):
         self.card_entry.clicked.connect(self.entry_requested.emit)
 
     def open_settings(self):
-        settings_dialog = SettingsDialog(
-            current_settings={"export_path": ""}, parent=self
-        )
+        settings = load_config()
+        settings_dialog = SettingsDialog(settings=settings, parent=self)
         if settings_dialog.exec() == QDialog.Accepted:
             new_settings = settings_dialog.get_data()
             print("New settings:", new_settings)
