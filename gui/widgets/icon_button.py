@@ -7,9 +7,10 @@ from gui.utils.icon_utils import get_svg_pixmap
 
 
 class IconButton(QPushButton):
-    def __init__(self, icon_path="", text="", parent=None):
+    def __init__(self, icon_path="", icon_size=16, text="", parent=None):
         super().__init__(text, parent)
         self._icon_path = icon_path
+        self._icon_size = icon_size
         self._current_color = AppColors.BTN_GHOST_TEXT
         self._hover_color = AppColors.BTN_GHOST_HOVER_TEXT
         self._is_hovered = False
@@ -38,9 +39,9 @@ class IconButton(QPushButton):
 
     def _update_icon(self, color_hex):
         if self._icon_path:
-            pixmap = get_svg_pixmap(self._icon_path, color_hex, 16)
+            pixmap = get_svg_pixmap(self._icon_path, color_hex, self._icon_size)
             self.setIcon(QIcon(pixmap))
-            self.setIconSize(QSize(16, 16))
+            self.setIconSize(QSize(self._icon_size, self._icon_size))
 
     def enterEvent(self, event):
         super().enterEvent(event)

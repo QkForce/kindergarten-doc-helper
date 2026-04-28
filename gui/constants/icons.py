@@ -37,6 +37,7 @@ class IconPaths:
 
     # CRUD icons
     CIRCLE_PLUS = str(ICON_DIR / "circle-plus.svg")
+    TRASH = str(ICON_DIR / "trash-2.svg")
 
 
 class AnimationPaths:

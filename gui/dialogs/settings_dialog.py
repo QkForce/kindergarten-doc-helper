@@ -6,7 +6,6 @@ from PySide6.QtWidgets import (
     QVBoxLayout,
     QHBoxLayout,
     QLabel,
-    QPushButton,
 )
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QIcon
@@ -122,7 +121,15 @@ class SettingsDialog(QDialog):
         # Select the newly added age group
         self.age_group_list_widget.setCurrentRow(self.age_group_list_widget.count() - 1)
 
+    def on_delete_age_group(self, age_group_id):
+        self.settings["age_groups"] = [
+            ag for ag in self.settings["age_groups"] if ag["id"] != age_group_id
+        ]
+        self.applySettings(self.settings)
+
     def on_age_group_selection_changed(self):
+        if not self.selected_age_group_id:
+            return
         selected_items = self.age_group_list_widget.selectedItems()
         for i in range(self.age_group_list_widget.count()):
             item = self.age_group_list_widget.item(i)
@@ -135,6 +142,8 @@ class SettingsDialog(QDialog):
                 self.update_domain_list()
 
     def on_domain_selection_changed(self):
+        if not self.selected_age_group_id:
+            return
         selected_items = self.domain_list_widget.selectedItems()
         for i in range(self.domain_list_widget.count()):
             item = self.domain_list_widget.item(i)
@@ -211,6 +220,15 @@ class SettingsDialog(QDialog):
             item.setSizeHint(custom_widget.sizeHint())
             self.age_group_list_widget.addItem(item)
             self.age_group_list_widget.setItemWidget(item, custom_widget)
+            custom_widget.on_delete_signal.connect(self.on_delete_age_group)
+        if len(settings["age_groups"]) < 1:
+            self.selected_age_group_id = None
+            self.selected_domain_id = None
+            self.breadcrumb_age_group_label.setText("")
+            self.breadcrumb_domain_label.setText("")
+            self.domain_list_widget.clear()
+            self.body_list.clear()
+            return
         self.selected_age_group_id = settings["age_groups"][0]["id"]
         self.breadcrumb_age_group_label.setText(settings["age_groups"][0]["name"])
         item = self.age_group_list_widget.item(0)
