@@ -159,6 +159,22 @@ class SettingsDialog(QDialog):
         # Select the newly added domain
         self.domain_list_widget.setCurrentRow(self.domain_list_widget.count() - 1)
 
+    def on_delete_domain(self, domain_id):
+        if not self.selected_age_group_id:
+            return
+        found_age_groups = [
+            ag
+            for ag in self.settings["age_groups"]
+            if ag["id"] == self.selected_age_group_id
+        ]
+        if len(found_age_groups) < 1:
+            return
+        age_group = found_age_groups[0]
+        age_group["domains"] = [
+            domain for domain in age_group["domains"] if domain["id"] != domain_id
+        ]
+        self.applySettings(self.settings)
+
     def on_age_group_selection_changed(self):
         if not self.selected_age_group_id:
             return
@@ -205,6 +221,7 @@ class SettingsDialog(QDialog):
             item.setSizeHint(custom_widget.sizeHint())
             self.domain_list_widget.addItem(item)
             self.domain_list_widget.setItemWidget(item, custom_widget)
+            custom_widget.on_delete_signal.connect(self.on_delete_domain)
         if len(domains) < 1:
             self.selected_domain_id = None
             self.breadcrumb_domain_label.setText("")
