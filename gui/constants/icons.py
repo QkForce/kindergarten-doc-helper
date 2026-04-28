@@ -35,6 +35,9 @@ class IconPaths:
     ENTRY_COMPLETED = str(ICON_DIR / "circle-check-big.svg")
     ENTRY_PARTIAL = str(ICON_DIR / "circle-dashed.svg")
 
+    # CRUD icons
+    CIRCLE_PLUS = str(ICON_DIR / "circle-plus.svg")
+
 
 class AnimationPaths:
     LOADING = str(ANIM_DIR / "loading.gif")

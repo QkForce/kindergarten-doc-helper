@@ -6,8 +6,10 @@ from PySide6.QtWidgets import (
     QVBoxLayout,
     QHBoxLayout,
     QLabel,
+    QPushButton,
 )
 from PySide6.QtCore import Qt
+from PySide6.QtGui import QIcon
 
 from gui.constants.colors import AppColors
 from gui.constants.icons import IconPaths
@@ -15,6 +17,7 @@ from gui.utils.icon_utils import get_svg_pixmap
 from gui.widgets.settings.age_group_item_widget import AgeGroupItemWidget
 from gui.widgets.settings.domain_item_widget import DomainItemWidget
 from gui.widgets.settings.subject_block import SubjectBlock
+from gui.widgets.icon_button import IconButton
 
 
 class SettingsDialog(QDialog):
@@ -28,6 +31,17 @@ class SettingsDialog(QDialog):
         age_group_title = QLabel("Жас топтары")
         age_group_title.setObjectName("sidebar_title")
         age_group_title.setAlignment(Qt.AlignmentFlag.AlignVCenter)
+        add_age_group_btn = IconButton(IconPaths.CIRCLE_PLUS)
+        add_age_group_btn.setProperty("btn-type", "ghost")
+        add_icon = get_svg_pixmap(IconPaths.CIRCLE_PLUS, AppColors.BTN_ICON_TEXT, 16)
+        add_age_group_btn.setIcon(QIcon(add_icon))
+        add_age_group_btn.setFixedSize(24, 24)
+        add_age_group_btn.clicked.connect(self.on_add_age_group_clicked)
+        age_group_header_layout = QHBoxLayout()
+        age_group_header_layout.addWidget(age_group_title)
+        age_group_header_layout.addStretch()
+        age_group_header_layout.addWidget(add_age_group_btn)
+        age_group_header_layout.addSpacing(8)
         self.age_group_list_widget = QListWidget()
         self.age_group_list_widget.setFixedHeight(160)
         self.age_group_list_widget.itemSelectionChanged.connect(
@@ -53,9 +67,9 @@ class SettingsDialog(QDialog):
         sidebar_frame.setFixedWidth(200)
         sidebar_layout = QVBoxLayout(sidebar_frame)
         sidebar_layout.setContentsMargins(0, 0, 0, 0)
-        sidebar_layout.addWidget(age_group_title)
+        sidebar_layout.addLayout(age_group_header_layout)
         sidebar_layout.addWidget(self.age_group_list_widget)
-        sidebar_layout.addSpacing(20)
+        sidebar_layout.addSpacing(5)
         sidebar_layout.addWidget(domain_title)
         sidebar_layout.addWidget(self.domain_list_widget)
 
@@ -96,6 +110,17 @@ class SettingsDialog(QDialog):
         layout.addLayout(body_layout)
 
         self.applySettings(self.settings)
+
+    def on_add_age_group_clicked(self):
+        new_age_group = {
+            "id": f"age_group_{len(self.settings['age_groups']) + 1}",
+            "name": f"Жас тобы {len(self.settings['age_groups']) + 1}",
+            "domains": [],
+        }
+        self.settings["age_groups"].append(new_age_group)
+        self.applySettings(self.settings)
+        # Select the newly added age group
+        self.age_group_list_widget.setCurrentRow(self.age_group_list_widget.count() - 1)
 
     def on_age_group_selection_changed(self):
         selected_items = self.age_group_list_widget.selectedItems()
@@ -139,6 +164,11 @@ class SettingsDialog(QDialog):
             item.setSizeHint(custom_widget.sizeHint())
             self.domain_list_widget.addItem(item)
             self.domain_list_widget.setItemWidget(item, custom_widget)
+        if len(domains) < 1:
+            self.selected_domain_id = None
+            self.breadcrumb_domain_label.setText("")
+            self.body_list.clear()
+            return
         self.selected_domain_id = domains[0]["id"]
         self.breadcrumb_domain_label.setText(domains[0]["name"])
         item = self.domain_list_widget.item(0)

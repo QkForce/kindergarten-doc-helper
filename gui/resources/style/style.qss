@@ -305,7 +305,10 @@ QFrame#sidebar_frame QListWidget {
     background-color: @CANVAS;
     outline: none;
 }
-
+QFrame#sidebar_frame QListWidget QScrollBar {
+    border-radius: 0px;
+    padding: 0px;
+}
 QFrame#sidebar_frame QListWidget::item {
     background-color: transparent;
     margin-left: 5px;
