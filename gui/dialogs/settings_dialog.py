@@ -30,11 +30,11 @@ class SettingsDialog(QDialog):
         age_group_title = QLabel("Жас топтары")
         age_group_title.setObjectName("sidebar_title")
         age_group_title.setAlignment(Qt.AlignmentFlag.AlignVCenter)
-        add_age_group_btn = IconButton(IconPaths.CIRCLE_PLUS)
+        add_age_group_btn = IconButton(IconPaths.CIRCLE_PLUS, icon_size=12)
         add_age_group_btn.setProperty("btn-type", "ghost")
-        add_icon = get_svg_pixmap(IconPaths.CIRCLE_PLUS, AppColors.BTN_ICON_TEXT, 16)
+        add_icon = get_svg_pixmap(IconPaths.CIRCLE_PLUS, AppColors.BTN_ICON_TEXT, 12)
         add_age_group_btn.setIcon(QIcon(add_icon))
-        add_age_group_btn.setFixedSize(24, 24)
+        add_age_group_btn.setFixedSize(16, 16)
         add_age_group_btn.clicked.connect(self.on_add_age_group_clicked)
         age_group_header_layout = QHBoxLayout()
         age_group_header_layout.addWidget(age_group_title)
@@ -53,6 +53,17 @@ class SettingsDialog(QDialog):
         domain_title = QLabel("Бағыттар")
         domain_title.setObjectName("sidebar_title")
         domain_title.setAlignment(Qt.AlignmentFlag.AlignVCenter)
+        add_domain_btn = IconButton(IconPaths.CIRCLE_PLUS, icon_size=12)
+        add_domain_btn.setProperty("btn-type", "ghost")
+        add_icon = get_svg_pixmap(IconPaths.CIRCLE_PLUS, AppColors.BTN_ICON_TEXT, 12)
+        add_domain_btn.setIcon(QIcon(add_icon))
+        add_domain_btn.setFixedSize(16, 16)
+        add_domain_btn.clicked.connect(self.on_add_domain_clicked)
+        domain_header_layout = QHBoxLayout()
+        domain_header_layout.addWidget(domain_title)
+        domain_header_layout.addStretch()
+        domain_header_layout.addWidget(add_domain_btn)
+        domain_header_layout.addSpacing(8)
         self.domain_list_widget = QListWidget()
         self.domain_list_widget.itemSelectionChanged.connect(
             self.on_domain_selection_changed
@@ -69,7 +80,7 @@ class SettingsDialog(QDialog):
         sidebar_layout.addLayout(age_group_header_layout)
         sidebar_layout.addWidget(self.age_group_list_widget)
         sidebar_layout.addSpacing(5)
-        sidebar_layout.addWidget(domain_title)
+        sidebar_layout.addLayout(domain_header_layout)
         sidebar_layout.addWidget(self.domain_list_widget)
 
         # BODY
@@ -126,6 +137,27 @@ class SettingsDialog(QDialog):
             ag for ag in self.settings["age_groups"] if ag["id"] != age_group_id
         ]
         self.applySettings(self.settings)
+
+    def on_add_domain_clicked(self):
+        if not self.selected_age_group_id:
+            return
+        found_age_groups = [
+            ag
+            for ag in self.settings["age_groups"]
+            if ag["id"] == self.selected_age_group_id
+        ]
+        if len(found_age_groups) < 1:
+            return
+        age_group = found_age_groups[0]
+        new_domain = {
+            "id": f"domain_{len(age_group['domains']) + 1}",
+            "name": f"Бағыт {len(age_group['domains']) + 1}",
+            "subjects": [],
+        }
+        age_group["domains"].append(new_domain)
+        self.applySettings(self.settings)
+        # Select the newly added domain
+        self.domain_list_widget.setCurrentRow(self.domain_list_widget.count() - 1)
 
     def on_age_group_selection_changed(self):
         if not self.selected_age_group_id:
