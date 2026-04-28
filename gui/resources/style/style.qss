@@ -339,6 +339,12 @@ QFrame#sidebar_frame QListWidget::item {
     font-weight: bold;
 }
 
+QLabel#empty_list_label {
+    color: @TEXT_MUTED;
+    font-size: 11px;
+    font-style: italic;
+}
+
 /* settigs_dialog > body */
 
 QFrame#body_header_frame {

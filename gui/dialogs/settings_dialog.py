@@ -49,6 +49,11 @@ class SettingsDialog(QDialog):
         self.age_group_list_widget.setHorizontalScrollBarPolicy(
             Qt.ScrollBarPolicy.ScrollBarAlwaysOff
         )
+        self.age_group_list_empty_label = QLabel("Жас топтары жоқ")
+        self.age_group_list_empty_label.setFixedHeight(30)
+        self.age_group_list_empty_label.setObjectName("empty_list_label")
+        self.age_group_list_empty_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.age_group_list_empty_label.setVisible(False)
 
         domain_title = QLabel("Бағыттар")
         domain_title.setObjectName("sidebar_title")
@@ -71,6 +76,11 @@ class SettingsDialog(QDialog):
         self.domain_list_widget.setHorizontalScrollBarPolicy(
             Qt.ScrollBarPolicy.ScrollBarAlwaysOff
         )
+        self.domain_list_empty_label = QLabel("Бағыттар жоқ")
+        self.domain_list_empty_label.setFixedHeight(30)
+        self.domain_list_empty_label.setObjectName("empty_list_label")
+        self.domain_list_empty_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.domain_list_empty_label.setVisible(False)
 
         sidebar_frame = QFrame()
         sidebar_frame.setObjectName("sidebar_frame")
@@ -79,9 +89,13 @@ class SettingsDialog(QDialog):
         sidebar_layout.setContentsMargins(0, 0, 0, 0)
         sidebar_layout.addLayout(age_group_header_layout)
         sidebar_layout.addWidget(self.age_group_list_widget)
+        sidebar_layout.addWidget(self.age_group_list_empty_label)
+        sidebar_layout.addStretch()
         sidebar_layout.addSpacing(5)
         sidebar_layout.addLayout(domain_header_layout)
         sidebar_layout.addWidget(self.domain_list_widget)
+        sidebar_layout.addWidget(self.domain_list_empty_label)
+        sidebar_layout.addStretch()
 
         # BODY
         self.breadcrumb_age_group_label = QLabel()
@@ -224,10 +238,15 @@ class SettingsDialog(QDialog):
             custom_widget.on_delete_signal.connect(self.on_delete_domain)
         if len(domains) < 1:
             self.selected_domain_id = None
+            self.domain_list_widget.setVisible(False)
+            self.domain_list_empty_label.setText("Бағыттар жоқ")
+            self.domain_list_empty_label.setVisible(True)
             self.breadcrumb_domain_label.setText("")
             self.body_list.clear()
             return
         self.selected_domain_id = domains[0]["id"]
+        self.domain_list_widget.setVisible(True)
+        self.domain_list_empty_label.setVisible(False)
         self.breadcrumb_domain_label.setText(domains[0]["name"])
         item = self.domain_list_widget.item(0)
         self.domain_list_widget.setCurrentItem(item)
@@ -273,12 +292,19 @@ class SettingsDialog(QDialog):
         if len(settings["age_groups"]) < 1:
             self.selected_age_group_id = None
             self.selected_domain_id = None
+            self.age_group_list_widget.setVisible(False)
+            self.age_group_list_empty_label.setVisible(True)
+            self.domain_list_widget.setVisible(False)
+            self.domain_list_empty_label.setText("Жас топтары жоқ")
+            self.domain_list_empty_label.setVisible(True)
             self.breadcrumb_age_group_label.setText("")
             self.breadcrumb_domain_label.setText("")
             self.domain_list_widget.clear()
             self.body_list.clear()
             return
         self.selected_age_group_id = settings["age_groups"][0]["id"]
+        self.age_group_list_widget.setVisible(True)
+        self.age_group_list_empty_label.setVisible(False)
         self.breadcrumb_age_group_label.setText(settings["age_groups"][0]["name"])
         item = self.age_group_list_widget.item(0)
         self.age_group_list_widget.setCurrentItem(item)
