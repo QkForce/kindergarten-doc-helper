@@ -38,7 +38,7 @@ QPushButton[btn-size="small"] {
     padding: 3px 7px 3px 7px;
     font-size: 12px;
     font-weight: bold;
-    border-radius: 3px;
+    border-radius: 6px;
 }
 
 QPushButton[btn-size="large"] {

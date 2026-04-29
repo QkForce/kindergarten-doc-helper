@@ -36,6 +36,7 @@ class IconPaths:
     ENTRY_PARTIAL = str(ICON_DIR / "circle-dashed.svg")
 
     # CRUD icons
+    PLUS = str(ICON_DIR / "plus.svg")
     CIRCLE_PLUS = str(ICON_DIR / "circle-plus.svg")
     TRASH = str(ICON_DIR / "trash-2.svg")
 

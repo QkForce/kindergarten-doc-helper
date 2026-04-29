@@ -7,6 +7,7 @@ from PySide6.QtWidgets import (
     QVBoxLayout,
     QHBoxLayout,
     QLabel,
+    QPushButton,
 )
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QIcon
@@ -110,14 +111,24 @@ class SettingsDialog(QDialog):
         self.breadcrumb_domain_label.setObjectName("breadcrumb_label")
         self.breadcrumb_domain_label.setAlignment(Qt.AlignmentFlag.AlignVCenter)
 
+        add_subject_btn = QPushButton("  Пән қосу")
+        add_subject_btn.setProperty("btn-size", "small")
+        add_subject_btn.setProperty("btn-type", "primary")
+        add_icon = get_svg_pixmap(IconPaths.PLUS, AppColors.CANVAS, 14)
+        add_subject_btn.setIcon(QIcon(add_icon))
+        add_subject_btn.setFixedHeight(26)
+        add_subject_btn.clicked.connect(self.on_add_subject_clicked)
+
         body_header_frame = QFrame()
         body_header_frame.setObjectName("body_header_frame")
-        body_header_frame.setFixedHeight(40)
         body_header_layout = QHBoxLayout(body_header_frame)
+        body_header_layout.setContentsMargins(10, 6, 10, 6)
+        body_header_layout.setSpacing(8)
         body_header_layout.addWidget(self.breadcrumb_age_group_label)
         body_header_layout.addWidget(chevron_icon)
         body_header_layout.addWidget(self.breadcrumb_domain_label)
         body_header_layout.addStretch()
+        body_header_layout.addWidget(add_subject_btn)
 
         self.body_list = QListWidget()
         self.body_list.setObjectName("settings_subjects_list")
@@ -260,6 +271,23 @@ class SettingsDialog(QDialog):
                 self.breadcrumb_domain_label.setText(widget.name)
                 self.update_body_list()
 
+    def on_add_subject_clicked(self):
+        if not self.selected_age_group_id or not self.selected_domain_id:
+            return
+        selected_age_group_idx = self.age_group_list_widget.currentRow()
+        selected_domain_idx = self.domain_list_widget.currentRow()
+        if selected_age_group_idx < 0 or selected_domain_idx < 0:
+            return
+        age_group = self.settings["age_groups"][selected_age_group_idx]
+        domain = age_group["domains"][selected_domain_idx]
+        new_subject = {
+            "id": f"subject_{time.time_ns()}",
+            "name": f"Пән {len(domain['subjects']) + 1}",
+            "metrics": [],
+        }
+        domain["subjects"].append(new_subject)
+        self.update_body_list()
+
     def update_domain_list(self, selected_domain_idx=None):
         self.domain_list_widget.clear()
         selected_domain_idx = (
@@ -298,25 +326,15 @@ class SettingsDialog(QDialog):
         self.domain_list_widget.setCurrentRow(selected_domain_idx)
 
     def update_body_list(self):
-        found_age_groups = [
-            ag
-            for ag in self.settings["age_groups"]
-            if ag["id"] == self.selected_age_group_id
-        ]
-        if len(found_age_groups) < 1:
-            return
-        age_group = found_age_groups[0]
-        found_domains = [
-            domain
-            for domain in age_group["domains"]
-            if domain["id"] == self.selected_domain_id
-        ]
-        if len(found_domains) < 1:
-            return
-        domain = found_domains[0]
         self.body_list.clear()
-        subjects = domain["subjects"]
-        for subject in subjects:
+
+        self.selected_age_group_idx = self.age_group_list_widget.currentRow()
+        self.selected_domain_idx = self.domain_list_widget.currentRow()
+        if self.selected_age_group_idx < 0 or self.selected_domain_idx < 0:
+            return
+        age_group = self.settings["age_groups"][self.selected_age_group_idx]
+        domain = age_group["domains"][self.selected_domain_idx]
+        for subject in domain["subjects"]:
             item = QListWidgetItem(self.body_list)
             custom_widget = SubjectBlock(
                 subject["id"], subject["name"], subject["metrics"]
