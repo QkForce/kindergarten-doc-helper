@@ -7,10 +7,18 @@ from PySide6.QtWidgets import (
     QTableWidgetItem,
     QHeaderView,
 )
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, Signal
+from PySide6.QtGui import QIcon
+
+from gui.constants.colors import AppColors
+from gui.constants.icons import IconPaths
+from gui.utils.icon_utils import get_svg_pixmap
+from gui.widgets.icon_button import IconButton
 
 
 class SubjectBlock(QFrame):
+    on_delete_signal = Signal(str)  # subject ID
+
     def __init__(self, id, name, metrics, parent=None):
         super().__init__(parent)
         self.setObjectName("settings_subject_block")
@@ -19,11 +27,20 @@ class SubjectBlock(QFrame):
         self.metrics = metrics
 
         self.title = QLabel(self.subject_name)
+        delete_icon = get_svg_pixmap(IconPaths.TRASH, AppColors.CANVAS, 14)
+        delete_btn = IconButton(IconPaths.TRASH, icon_size=14)
+        delete_btn.setIcon(QIcon(delete_icon))
+        delete_btn.setProperty("btn-type", "ghost")
+        delete_btn.setFixedSize(26, 26)
+        delete_btn.setToolTip("Пәнді жою")
+        delete_btn.clicked.connect(lambda: self.on_delete_signal.emit(self.subject_id))
+
         header_frame = QFrame()
         header_frame.setObjectName("settings_subject_block_header")
         header_layout = QHBoxLayout(header_frame)
         header_layout.addWidget(self.title)
         header_layout.addStretch()
+        header_layout.addWidget(delete_btn)
 
         self.table = QTableWidget()
         self.table.setShowGrid(False)
