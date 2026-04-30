@@ -9,7 +9,7 @@ from PySide6.QtWidgets import (
     QLabel,
     QPushButton,
 )
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QIcon
 
 from gui.constants.colors import AppColors
@@ -153,6 +153,24 @@ class SettingsDialog(QDialog):
 
         self.applySettings(self.settings)
 
+    @property
+    def current_age_group_id(self):
+        row = self.age_group_list_widget.currentRow()
+        if row < 0:
+            return None
+        item = self.age_group_list_widget.item(row)
+        widget = self.age_group_list_widget.itemWidget(item)
+        return widget.id if widget else None
+
+    @property
+    def current_domain_id(self):
+        row = self.domain_list_widget.currentRow()
+        if row < 0:
+            return None
+        item = self.domain_list_widget.item(row)
+        widget = self.domain_list_widget.itemWidget(item)
+        return widget.id if widget else None
+
     def on_add_age_group_clicked(self):
         new_age_group = {
             "id": f"age_group_{time.time_ns()}",
@@ -165,16 +183,13 @@ class SettingsDialog(QDialog):
         )
 
     def on_delete_age_group(self, age_group_id):
-        # Save the currently selected ID (which is not being deleted)
-        current_selected_id = self.selected_age_group_id
-
         # Remove the age group from settings
         self.settings["age_groups"] = [
             ag for ag in self.settings["age_groups"] if ag["id"] != age_group_id
         ]
 
         # Calculate new index based on the current selected ID and the deleted ID
-        if age_group_id == current_selected_id:
+        if age_group_id == self.current_age_group_id:
             # Calculate the new selected index when the currently selected ID is deleted
             new_idx = 0 if self.settings["age_groups"] else None
         else:
@@ -185,7 +200,7 @@ class SettingsDialog(QDialog):
                 (
                     i
                     for i, ag in enumerate(self.settings["age_groups"])
-                    if ag["id"] == current_selected_id
+                    if ag["id"] == self.current_age_group_id
                 ),
                 0,
             )
@@ -219,7 +234,6 @@ class SettingsDialog(QDialog):
         selected_ag_domains = self.settings["age_groups"][
             current_selected_age_group_idx
         ]["domains"]
-        current_selected_domain_id = self.selected_domain_id
 
         # Remove the domain from settings
         selected_ag_domains = [
@@ -230,14 +244,14 @@ class SettingsDialog(QDialog):
         ] = selected_ag_domains
 
         # Calculate new index based on the current selected domain ID and the deleted domain ID
-        if domain_id == current_selected_domain_id:
+        if domain_id == self.current_domain_id:
             new_domain_idx = 0 if selected_ag_domains else None
         else:
             new_domain_idx = next(
                 (
                     i
                     for i, domain in enumerate(selected_ag_domains)
-                    if domain["id"] == current_selected_domain_id
+                    if domain["id"] == self.current_domain_id
                 ),
                 0,
             )
@@ -250,7 +264,7 @@ class SettingsDialog(QDialog):
         )
 
     def on_age_group_selection_changed(self):
-        if not self.selected_age_group_id:
+        if not self.current_age_group_id:
             return
         selected_items = self.age_group_list_widget.selectedItems()
         for i in range(self.age_group_list_widget.count()):
@@ -259,14 +273,13 @@ class SettingsDialog(QDialog):
             if widget:
                 widget.setActive(item in selected_items)
             if item in selected_items:
-                self.selected_age_group_id = widget.id
                 self.breadcrumb_age_group_label.setText(widget.name)
                 self.update_domain_list()
 
     def on_domain_selection_changed(self):
         if self.age_group_list_widget.currentRow() < 0:
             return
-        if not self.selected_age_group_id:
+        if not self.current_age_group_id:
             return
         selected_items = self.domain_list_widget.selectedItems()
         for i in range(self.domain_list_widget.count()):
@@ -275,12 +288,11 @@ class SettingsDialog(QDialog):
             if widget:
                 widget.setActive(item in selected_items)
             if item in selected_items:
-                self.selected_domain_id = widget.id
                 self.breadcrumb_domain_label.setText(widget.name)
                 self.update_body_list()
 
     def on_add_subject_clicked(self):
-        if not self.selected_age_group_id or not self.selected_domain_id:
+        if not self.current_age_group_id or not self.current_domain_id:
             return
         selected_age_group_idx = self.age_group_list_widget.currentRow()
         selected_domain_idx = self.domain_list_widget.currentRow()
@@ -331,7 +343,6 @@ class SettingsDialog(QDialog):
 
         # Update visibility and selection based on the new list of domains
         if len(domains) < 1:
-            self.selected_domain_id = None
             self.domain_list_widget.setVisible(False)
             self.domain_list_empty_label.setVisible(True)
             self.breadcrumb_domain_label.setText("")
@@ -342,7 +353,6 @@ class SettingsDialog(QDialog):
             self.body_list.clear()
         else:
             selected_domain_idx = min(selected_domain_idx, len(domains) - 1)
-            self.selected_domain_id = domains[selected_domain_idx]["id"]
             self.domain_list_widget.setVisible(True)
             self.domain_list_empty_label.setVisible(False)
             self.breadcrumb_domain_label.setText(domains[selected_domain_idx]["name"])
@@ -412,8 +422,6 @@ class SettingsDialog(QDialog):
             self.age_group_list_widget.setItemWidget(item, custom_widget)
             custom_widget.on_delete_signal.connect(self.on_delete_age_group)
         if len(settings["age_groups"]) < 1:
-            self.selected_age_group_id = None
-            self.selected_domain_id = None
             self.age_group_list_widget.setVisible(False)
             self.age_group_list_empty_label.setVisible(True)
             self.domain_list_widget.setVisible(False)
@@ -431,9 +439,6 @@ class SettingsDialog(QDialog):
         selected_age_group_idx = min(
             selected_age_group_idx, len(settings["age_groups"]) - 1
         )
-        self.selected_age_group_id = settings["age_groups"][selected_age_group_idx][
-            "id"
-        ]
         self.age_group_list_widget.setVisible(True)
         self.age_group_list_empty_label.setVisible(False)
         self.body_header_frame.setVisible(True)
