@@ -340,6 +340,7 @@ QFrame#sidebar_frame QListWidget::item {
 }
 
 QLabel#empty_list_label {
+    background-color: @CANVAS;
     color: @TEXT_MUTED;
     font-size: 11px;
     font-style: italic;

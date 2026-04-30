@@ -119,9 +119,9 @@ class SettingsDialog(QDialog):
         add_subject_btn.setFixedHeight(26)
         add_subject_btn.clicked.connect(self.on_add_subject_clicked)
 
-        body_header_frame = QFrame()
-        body_header_frame.setObjectName("body_header_frame")
-        body_header_layout = QHBoxLayout(body_header_frame)
+        self.body_header_frame = QFrame()
+        self.body_header_frame.setObjectName("body_header_frame")
+        body_header_layout = QHBoxLayout(self.body_header_frame)
         body_header_layout.setContentsMargins(10, 6, 10, 6)
         body_header_layout.setSpacing(8)
         body_header_layout.addWidget(self.breadcrumb_age_group_label)
@@ -133,11 +133,17 @@ class SettingsDialog(QDialog):
         self.body_list = QListWidget()
         self.body_list.setObjectName("settings_subjects_list")
 
+        self.body_empty_label = QLabel("")
+        self.body_empty_label.setObjectName("empty_list_label")
+        self.body_empty_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.body_empty_label.setVisible(False)
+
         body_layout = QVBoxLayout()
         body_layout.setContentsMargins(0, 0, 0, 0)
         body_layout.setSpacing(0)
-        body_layout.addWidget(body_header_frame, 0)
+        body_layout.addWidget(self.body_header_frame, 0)
         body_layout.addWidget(self.body_list, 1)
+        body_layout.addWidget(self.body_empty_label, 1)
 
         layout = QHBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)
@@ -329,6 +335,10 @@ class SettingsDialog(QDialog):
             self.domain_list_widget.setVisible(False)
             self.domain_list_empty_label.setVisible(True)
             self.breadcrumb_domain_label.setText("")
+            self.body_header_frame.setVisible(False)
+            self.body_list.setVisible(False)
+            self.body_empty_label.setText("Бағыттар жоқ")
+            self.body_empty_label.setVisible(True)
             self.body_list.clear()
         else:
             selected_domain_idx = min(selected_domain_idx, len(domains) - 1)
@@ -336,6 +346,9 @@ class SettingsDialog(QDialog):
             self.domain_list_widget.setVisible(True)
             self.domain_list_empty_label.setVisible(False)
             self.breadcrumb_domain_label.setText(domains[selected_domain_idx]["name"])
+            self.body_header_frame.setVisible(True)
+            self.body_list.setVisible(True)
+            self.body_empty_label.setVisible(False)
             self.domain_list_widget.setCurrentRow(selected_domain_idx)
 
         self.update_body_list()
@@ -371,6 +384,14 @@ class SettingsDialog(QDialog):
             self.body_list.setItemWidget(item, custom_widget)
             custom_widget.on_delete_signal.connect(self.on_delete_subject)
 
+        if len(domain.get("subjects", [])) < 1:
+            self.body_list.setVisible(False)
+            self.body_empty_label.setText("Пәндер жоқ")
+            self.body_empty_label.setVisible(True)
+        else:
+            self.body_list.setVisible(True)
+            self.body_empty_label.setVisible(False)
+
     def applySettings(
         self, settings, selected_age_group_idx=None, selected_domain_idx=None
     ):
@@ -398,6 +419,10 @@ class SettingsDialog(QDialog):
             self.domain_list_widget.setVisible(False)
             self.domain_list_empty_label.setText("Жас топтары жоқ")
             self.domain_list_empty_label.setVisible(True)
+            self.body_header_frame.setVisible(False)
+            self.body_list.setVisible(False)
+            self.body_empty_label.setText("Жас топтары жоқ")
+            self.body_empty_label.setVisible(True)
             self.breadcrumb_age_group_label.setText("")
             self.breadcrumb_domain_label.setText("")
             self.domain_list_widget.clear()
@@ -411,6 +436,9 @@ class SettingsDialog(QDialog):
         ]
         self.age_group_list_widget.setVisible(True)
         self.age_group_list_empty_label.setVisible(False)
+        self.body_header_frame.setVisible(True)
+        self.body_list.setVisible(True)
+        self.body_empty_label.setVisible(False)
         self.breadcrumb_age_group_label.setText(
             settings["age_groups"][selected_age_group_idx]["name"]
         )
