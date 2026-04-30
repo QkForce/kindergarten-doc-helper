@@ -188,15 +188,11 @@ class SettingsDialog(QDialog):
             ag for ag in self.settings["age_groups"] if ag["id"] != age_group_id
         ]
 
-        # Calculate new index based on the current selected ID and the deleted ID
-        if age_group_id == self.current_age_group_id:
-            # Calculate the new selected index when the currently selected ID is deleted
-            new_idx = 0 if self.settings["age_groups"] else None
-        else:
-            # Calculate the new index of the currently selected ID after deletion
-            # Zero for safety, but it should not be needed,
-            # because if the selected ID is not deleted, it should still be in the list
-            new_idx = next(
+        # If the list is empty new_idx should be None,
+        # otherwise try to find the index of the current selected age group ID,
+        # if not found default to 0
+        new_idx = (
+            next(
                 (
                     i
                     for i, ag in enumerate(self.settings["age_groups"])
@@ -204,6 +200,9 @@ class SettingsDialog(QDialog):
                 ),
                 0,
             )
+            if self.settings["age_groups"]
+            else None
+        )
 
         # Apply settings with the new index
         self.applySettings(self.settings, selected_age_group_idx=new_idx)
@@ -243,11 +242,11 @@ class SettingsDialog(QDialog):
             "domains"
         ] = selected_ag_domains
 
-        # Calculate new index based on the current selected domain ID and the deleted domain ID
-        if domain_id == self.current_domain_id:
-            new_domain_idx = 0 if selected_ag_domains else None
-        else:
-            new_domain_idx = next(
+        # If the list is empty new_idx should be None,
+        # otherwise try to find the index of the current selected domain ID,
+        # if not found default to 0
+        new_domain_idx = (
+            next(
                 (
                     i
                     for i, domain in enumerate(selected_ag_domains)
@@ -255,6 +254,9 @@ class SettingsDialog(QDialog):
                 ),
                 0,
             )
+            if selected_ag_domains
+            else None
+        )
 
         # Apply settings with the new domain index
         self.applySettings(
