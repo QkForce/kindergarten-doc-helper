@@ -27,8 +27,15 @@ class SubjectBlock(QFrame):
         self.metrics = metrics
 
         self.title = QLabel(self.subject_name)
-        delete_icon = get_svg_pixmap(IconPaths.TRASH, AppColors.CANVAS, 14)
-        delete_btn = IconButton(IconPaths.TRASH, icon_size=14)
+        delete_icon = get_svg_pixmap(
+            IconPaths.TRASH, AppColors.BTN_ICON_DANGER_CONTENT, 14
+        )
+        delete_btn = IconButton(
+            IconPaths.TRASH,
+            icon_size=14,
+            current_color=AppColors.BTN_ICON_DANGER_CONTENT,
+            hover_color=AppColors.BTN_ICON_DANGER_HOVER_BG,
+        )
         delete_btn.setIcon(QIcon(delete_icon))
         delete_btn.setProperty("btn-type", "ghost")
         delete_btn.setFixedSize(26, 26)

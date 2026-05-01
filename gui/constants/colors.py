@@ -95,8 +95,13 @@ class AppColors:
     BTN_DISABLED_BORDER = Palette.Slate200
     BTN_DISABLED_TEXT = Palette.Slate400
 
+    # Icon button colors
+
     BTN_ICON_TEXT = Palette.Slate400
     BTN_ICON_HOVER_BG = Palette.Blue50
+
+    BTN_ICON_DANGER_CONTENT = Palette.Rose600
+    BTN_ICON_DANGER_HOVER_BG = Palette.Rose500
 
     # Tooltip colors
     TOOLTIP_BG = Palette.Slate900
