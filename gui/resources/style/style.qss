@@ -380,13 +380,10 @@ QListWidget#settings_subjects_list::item:hover {
 QFrame#settings_subject_block {
     border-radius: 10px;
     margin: 10px 10px 0px 10px;
-    border-bottom: 1px solid @BORDER;
+    border: 1px solid @BORDER;
 }
 
 QFrame#settings_subject_block_header {
-    border-top: 1px solid @BORDER;
-    border-left: 1px solid @BORDER;
-    border-right: 1px solid @BORDER;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
     background-color: @HEADER_CELL_BACKGROUND;
@@ -399,8 +396,6 @@ QFrame#settings_subject_block_header > QLabel {
 
 QFrame#settings_subject_block > QTableWidget {
     background-color: transparent;
-    border-left: 1px solid @BORDER;
-    border-bottom: 1px solid @BORDER;
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
     gridline-color: @BORDER;
@@ -423,4 +418,9 @@ QFrame#settings_subject_block > QTableView::item {
 QFrame#settings_subject_block > QTableView::item:selected {
     background-color: @CELL_SELECTED_BG;
     color: @CELL_TEXT;
+}
+
+QFrame#settings_subject_block > QLabel#empty_list_label {
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
 }

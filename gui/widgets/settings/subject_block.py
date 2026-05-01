@@ -64,11 +64,18 @@ class SubjectBlock(QFrame):
             ]
         )
 
+        self.metrics_empty_label = QLabel("Метрикалар жоқ")
+        self.metrics_empty_label.setObjectName("empty_list_label")
+        self.metrics_empty_label.setFixedHeight(50)
+        self.metrics_empty_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.metrics_empty_label.hide()
+
         layout = QVBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(0)
         layout.addWidget(header_frame, 0)
         layout.addWidget(self.table, 1)
+        layout.addWidget(self.metrics_empty_label, 1)
 
         self.updateTable()
 
@@ -92,3 +99,7 @@ class SubjectBlock(QFrame):
         total_height += self.table.frameWidth() * 2
         self.table.setFixedHeight(total_height)
         self.table.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+
+        # Empty state
+        metrics_empty = len(self.metrics) == 0
+        self.metrics_empty_label.setVisible(metrics_empty)
