@@ -6,6 +6,7 @@ from PySide6.QtWidgets import (
     QTableWidget,
     QTableWidgetItem,
     QHeaderView,
+    QPushButton,
 )
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QIcon
@@ -27,6 +28,12 @@ class SubjectBlock(QFrame):
         self.metrics = metrics
 
         self.title = QLabel(self.subject_name)
+
+        add_metric_btn = QPushButton("+ Метрика қосу")
+        add_metric_btn.setProperty("btn-size", "small")
+        add_metric_btn.setProperty("btn-type", "link")
+        add_metric_btn.setFixedHeight(26)
+
         delete_icon = get_svg_pixmap(
             IconPaths.TRASH, AppColors.BTN_ICON_DANGER_CONTENT, 14
         )
@@ -47,6 +54,7 @@ class SubjectBlock(QFrame):
         header_layout = QHBoxLayout(header_frame)
         header_layout.addWidget(self.title)
         header_layout.addStretch()
+        header_layout.addWidget(add_metric_btn)
         header_layout.addWidget(delete_btn)
 
         self.table = QTableWidget()

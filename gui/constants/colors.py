@@ -91,6 +91,10 @@ class AppColors:
     BTN_NEUTRAL_TEXT = Palette.Slate800
     BTN_NEUTRAL_PRESSED = Palette.Slate200
 
+    BTN_LINK_TEXT = Palette.Blue600
+    BTN_LINK_HOVER_TEXT = Palette.Blue700
+    BTN_LINK_PRESSED = Palette.Blue600
+
     BTN_DISABLED_BG = Palette.Slate100
     BTN_DISABLED_BORDER = Palette.Slate200
     BTN_DISABLED_TEXT = Palette.Slate400

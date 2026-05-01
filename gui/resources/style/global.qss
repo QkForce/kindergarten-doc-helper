@@ -94,11 +94,14 @@ QPushButton[btn-type="neutral"]:pressed {
 QPushButton[btn-type="link"] {
     background-color: transparent;
     border: 0px;
-    color: @BTN_NEUTRAL_TEXT;
-    font-size: 14px;
+    color: @BTN_LINK_TEXT;
+}
+QPushButton[btn-type="link"]:hover {
+    text-decoration: underline;
+    color: @BTN_LINK_HOVER_TEXT;
 }
 QPushButton[btn-type="link"]:pressed {
-    color: @BTN_NEUTRAL_PRESSED;
+    color: @BTN_LINK_PRESSED;
 }
 
 QPushButton[btn-type="danger"] {
