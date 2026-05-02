@@ -322,6 +322,30 @@ class SettingsDialog(QDialog):
         ]
         self.update_body_list()
 
+    def on_add_metric(self, subject_id, metric_data):
+        selected_age_group_idx = self.age_group_list_widget.currentRow()
+        selected_domain_idx = self.domain_list_widget.currentRow()
+        if selected_age_group_idx < 0 or selected_domain_idx < 0:
+            return
+        age_group = self.settings["age_groups"][selected_age_group_idx]
+        domain = age_group["domains"][selected_domain_idx]
+        subject = None
+        for s in domain["subjects"]:
+            if s["id"] == subject_id:
+                metric_data["code"] = (
+                    f"{selected_age_group_idx+1}-{domain['name'][0]}.{len(s['metrics']) + 1}"
+                )
+                s["metrics"].append(metric_data)
+                subject = s
+                break
+        for i in range(self.body_list.count()):
+            item = self.body_list.item(i)
+            widget = self.body_list.itemWidget(item)
+            if widget and widget.subject_id == subject_id:
+                widget.updateTable(subject["metrics"])
+                widget.updateGeometry()
+                item.setSizeHint(widget.sizeHint())
+
     def update_domain_list(self, selected_domain_idx=None):
         self.domain_list_widget.clear()
 
@@ -394,6 +418,7 @@ class SettingsDialog(QDialog):
             item.setSizeHint(custom_widget.sizeHint())
             self.body_list.addItem(item)
             self.body_list.setItemWidget(item, custom_widget)
+            custom_widget.on_add_metric_signal.connect(self.on_add_metric)
             custom_widget.on_delete_signal.connect(self.on_delete_subject)
 
         if len(domain.get("subjects", [])) < 1:

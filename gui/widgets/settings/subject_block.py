@@ -1,3 +1,5 @@
+import time
+
 from PySide6.QtWidgets import (
     QFrame,
     QHBoxLayout,
@@ -18,6 +20,7 @@ from gui.widgets.icon_button import IconButton
 
 
 class SubjectBlock(QFrame):
+    on_add_metric_signal = Signal(str, dict)  # subject ID, metric data
     on_delete_signal = Signal(str)  # subject ID
 
     def __init__(self, id, name, metrics, parent=None):
@@ -33,6 +36,17 @@ class SubjectBlock(QFrame):
         add_metric_btn.setProperty("btn-size", "small")
         add_metric_btn.setProperty("btn-type", "link")
         add_metric_btn.setFixedHeight(26)
+        add_metric_btn.clicked.connect(
+            lambda: self.on_add_metric_signal.emit(
+                self.subject_id,
+                {
+                    "id": f"metric_{time.time_ns()}",
+                    "code": "",
+                    "transformed": "",
+                    "criteria": ["", "", ""],
+                },
+            )
+        )
 
         delete_icon = get_svg_pixmap(
             IconPaths.TRASH, AppColors.BTN_ICON_DANGER_CONTENT, 14
@@ -87,7 +101,9 @@ class SubjectBlock(QFrame):
 
         self.updateTable()
 
-    def updateTable(self):
+    def updateTable(self, metrics=None):
+        if metrics is not None:
+            self.metrics = metrics
         self.table.setRowCount(len(self.metrics))
         for row, metric in enumerate(self.metrics):
             criteria = metric.get("criteria", ["", "", ""])
