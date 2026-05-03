@@ -308,7 +308,23 @@ class SettingsDialog(QDialog):
             "metrics": [],
         }
         domain["subjects"].append(new_subject)
-        self.update_body_list()
+
+        item = QListWidgetItem(self.body_list)
+        custom_widget = SubjectBlock(
+            new_subject["id"], new_subject["name"], new_subject["metrics"]
+        )
+        item.setSizeHint(custom_widget.sizeHint())
+
+        self.body_list.addItem(item)
+        self.body_list.setItemWidget(item, custom_widget)
+
+        custom_widget.on_add_metric_signal.connect(self.on_add_metric)
+        custom_widget.on_delete_signal.connect(self.on_delete_subject)
+
+        self.body_list.scrollToBottom()
+
+        self.body_empty_label.setVisible(False)
+        self.body_list.setVisible(True)
 
     def on_delete_subject(self, subject_id):
         selected_age_group_idx = self.age_group_list_widget.currentRow()
