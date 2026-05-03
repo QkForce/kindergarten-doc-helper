@@ -320,7 +320,18 @@ class SettingsDialog(QDialog):
         domain["subjects"] = [
             subject for subject in domain["subjects"] if subject["id"] != subject_id
         ]
-        self.update_body_list()
+
+        for i in range(self.body_list.count()):
+            item = self.body_list.item(i)
+            widget = self.body_list.itemWidget(item)
+            if widget and widget.subject_id == subject_id:
+                self.body_list.takeItem(i)
+                break
+
+        if self.body_list.count() == 0:
+            self.body_list.setVisible(False)
+            self.body_empty_label.setText("Пәндер жоқ")
+            self.body_empty_label.setVisible(True)
 
     def on_add_metric(self, subject_id, metric_data):
         selected_age_group_idx = self.age_group_list_widget.currentRow()
