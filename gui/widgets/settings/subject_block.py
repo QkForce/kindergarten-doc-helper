@@ -11,18 +11,16 @@ from PySide6.QtWidgets import (
     QPushButton,
 )
 from PySide6.QtCore import Qt, Signal
-from PySide6.QtGui import QIcon
 
 from gui.constants.colors import AppColors
 from gui.constants.icons import IconPaths
-from gui.utils.icon_utils import get_svg_pixmap
 from gui.widgets.icon_button import IconButton
 
 
 class SubjectBlock(QFrame):
     on_delete_signal = Signal(str)  # subject ID
     on_add_metric_signal = Signal(str, dict)  # subject ID, metric data
-    on_delete_metric_signal = Signal(str)  # subject ID
+    on_delete_metric_signal = Signal(str, str)  # subject ID, metric ID
 
     def __init__(self, id, name, metrics, parent=None):
         super().__init__(parent)
@@ -119,7 +117,11 @@ class SubjectBlock(QFrame):
             )
             delete_btn.setProperty("btn-type", "ghost")
             delete_btn.setToolTip("Метриканы жою")
-            delete_btn.clicked.connect(lambda: self.on_delete_metric_signal.emit(m_id))
+            delete_btn.clicked.connect(
+                lambda checked=False, mid=m_id: self.on_delete_metric_signal.emit(
+                    self.subject_id, mid
+                )
+            )
             self.table.setCellWidget(row, 5, delete_btn)
         header = self.table.horizontalHeader()
         for i in range(0, self.table.columnCount() - 1):
