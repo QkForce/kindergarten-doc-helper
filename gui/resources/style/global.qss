@@ -169,6 +169,17 @@ QTextEdit[textedit-style="box"] {
     font-size: 14px;
 }
 
+QPlainTextEdit {
+    border: 1px solid @BORDER;
+    border-radius: 8px;
+    padding: 12px;
+    font-size: 14px;
+    color: @TEXT_MAIN;
+}
+QPlainTextEdit:focus {
+    border: 1px solid @PRIMARY;
+}
+
 /* QProgressBar */
 
 QProgressBar {
@@ -388,4 +399,12 @@ QFrame[frame-style="blank"] {
 
 QFrame#separator {
     border-top: 1px solid @BORDER;
+}
+
+/* Dialogs */
+
+QFrame[frame-style="dialog"] {
+    background-color: @CANVAS;
+    border: 1px solid @BORDER;
+    border-radius: 12px;
 }

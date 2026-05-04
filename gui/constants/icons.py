@@ -40,6 +40,7 @@ class IconPaths:
     CIRCLE_PLUS = str(ICON_DIR / "circle-plus.svg")
     TRASH = str(ICON_DIR / "trash-2.svg")
     EDIT = str(ICON_DIR / "pen.svg")
+    CLOSE = str(ICON_DIR / "x.svg")
 
 
 class AnimationPaths:

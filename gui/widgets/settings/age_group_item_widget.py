@@ -1,13 +1,9 @@
-from PySide6.QtWidgets import (
-    QFrame,
-    QHBoxLayout,
-    QLabel,
-    QSizePolicy,
-)
+from PySide6.QtWidgets import QFrame, QHBoxLayout, QLabel, QSizePolicy, QInputDialog
 from PySide6.QtCore import Signal
 
 from gui.constants.icons import IconPaths
 from gui.widgets.icon_button import IconButton
+from gui.dialogs.rename_dialog import RenameDialog
 
 
 class AgeGroupItemWidget(QFrame):
@@ -28,7 +24,7 @@ class AgeGroupItemWidget(QFrame):
         edit_btn = IconButton(IconPaths.EDIT, icon_size=12)
         edit_btn.setProperty("btn-type", "ghost")
         edit_btn.setFixedSize(20, 20)
-        edit_btn.clicked.connect(lambda: self.on_edit_signal.emit(self.id, self.name))
+        edit_btn.clicked.connect(self.start_edit)
 
         delete_btn = IconButton(IconPaths.TRASH, icon_size=12)
         delete_btn.setProperty("btn-type", "ghost")
@@ -42,6 +38,15 @@ class AgeGroupItemWidget(QFrame):
         layout.addStretch()
         layout.addWidget(edit_btn)
         layout.addWidget(delete_btn)
+
+    def start_edit(self):
+        dialog = RenameDialog(self.name, self)
+        if dialog.exec() == dialog.Accepted:
+            new_name = dialog.getText()
+            if new_name:
+                self.name = new_name
+                self.label.setText(self.name)
+                self.on_edit_signal.emit(self.id, self.name)
 
     def setActive(self, is_active):
         self.setProperty("selected", "true" if is_active else "false")
