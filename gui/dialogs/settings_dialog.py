@@ -181,6 +181,17 @@ class SettingsDialog(QDialog):
             self.settings, selected_age_group_idx=(len(self.settings["age_groups"]) - 1)
         )
 
+    def on_edit_age_group(self, age_group_id, new_name):
+        for age_group in self.settings["age_groups"]:
+            if age_group["id"] == age_group_id:
+                age_group["name"] = new_name
+                break
+        self.applySettings(
+            self.settings,
+            selected_age_group_idx=self.age_group_list_widget.currentRow(),
+            selected_domain_idx=self.domain_list_widget.currentRow(),
+        )
+
     def on_delete_age_group(self, age_group_id):
         # Remove the age group from settings
         self.settings["age_groups"] = [
@@ -223,6 +234,23 @@ class SettingsDialog(QDialog):
             self.settings,
             selected_age_group_idx=selected_age_group_idx,
             selected_domain_idx=(len(selected_ag_domains) - 1),
+        )
+
+    def on_edit_domain(self, domain_id, new_name):
+        selected_age_group_idx = self.age_group_list_widget.currentRow()
+        if selected_age_group_idx < 0:
+            return
+        selected_ag_domains = self.settings["age_groups"][selected_age_group_idx][
+            "domains"
+        ]
+        for domain in selected_ag_domains:
+            if domain["id"] == domain_id:
+                domain["name"] = new_name
+                break
+        self.applySettings(
+            self.settings,
+            selected_age_group_idx=selected_age_group_idx,
+            selected_domain_idx=self.domain_list_widget.currentRow(),
         )
 
     def on_delete_domain(self, domain_id):
@@ -415,6 +443,7 @@ class SettingsDialog(QDialog):
             item.setSizeHint(custom_widget.sizeHint())
             self.domain_list_widget.addItem(item)
             self.domain_list_widget.setItemWidget(item, custom_widget)
+            custom_widget.on_edit_signal.connect(self.on_edit_domain)
             custom_widget.on_delete_signal.connect(self.on_delete_domain)
 
         # Update visibility and selection based on the new list of domains
@@ -500,6 +529,7 @@ class SettingsDialog(QDialog):
             item.setSizeHint(custom_widget.sizeHint())
             self.age_group_list_widget.addItem(item)
             self.age_group_list_widget.setItemWidget(item, custom_widget)
+            custom_widget.on_edit_signal.connect(self.on_edit_age_group)
             custom_widget.on_delete_signal.connect(self.on_delete_age_group)
         if len(settings["age_groups"]) < 1:
             self.age_group_list_widget.setVisible(False)
