@@ -15,8 +15,7 @@ from PySide6.QtGui import QIcon
 from gui.constants.colors import AppColors
 from gui.constants.icons import IconPaths
 from gui.utils.icon_utils import get_svg_pixmap
-from gui.widgets.settings.age_group_item_widget import AgeGroupItemWidget
-from gui.widgets.settings.domain_item_widget import DomainItemWidget
+from gui.widgets.settings.simple_list_item_widget import SimpleListItemWidget
 from gui.widgets.settings.subject_block import SubjectBlock
 from gui.widgets.icon_button import IconButton
 
@@ -409,7 +408,9 @@ class SettingsDialog(QDialog):
         # Fill the domain list
         for domain in domains:
             item = QListWidgetItem(self.domain_list_widget)
-            custom_widget = DomainItemWidget(domain["id"], domain["name"])
+            custom_widget = SimpleListItemWidget(
+                domain["id"], domain["name"], "domain_item_widget"
+            )
             custom_widget.setFixedWidth(180)
             item.setSizeHint(custom_widget.sizeHint())
             self.domain_list_widget.addItem(item)
@@ -492,7 +493,9 @@ class SettingsDialog(QDialog):
         self.age_group_list_widget.clear()
         for age_group in settings["age_groups"]:
             item = QListWidgetItem(self.age_group_list_widget)
-            custom_widget = AgeGroupItemWidget(age_group["id"], age_group["name"])
+            custom_widget = SimpleListItemWidget(
+                age_group["id"], age_group["name"], "age_group_item_widget"
+            )
             custom_widget.setFixedWidth(180)
             item.setSizeHint(custom_widget.sizeHint())
             self.age_group_list_widget.addItem(item)

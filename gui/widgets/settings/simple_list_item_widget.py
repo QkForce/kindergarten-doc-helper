@@ -1,26 +1,30 @@
-from PySide6.QtWidgets import (
-    QFrame,
-    QHBoxLayout,
-    QLabel,
-)
+from PySide6.QtWidgets import QFrame, QHBoxLayout, QLabel, QSizePolicy
 from PySide6.QtCore import Signal
 
 from gui.constants.icons import IconPaths
 from gui.widgets.icon_button import IconButton
+from gui.dialogs.rename_dialog import RenameDialog
 
 
-class DomainItemWidget(QFrame):
-    on_delete_signal = Signal(str)  # domain ID
+class SimpleListItemWidget(QFrame):
+    on_edit_signal = Signal(str, str)  # id, new name
+    on_delete_signal = Signal(str)  # id
 
-    def __init__(self, id, name, parent=None):
+    def __init__(self, id, name, obj_name, parent=None):
         super().__init__(parent)
-        self.setObjectName("domain_item_widget")
+        self.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
+        self.setObjectName(obj_name)
         self.setProperty("selected", "false")
         self.id = id
         self.name = name
 
         self.label = QLabel(self.name)
         self.label.setWordWrap(True)
+
+        edit_btn = IconButton(IconPaths.EDIT, icon_size=12)
+        edit_btn.setProperty("btn-type", "ghost")
+        edit_btn.setFixedSize(20, 20)
+        edit_btn.clicked.connect(self.start_edit)
 
         delete_btn = IconButton(IconPaths.TRASH, icon_size=12)
         delete_btn.setProperty("btn-type", "ghost")
@@ -32,7 +36,17 @@ class DomainItemWidget(QFrame):
         layout.addSpacing(0)
         layout.addWidget(self.label)
         layout.addStretch()
+        layout.addWidget(edit_btn)
         layout.addWidget(delete_btn)
+
+    def start_edit(self):
+        dialog = RenameDialog(self.name, self)
+        if dialog.exec() == dialog.Accepted:
+            new_name = dialog.getText()
+            if new_name:
+                self.name = new_name
+                self.label.setText(self.name)
+                self.on_edit_signal.emit(self.id, self.name)
 
     def setActive(self, is_active):
         self.setProperty("selected", "true" if is_active else "false")
