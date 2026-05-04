@@ -5,11 +5,8 @@ from PySide6.QtWidgets import (
     QSizePolicy,
 )
 from PySide6.QtCore import Signal
-from PySide6.QtGui import QIcon
 
 from gui.constants.icons import IconPaths
-from gui.constants.colors import AppColors
-from gui.utils.icon_utils import get_svg_pixmap
 from gui.widgets.icon_button import IconButton
 
 
@@ -29,8 +26,6 @@ class AgeGroupItemWidget(QFrame):
 
         delete_btn = IconButton(IconPaths.TRASH, icon_size=12)
         delete_btn.setProperty("btn-type", "ghost")
-        delete_icon = get_svg_pixmap(IconPaths.TRASH, AppColors.BTN_ICON_TEXT, 12)
-        delete_btn.setIcon(QIcon(delete_icon))
         delete_btn.setFixedSize(16, 16)
         delete_btn.clicked.connect(lambda: self.on_delete_signal.emit(self.id))
 
