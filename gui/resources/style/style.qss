@@ -290,8 +290,12 @@ QFrame#sidebar_frame {
     padding-right: 1px;
 }
 
-QFrame#sidebar_frame > QLabel#sidebar_title {
+QFrame#simple_list_widget {
+    background-color: @CANVAS;
     border-top: 1px solid @BORDER;
+}
+
+QLabel#sidebar_title {
     background-color: transparent;
     font-weight: bold;
     font-size: 12px;
