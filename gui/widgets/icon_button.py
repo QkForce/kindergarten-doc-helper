@@ -22,6 +22,9 @@ class IconButton(QPushButton):
         self._current_color = current_color
         self._hover_color = hover_color
         self._is_hovered = False
+        self.setIcon(
+            QIcon(get_svg_pixmap(self._icon_path, self._current_color, self._icon_size))
+        )
 
     def setIconPath(self, icon_path):
         self._icon_path = icon_path

@@ -20,8 +20,9 @@ from gui.widgets.icon_button import IconButton
 
 
 class SubjectBlock(QFrame):
-    on_add_metric_signal = Signal(str, dict)  # subject ID, metric data
     on_delete_signal = Signal(str)  # subject ID
+    on_add_metric_signal = Signal(str, dict)  # subject ID, metric data
+    on_delete_metric_signal = Signal(str)  # subject ID
 
     def __init__(self, id, name, metrics, parent=None):
         super().__init__(parent)
@@ -48,16 +49,12 @@ class SubjectBlock(QFrame):
             )
         )
 
-        delete_icon = get_svg_pixmap(
-            IconPaths.TRASH, AppColors.BTN_ICON_DANGER_CONTENT, 14
-        )
         delete_btn = IconButton(
             IconPaths.TRASH,
             icon_size=14,
             current_color=AppColors.BTN_ICON_DANGER_CONTENT,
             hover_color=AppColors.BTN_ICON_DANGER_HOVER_BG,
         )
-        delete_btn.setIcon(QIcon(delete_icon))
         delete_btn.setProperty("btn-type", "ghost")
         delete_btn.setFixedSize(26, 26)
         delete_btn.setToolTip("Пәнді жою")
@@ -75,7 +72,7 @@ class SubjectBlock(QFrame):
         self.table.setShowGrid(False)
         self.table.horizontalHeader().setSectionResizeMode(1, QHeaderView.Stretch)
         self.table.verticalHeader().hide()
-        self.table.setColumnCount(5)
+        self.table.setColumnCount(6)
         self.table.setHorizontalHeaderLabels(
             [
                 "Код",
@@ -83,6 +80,7 @@ class SubjectBlock(QFrame):
                 "Критерия (Жақсы)",
                 "Критерия (Орташа)",
                 "Критерия (Нашар)",
+                "Әрекеттер",
             ]
         )
 
@@ -106,15 +104,29 @@ class SubjectBlock(QFrame):
             self.metrics = metrics
         self.table.setRowCount(len(self.metrics))
         for row, metric in enumerate(self.metrics):
+            m_id = metric.get("id", "")
             criteria = metric.get("criteria", ["", "", ""])
             self.table.setItem(row, 0, QTableWidgetItem(str(metric.get("code", ""))))
             self.table.setItem(row, 1, QTableWidgetItem(metric.get("transformed", "")))
             self.table.setItem(row, 2, QTableWidgetItem(str(criteria[0])))
             self.table.setItem(row, 3, QTableWidgetItem(str(criteria[1])))
             self.table.setItem(row, 4, QTableWidgetItem(str(criteria[2])))
+            delete_btn = IconButton(
+                IconPaths.TRASH,
+                icon_size=14,
+                current_color=AppColors.BTN_ICON_DANGER_CONTENT,
+                hover_color=AppColors.BTN_ICON_DANGER_HOVER_BG,
+            )
+            delete_btn.setProperty("btn-type", "ghost")
+            delete_btn.setToolTip("Метриканы жою")
+            delete_btn.clicked.connect(lambda: self.on_delete_metric_signal.emit(m_id))
+            self.table.setCellWidget(row, 5, delete_btn)
         header = self.table.horizontalHeader()
-        for i in range(0, self.table.columnCount()):
+        for i in range(0, self.table.columnCount() - 1):
             header.setSectionResizeMode(i, QHeaderView.ResizeMode.Stretch)
+        header.setSectionResizeMode(
+            self.table.columnCount() - 1, QHeaderView.ResizeMode.ResizeToContents
+        )
 
         # Calculate height
         total_height = self.table.horizontalHeader().height()
