@@ -11,6 +11,7 @@ from gui.widgets.icon_button import IconButton
 
 
 class AgeGroupItemWidget(QFrame):
+    on_edit_signal = Signal(str, str)  # age group id, new name
     on_delete_signal = Signal(str)  # age group id
 
     def __init__(self, id, name, parent=None):
@@ -24,6 +25,11 @@ class AgeGroupItemWidget(QFrame):
         self.label = QLabel(self.name)
         self.label.setWordWrap(True)
 
+        edit_btn = IconButton(IconPaths.EDIT, icon_size=12)
+        edit_btn.setProperty("btn-type", "ghost")
+        edit_btn.setFixedSize(20, 20)
+        edit_btn.clicked.connect(lambda: self.on_edit_signal.emit(self.id, self.name))
+
         delete_btn = IconButton(IconPaths.TRASH, icon_size=12)
         delete_btn.setProperty("btn-type", "ghost")
         delete_btn.setFixedSize(16, 16)
@@ -34,6 +40,7 @@ class AgeGroupItemWidget(QFrame):
         layout.addSpacing(0)
         layout.addWidget(self.label)
         layout.addStretch()
+        layout.addWidget(edit_btn)
         layout.addWidget(delete_btn)
 
     def setActive(self, is_active):
