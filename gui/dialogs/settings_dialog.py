@@ -71,6 +71,7 @@ class SettingsDialog(QDialog):
 
         self.body_header_frame = QFrame()
         self.body_header_frame.setObjectName("body_header_frame")
+        self.body_header_frame.setFixedHeight(40)
         body_header_layout = QHBoxLayout(self.body_header_frame)
         body_header_layout.setContentsMargins(10, 6, 10, 6)
         body_header_layout.setSpacing(8)
@@ -88,7 +89,9 @@ class SettingsDialog(QDialog):
         self.body_empty_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.body_empty_label.setVisible(False)
 
-        body_layout = QVBoxLayout()
+        body_frame = QFrame()
+        body_frame.setObjectName("settings_body_frame")
+        body_layout = QVBoxLayout(body_frame)
         body_layout.setContentsMargins(0, 0, 0, 0)
         body_layout.setSpacing(0)
         body_layout.addWidget(self.body_header_frame, 0)
@@ -99,7 +102,7 @@ class SettingsDialog(QDialog):
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(0)
         layout.addWidget(sidebar_frame)
-        layout.addLayout(body_layout)
+        layout.addWidget(body_frame)
 
         self.applySettings(self.settings)
 
@@ -185,7 +188,7 @@ class SettingsDialog(QDialog):
         )
         self.domain_list.setCurrentRow(len(selected_ag_domains) - 1)
         self.body_header_frame.setVisible(True)
-        self.body_list.setVisible(True)
+        self.body_list.setVisible(self.body_list.count() > 0)
         self.body_empty_label.setVisible(self.body_list.count() == 0)
 
     def on_edit_domain(self, domain_id, new_name):

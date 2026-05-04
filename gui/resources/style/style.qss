@@ -352,9 +352,13 @@ QLabel#empty_list_label {
 
 /* settigs_dialog > body */
 
+QFrame#settings_body_frame {
+    border-top: 1px solid @BORDER;
+    background-color: @CANVAS;
+}
+
 QFrame#body_header_frame {
     background-color: @CANVAS;
-    border-top: 1px solid @BORDER;
     border-bottom: 1px solid @BORDER;
 }
 
