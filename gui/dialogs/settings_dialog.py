@@ -118,7 +118,9 @@ class SettingsDialog(QDialog):
         return ag["domains"][idx] if ag and idx >= 0 else None
 
     def _update_body_state(self, has_subjects, empty_message=""):
-        self.body_header_frame.setVisible(has_subjects)
+        self.body_header_frame.setVisible(
+            has_subjects or self.current_domain is not None
+        )
         self.body_list.setVisible(has_subjects)
         self.body_empty_label.setVisible(not has_subjects)
         if not has_subjects:
@@ -240,34 +242,23 @@ class SettingsDialog(QDialog):
         custom_widget.on_delete_metric_signal.connect(self.on_delete_metric)
 
     def on_add_subject_clicked(self):
-        if not self.age_group_list.current_id or not self.domain_list.current_id:
+        domain = self.current_domain
+        if not domain:
             return
-        selected_age_group_idx = self.age_group_list.currentRow()
-        selected_domain_idx = self.domain_list.currentRow()
-        if selected_age_group_idx < 0 or selected_domain_idx < 0:
-            return
-        age_group = self.settings["age_groups"][selected_age_group_idx]
-        domain = age_group["domains"][selected_domain_idx]
         new_subject = {
             "id": f"subject_{time.time_ns()}",
             "name": f"Пән {len(domain['subjects']) + 1}",
             "metrics": [],
         }
         domain["subjects"].append(new_subject)
-
         self._add_subject_to_list(new_subject)
-
         self.body_list.scrollToBottom()
-
         self._update_body_state(True)
 
     def on_delete_subject(self, subject_id):
-        selected_age_group_idx = self.age_group_list.currentRow()
-        selected_domain_idx = self.domain_list.currentRow()
-        if selected_age_group_idx < 0 or selected_domain_idx < 0:
+        domain = self.current_domain
+        if not domain:
             return
-        age_group = self.settings["age_groups"][selected_age_group_idx]
-        domain = age_group["domains"][selected_domain_idx]
         domain["subjects"] = [
             subject for subject in domain["subjects"] if subject["id"] != subject_id
         ]
@@ -280,9 +271,7 @@ class SettingsDialog(QDialog):
                 break
 
         if self.body_list.count() == 0:
-            self.body_list.setVisible(False)
-            self.body_empty_label.setText("Пәндер жоқ")
-            self.body_empty_label.setVisible(True)
+            self._update_body_state(False, "Пәндер жоқ")
 
     def on_add_metric(self, subject_id, metric_data):
         row_age = self.age_group_list.currentRow()
