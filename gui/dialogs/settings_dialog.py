@@ -106,6 +106,25 @@ class SettingsDialog(QDialog):
 
         self.applySettings(self.settings)
 
+    @property
+    def current_age_group(self):
+        idx = self.age_group_list.currentRow()
+        return self.settings["age_groups"][idx] if idx >= 0 else None
+
+    @property
+    def current_domain(self):
+        ag = self.current_age_group
+        idx = self.domain_list.currentRow()
+        return ag["domains"][idx] if ag and idx >= 0 else None
+
+    def _update_body_state(self, has_subjects, empty_message=""):
+        self.body_header_frame.setVisible(has_subjects)
+        self.body_list.setVisible(has_subjects)
+        self.body_empty_label.setVisible(not has_subjects)
+        if not has_subjects:
+            self.body_empty_label.setText(empty_message)
+            self.body_list.clear()
+
     def on_add_age_group_clicked(self):
         new_age_group = {
             "id": f"age_group_{time.time_ns()}",
@@ -156,15 +175,7 @@ class SettingsDialog(QDialog):
             self.domain_list.clear()
             self.domain_list.setEmpty("Жас топтары жоқ")
 
-            self.breadcrumb_age_group_label.setText("")
-            self.breadcrumb_domain_label.setText("")
-
-            self.body_header_frame.setVisible(False)
-            self.body_list.clear()
-            self.body_list.setVisible(False)
-
-            self.body_empty_label.setText("Жас топтары жоқ")
-            self.body_empty_label.setVisible(True)
+            self._update_body_state(False, "Жас топтары жоқ")
 
     def on_add_domain_clicked(self):
         selected_age_group_idx = self.age_group_list.currentRow()
@@ -186,10 +197,7 @@ class SettingsDialog(QDialog):
             self.on_edit_domain,
             self.on_delete_domain,
         )
-        self.domain_list.setCurrentRow(len(selected_ag_domains) - 1)
-        self.body_header_frame.setVisible(True)
-        self.body_list.setVisible(self.body_list.count() > 0)
-        self.body_empty_label.setVisible(self.body_list.count() == 0)
+        self.update_domain_list(len(selected_ag_domains) - 1)
 
     def on_edit_domain(self, domain_id, new_name):
         selected_age_group_idx = self.age_group_list.currentRow()
@@ -243,6 +251,16 @@ class SettingsDialog(QDialog):
             return
         self.update_body_list()
 
+    def _add_subject_to_list(self, subject):
+        item = QListWidgetItem(self.body_list)
+        custom_widget = SubjectBlock(subject["id"], subject["name"], subject["metrics"])
+        item.setSizeHint(custom_widget.sizeHint())
+        self.body_list.addItem(item)
+        self.body_list.setItemWidget(item, custom_widget)
+        custom_widget.on_delete_signal.connect(self.on_delete_subject)
+        custom_widget.on_add_metric_signal.connect(self.on_add_metric)
+        custom_widget.on_delete_metric_signal.connect(self.on_delete_metric)
+
     def on_add_subject_clicked(self):
         if not self.age_group_list.current_id or not self.domain_list.current_id:
             return
@@ -259,23 +277,11 @@ class SettingsDialog(QDialog):
         }
         domain["subjects"].append(new_subject)
 
-        item = QListWidgetItem(self.body_list)
-        custom_widget = SubjectBlock(
-            new_subject["id"], new_subject["name"], new_subject["metrics"]
-        )
-        item.setSizeHint(custom_widget.sizeHint())
-
-        self.body_list.addItem(item)
-        self.body_list.setItemWidget(item, custom_widget)
-
-        custom_widget.on_delete_signal.connect(self.on_delete_subject)
-        custom_widget.on_add_metric_signal.connect(self.on_add_metric)
-        custom_widget.on_delete_metric_signal.connect(self.on_delete_metric)
+        self._add_subject_to_list(new_subject)
 
         self.body_list.scrollToBottom()
 
-        self.body_empty_label.setVisible(False)
-        self.body_list.setVisible(True)
+        self._update_body_state(True)
 
     def on_delete_subject(self, subject_id):
         selected_age_group_idx = self.age_group_list.currentRow()
@@ -346,19 +352,17 @@ class SettingsDialog(QDialog):
                 widget.updateGeometry()
                 item.setSizeHint(widget.sizeHint())
 
-    def update_domain_list(self, selected_domain_idx=None):
+    def update_domain_list(self, selected_idx=None):
         self.domain_list.clear()
+        ag = self.current_age_group
 
-        selected_domain_idx = selected_domain_idx or 0
-
-        row_age = self.age_group_list.currentRow()
-        if row_age < 0:
+        if not ag or not ag["domains"]:
+            self.domain_list.setEmpty("Бағыттар жоқ")
+            self._update_body_state(False, "Бағыттар жоқ")
             return
-        age_group = self.settings["age_groups"][row_age]
-        domains = age_group["domains"]
 
         # Fill the domain list
-        for domain in domains:
+        for domain in ag["domains"]:
             self.domain_list.addItem(
                 domain["id"],
                 domain["name"],
@@ -367,66 +371,26 @@ class SettingsDialog(QDialog):
                 self.on_delete_domain,
             )
 
-        # Update visibility and selection based on the new list of domains
-        if len(domains) < 1:
-            self.domain_list.setEmpty("Бағыттар жоқ")
-            self.breadcrumb_domain_label.setText("")
-            self.body_header_frame.setVisible(False)
-            self.body_list.setVisible(False)
-            self.body_empty_label.setText("Бағыттар жоқ")
-            self.body_empty_label.setVisible(True)
-            self.body_list.clear()
-        else:
-            selected_domain_idx = min(selected_domain_idx, len(domains) - 1)
-            self.domain_list.setEmpty("", show=False)
-            self.breadcrumb_domain_label.setText(domains[selected_domain_idx]["name"])
-            self.body_header_frame.setVisible(True)
-            self.body_list.setVisible(True)
-            self.body_empty_label.setVisible(False)
-            self.domain_list.setCurrentRow(selected_domain_idx)
+        self.domain_list.setEmpty("", show=False)
 
-        self.update_body_list()
+        self._update_body_state(True)
+
+        self.domain_list.setCurrentRow(min(selected_idx or 0, len(ag["domains"]) - 1))
 
     def update_body_list(self):
         self.body_list.clear()
-
-        row_age = self.age_group_list.currentRow()
-        row_domain = self.domain_list.currentRow()
-
-        if row_age < 0 or row_domain < 0:
+        domain = self.current_domain
+        if not domain:
             return
-
-        if not self.settings["age_groups"] or row_age >= len(
-            self.settings["age_groups"]
-        ):
-            return
-
-        age_group = self.settings["age_groups"][row_age]
-
-        if not age_group.get("domains") or row_domain >= len(age_group["domains"]):
-            return
-
-        domain = age_group["domains"][row_domain]
-
-        for subject in domain.get("subjects", []):
-            item = QListWidgetItem(self.body_list)
-            custom_widget = SubjectBlock(
-                subject["id"], subject["name"], subject["metrics"]
-            )
-            item.setSizeHint(custom_widget.sizeHint())
-            self.body_list.addItem(item)
-            self.body_list.setItemWidget(item, custom_widget)
-            custom_widget.on_delete_signal.connect(self.on_delete_subject)
-            custom_widget.on_add_metric_signal.connect(self.on_add_metric)
-            custom_widget.on_delete_metric_signal.connect(self.on_delete_metric)
-
         if len(domain.get("subjects", [])) < 1:
+            self.body_header_frame.setVisible(True)
             self.body_list.setVisible(False)
             self.body_empty_label.setText("Пәндер жоқ")
             self.body_empty_label.setVisible(True)
-        else:
-            self.body_list.setVisible(True)
-            self.body_empty_label.setVisible(False)
+            return
+        self._update_body_state(True)
+        for subject in domain.get("subjects", []):
+            self._add_subject_to_list(subject)
 
     def applySettings(
         self, settings, selected_age_group_idx=None, selected_domain_idx=None
@@ -450,29 +414,25 @@ class SettingsDialog(QDialog):
         if len(settings["age_groups"]) < 1:
             self.age_group_list.setEmpty("Жас топтары жоқ")
             self.domain_list.setEmpty("Жас топтары жоқ")
-            self.body_header_frame.setVisible(False)
-            self.body_list.setVisible(False)
-            self.body_empty_label.setText("Жас топтары жоқ")
-            self.body_empty_label.setVisible(True)
-            self.breadcrumb_age_group_label.setText("")
-            self.breadcrumb_domain_label.setText("")
+
+            self._update_body_state(False, "Жас топтары жоқ")
+
             self.domain_list.clear()
-            self.body_list.clear()
             return
         selected_age_group_idx = min(
             selected_age_group_idx, len(settings["age_groups"]) - 1
         )
         self.age_group_list.setEmpty("", show=False)
-        self.body_header_frame.setVisible(True)
-        self.body_list.setVisible(True)
-        self.body_empty_label.setVisible(False)
+
+        self._update_body_state(True)
+
         self.breadcrumb_age_group_label.setText(
             settings["age_groups"][selected_age_group_idx]["name"]
         )
         self.age_group_list.blockSignals(False)
         self.age_group_list.setCurrentRow(selected_age_group_idx)
 
-        self.update_domain_list(selected_domain_idx=selected_domain_idx)
+        self.update_domain_list(selected_idx=selected_domain_idx)
 
     def get_data(self):
         return {
