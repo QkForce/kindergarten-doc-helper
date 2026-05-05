@@ -157,18 +157,7 @@ class SettingsDialog(QDialog):
         ]
         self.age_group_list.deleteItem(age_group_id)
         if self.age_group_list.list.count() > 0:
-            new_idx = (
-                next(
-                    (
-                        i
-                        for i, ag in enumerate(self.settings["age_groups"])
-                        if ag["id"] == self.age_group_list.current_id
-                    ),
-                    0,
-                )
-                if self.settings["age_groups"]
-                else None
-            )
+            new_idx = max(0, self.age_group_list.currentRow())
             self.age_group_list.setCurrentRow(new_idx)
         else:
             self.age_group_list.setEmpty("Жас топтары жоқ")
@@ -221,18 +210,7 @@ class SettingsDialog(QDialog):
         age_group["domains"] = [d for d in age_group["domains"] if d["id"] != domain_id]
         self.domain_list.deleteItem(domain_id)
         if self.domain_list.list.count() > 0:
-            new_idx = (
-                next(
-                    (
-                        i
-                        for i, domain in enumerate(age_group["domains"])
-                        if domain["id"] == self.domain_list.current_id
-                    ),
-                    0,
-                )
-                if age_group["domains"]
-                else None
-            )
+            new_idx = max(0, self.domain_list.currentRow())
             self.domain_list.setCurrentRow(new_idx)
         else:
             self.update_domain_list()
