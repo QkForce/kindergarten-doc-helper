@@ -19,7 +19,7 @@ from gui.widgets.icon_button import IconButton
 
 class SubjectBlock(QFrame):
     on_delete_signal = Signal(str)  # subject ID
-    on_add_metric_signal = Signal(str, dict)  # subject ID, metric data
+    on_add_metric_signal = Signal(str)  # subject ID
     on_delete_metric_signal = Signal(str, str)  # subject ID, metric ID
 
     def __init__(self, id, name, metrics, parent=None):
@@ -36,15 +36,7 @@ class SubjectBlock(QFrame):
         add_metric_btn.setProperty("btn-type", "link")
         add_metric_btn.setFixedHeight(26)
         add_metric_btn.clicked.connect(
-            lambda: self.on_add_metric_signal.emit(
-                self.subject_id,
-                {
-                    "id": f"metric_{time.time_ns()}",
-                    "code": "",
-                    "transformed": "",
-                    "criteria": ["", "", ""],
-                },
-            )
+            lambda: self.on_add_metric_signal.emit(self.subject_id)
         )
 
         delete_btn = IconButton(

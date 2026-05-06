@@ -44,9 +44,11 @@ class SimpleListItemWidget(QFrame):
         if dialog.exec() == dialog.Accepted:
             new_name = dialog.getText()
             if new_name:
-                self.name = new_name
-                self.label.setText(self.name)
-                self.on_edit_signal.emit(self.id, self.name)
+                self.on_edit_signal.emit(self.id, new_name)
+
+    def updateName(self, name):
+        self.name = name
+        self.label.setText(self.name)
 
     def setActive(self, is_active):
         self.setProperty("selected", "true" if is_active else "false")

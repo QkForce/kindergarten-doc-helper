@@ -107,10 +107,13 @@ class SimpleListWidget(QFrame):
         self.empty_label.setVisible(False)
         self.list.setVisible(True)
 
-        # self.list.blockSignals(True)
-        # item.setSelected(True)
-        # custom_widget.setActive(True)
-        # self.list.blockSignals(False)
+    def updateItemName(self, id, name):
+        for i in range(self.list.count()):
+            item = self.list.item(i)
+            widget = self.list.itemWidget(item)
+            if widget and widget.id == id:
+                widget.updateName(name)
+                break
 
     def deleteItem(self, id):
         target_row = -1
