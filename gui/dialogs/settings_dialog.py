@@ -152,11 +152,6 @@ class SettingsDialog(QDialog):
 
         self.domain_list.blockSignals(False)
 
-        if domains:
-            self.domain_list.setCurrentRow(0)
-        else:
-            self.sync_subjects()
-
     def refresh_all(self):
         self.age_group_list.blockSignals(True)
         self.age_group_list.clear()
@@ -172,11 +167,6 @@ class SettingsDialog(QDialog):
             )
 
         self.age_group_list.blockSignals(False)
-
-        if age_groups:
-            self.age_group_list.setCurrentRow(0)
-        else:
-            self.sync_domains()
 
     def handle_age_group_change(self, ag_id, name):
         self.breadcrumb_age_group_label.setText(name)
@@ -232,7 +222,7 @@ class SettingsDialog(QDialog):
 
     def on_delete_age_group(self, age_group_id):
         self.store.delete_age_group(age_group_id)
-        self.refresh_all()
+        self.age_group_list.deleteItem(age_group_id)
         new_idx = max(0, self.age_group_list.currentRow())
         self.age_group_list.setCurrentRow(new_idx)
 
@@ -262,7 +252,7 @@ class SettingsDialog(QDialog):
         if not ag:
             return
         self.store.delete_domain(ag["id"], domain_id)
-        self.sync_domains()
+        self.domain_list.deleteItem(domain_id)
         new_idx = max(0, self.domain_list.currentRow())
         self.domain_list.setCurrentRow(new_idx)
 
