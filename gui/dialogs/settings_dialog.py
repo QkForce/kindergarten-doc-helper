@@ -207,8 +207,15 @@ class SettingsDialog(QDialog):
     # --- AGE GROUP ACTION HANDLERS ---
 
     def on_add_age_group_clicked(self):
-        self.store.add_age_group()
-        self.refresh_all()
+        ag = self.store.add_age_group()
+        self.age_group_list.addItem(
+            ag["id"],
+            ag["name"],
+            "age_group_item_widget",
+            self.on_edit_age_group,
+            self.on_delete_age_group,
+        )
+        self.age_group_list.selectLastItem()
 
     def on_edit_age_group(self, age_group_id, new_name):
         ag = self.store.find_ag(age_group_id)
@@ -231,8 +238,15 @@ class SettingsDialog(QDialog):
     def on_add_domain_clicked(self):
         ag = self.current_age_group
         if ag:
-            self.store.add_domain(ag["id"])
-            self.sync_domains()
+            dom = self.store.add_domain(ag["id"])
+            self.domain_list.addItem(
+                dom["id"],
+                dom["name"],
+                "domain_item_widget",
+                self.on_edit_domain,
+                self.on_delete_domain,
+            )
+            self.domain_list.selectLastItem()
 
     def on_edit_domain(self, domain_id, new_name):
         ag = self.current_age_group

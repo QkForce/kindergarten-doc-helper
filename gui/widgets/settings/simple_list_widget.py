@@ -92,6 +92,10 @@ class SimpleListWidget(QFrame):
         self.empty_label.setVisible(show)
         self.list.setVisible(not show)
 
+    def selectLastItem(self):
+        if self.list.count() > 0:
+            self.list.setCurrentRow(self.list.count() - 1)
+
     def addItem(self, id, name, obj_name, on_edit, on_delete, width=180):
         item = QListWidgetItem(self.list)
         custom_widget = SimpleListItemWidget(id, name, obj_name)
