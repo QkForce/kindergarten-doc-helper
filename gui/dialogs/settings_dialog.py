@@ -276,8 +276,10 @@ class SettingsDialog(QDialog):
         ag = self.current_age_group
         dom = self.current_domain
         if ag and dom:
-            self.store.add_subject(ag["id"], dom["id"])
-            self.sync_subjects()
+            sub = self.store.add_subject(ag["id"], dom["id"])
+            self._add_subject_to_list(sub)
+            self.body_list.setVisible(True)
+            self.body_empty_label.setVisible(False)
             self.body_list.scrollToBottom()
 
     def on_delete_subject(self, subject_id):
@@ -296,7 +298,10 @@ class SettingsDialog(QDialog):
                 self.body_list.takeItem(i)
                 break
 
-        self.sync_subjects()
+        if self.body_list.count() == 0:
+            self.body_empty_label.setText("Пәндер жоқ")
+            self.body_empty_label.setVisible(True)
+            self.body_list.setVisible(False)
 
     # --- METRIC ACTION HANDLERS ---
 
