@@ -352,7 +352,7 @@ QLabel#empty_list_label {
 
 /* settigs_dialog > body */
 
-QFrame#settings_body_frame {
+SubjectListWidget#settings_body_frame {
     border-top: 1px solid @BORDER;
     background-color: @CANVAS;
 }

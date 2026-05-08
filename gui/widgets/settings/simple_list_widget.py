@@ -87,14 +87,18 @@ class SimpleListWidget(QFrame):
                 if is_active:
                     self.on_selection_changed_signal.emit(widget.id, widget.name)
 
-    def setEmpty(self, text, show=True):
-        self.empty_label.setText(text)
-        self.empty_label.setVisible(show)
-        self.list.setVisible(not show)
+    def setEmpty(self, msg):
+        self.list.setVisible(False)
+        self.empty_label.setText(msg)
+        self.empty_label.setVisible(True)
 
     def selectLastItem(self):
         if self.list.count() > 0:
             self.list.setCurrentRow(self.list.count() - 1)
+
+    def selectFirstItem(self):
+        if self.list.count() > 0:
+            self.list.setCurrentRow(0)
 
     def addItem(self, id, name, obj_name, on_edit, on_delete, width=180):
         item = QListWidgetItem(self.list)
@@ -108,8 +112,8 @@ class SimpleListWidget(QFrame):
             lambda: self.on_delete_clicked(custom_widget.id, on_delete)
         )
 
-        self.empty_label.setVisible(False)
         self.list.setVisible(True)
+        self.empty_label.setVisible(False)
 
     def updateItemName(self, id, name):
         for i in range(self.list.count()):
@@ -120,16 +124,13 @@ class SimpleListWidget(QFrame):
                 break
 
     def deleteItem(self, id):
-        target_row = -1
         for i in range(self.list.count()):
             widget = self.list.itemWidget(self.list.item(i))
             if widget and widget.id == id:
-                target_row = i
+                self.list.takeItem(i)
                 break
-        if target_row != -1:
-            self.list.takeItem(target_row)
-            if self.list.count() == 0:
-                self.setEmpty("Тізім бос", show=True)
+        if self.list.count() == 0:
+            self.setEmpty("Тізім бос")
 
     def clear(self):
         self.list.blockSignals(True)
