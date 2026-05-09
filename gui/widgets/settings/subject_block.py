@@ -1,5 +1,3 @@
-import time
-
 from PySide6.QtWidgets import (
     QFrame,
     QHBoxLayout,
@@ -9,15 +7,18 @@ from PySide6.QtWidgets import (
     QTableWidgetItem,
     QHeaderView,
     QPushButton,
+    QWidget,
 )
 from PySide6.QtCore import Qt, Signal
 
 from gui.constants.colors import AppColors
 from gui.constants.icons import IconPaths
+from gui.dialogs.rename_dialog import RenameDialog
 from gui.widgets.icon_button import IconButton
 
 
 class SubjectBlock(QFrame):
+    on_edit_signal = Signal(str, str)  # subject ID, new name
     on_delete_signal = Signal(str)  # subject ID
     on_add_metric_signal = Signal(str)  # subject ID
     on_delete_metric_signal = Signal(str, str)  # subject ID, metric ID
@@ -30,6 +31,14 @@ class SubjectBlock(QFrame):
         self.metrics = metrics
 
         self.title = QLabel(self.subject_name)
+
+        edit_btn = IconButton(
+            IconPaths.EDIT,
+            icon_size=12,
+        )
+        edit_btn.setProperty("btn-type", "ghost")
+        edit_btn.setFixedSize(26, 26)
+        edit_btn.clicked.connect(self.on_edit_clicked)
 
         add_metric_btn = QPushButton("+ Метрика қосу")
         add_metric_btn.setProperty("btn-size", "small")
@@ -54,6 +63,8 @@ class SubjectBlock(QFrame):
         header_frame.setObjectName("settings_subject_block_header")
         header_layout = QHBoxLayout(header_frame)
         header_layout.addWidget(self.title)
+        header_layout.addSpacing(10)
+        header_layout.addWidget(edit_btn)
         header_layout.addStretch()
         header_layout.addWidget(add_metric_btn)
         header_layout.addWidget(delete_btn)
@@ -133,3 +144,14 @@ class SubjectBlock(QFrame):
         # Empty state
         metrics_empty = len(self.metrics) == 0
         self.metrics_empty_label.setVisible(metrics_empty)
+
+    def setSubjectName(self, name):
+        self.subject_name = name
+        self.title.setText(name)
+
+    def on_edit_clicked(self):
+        dialog = RenameDialog(self.subject_name, self)
+        if dialog.exec() == dialog.Accepted:
+            new_name = dialog.getText()
+            if new_name:
+                self.on_edit_signal.emit(self.subject_id, new_name)

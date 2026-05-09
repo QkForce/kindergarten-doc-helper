@@ -83,6 +83,13 @@ class SettingsStore:
             return new_sub
         return None
 
+    def edit_subject(self, ag_id, dom_id, sub_id, new_name):
+        sub = self.find_sub(ag_id, dom_id, sub_id)
+        if sub:
+            sub["name"] = new_name
+            return True
+        return False
+
     def delete_subject(self, ag_id, dom_id, sub_id):
         dom = self.find_dom(ag_id, dom_id)
         if not dom:

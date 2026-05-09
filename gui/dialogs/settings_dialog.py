@@ -81,7 +81,11 @@ class SettingsDialog(QDialog):
 
         for sub in subjects:
             self.body.addSubject(
-                sub, self.on_delete_subject, self.on_add_metric, self.on_delete_metric
+                sub,
+                self.on_edit_subject,
+                self.on_delete_subject,
+                self.on_add_metric,
+                self.on_delete_metric,
             )
 
     def sync_domains(self):
@@ -226,9 +230,24 @@ class SettingsDialog(QDialog):
         if ag and dom:
             sub = self.store.add_subject(ag["id"], dom["id"])
             self.body.addSubject(
-                sub, self.on_delete_subject, self.on_add_metric, self.on_delete_metric
+                sub,
+                self.on_edit_subject,
+                self.on_delete_subject,
+                self.on_add_metric,
+                self.on_delete_metric,
             )
             self.body.scrollToBottom()
+
+    def on_edit_subject(self, sub_id, new_name):
+        ag = self.current_age_group
+        if not ag:
+            return
+        dom = self.current_domain
+        if not dom:
+            return
+        self.store.edit_subject(ag["id"], dom["id"], sub_id, new_name)
+
+        self.body.editSubject(sub_id, new_name)
 
     def on_delete_subject(self, subject_id):
         ag = self.current_age_group

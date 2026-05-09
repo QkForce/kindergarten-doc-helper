@@ -18,6 +18,7 @@ from gui.widgets.settings.subject_block import SubjectBlock
 
 class SubjectListWidget(QFrame):
     on_add_subject_signal = Signal()
+    on_edit_subject_signal = Signal(str, str)  # id, new name
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -97,19 +98,30 @@ class SubjectListWidget(QFrame):
 
     # --- SUBJECT METHODS ---
 
-    def addSubject(self, sub, on_delete_subject, on_add_metric, on_delete_metric):
+    def addSubject(
+        self, sub, on_edit_subject, on_delete_subject, on_add_metric, on_delete_metric
+    ):
         item = QListWidgetItem(self.list)
         custom_widget = SubjectBlock(sub["id"], sub["name"], sub["metrics"])
         item.setSizeHint(custom_widget.sizeHint())
         self.list.addItem(item)
         self.list.setItemWidget(item, custom_widget)
 
+        custom_widget.on_edit_signal.connect(on_edit_subject)
         custom_widget.on_delete_signal.connect(on_delete_subject)
         custom_widget.on_add_metric_signal.connect(on_add_metric)
         custom_widget.on_delete_metric_signal.connect(on_delete_metric)
 
         self.list.setVisible(True)
         self.empty_label.setVisible(False)
+
+    def editSubject(self, sub_id, new_name):
+        for i in range(self.list.count()):
+            item = self.list.item(i)
+            widget = self.list.itemWidget(item)
+            if widget and widget.subject_id == sub_id:
+                widget.setSubjectName(new_name)
+                break
 
     def deleteSubject(self, subject_id):
         for i in range(self.list.count()):
