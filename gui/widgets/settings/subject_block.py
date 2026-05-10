@@ -21,6 +21,7 @@ class SubjectBlock(QFrame):
     on_edit_signal = Signal(str, str)  # subject ID, new name
     on_delete_signal = Signal(str)  # subject ID
     on_add_metric_signal = Signal(str)  # subject ID
+    on_edit_metric_signal = Signal(str, str, dict)  # subject ID, metric ID, metric data
     on_delete_metric_signal = Signal(str, str)  # subject ID, metric ID
 
     def __init__(self, id, name, metrics, parent=None):
@@ -100,32 +101,61 @@ class SubjectBlock(QFrame):
 
         self.updateTable()
 
+    def set_table_item(self, row, met_id, code, desc, c1, c2, c3):
+        self.table.setItem(row, 0, QTableWidgetItem(str(code)))
+        self.table.setItem(row, 1, QTableWidgetItem(desc))
+        self.table.setItem(row, 2, QTableWidgetItem(str(c1)))
+        self.table.setItem(row, 3, QTableWidgetItem(str(c2)))
+        self.table.setItem(row, 4, QTableWidgetItem(str(c3)))
+
+        edit_btn = IconButton(
+            IconPaths.EDIT,
+            icon_size=14,
+        )
+        edit_btn.setProperty("btn-type", "ghost")
+        edit_btn.setToolTip("Метриканы өзгерту")
+        edit_btn.clicked.connect(
+            lambda checked=False, m_id=met_id: self.on_edit_metric_clicked(
+                self.subject_id, m_id
+            )
+        )
+
+        delete_btn = IconButton(
+            IconPaths.TRASH,
+            icon_size=14,
+            current_color=AppColors.BTN_ICON_DANGER_CONTENT,
+            hover_color=AppColors.BTN_ICON_DANGER_HOVER_BG,
+        )
+        delete_btn.setProperty("btn-type", "ghost")
+        delete_btn.setToolTip("Метриканы жою")
+        delete_btn.clicked.connect(
+            lambda checked=False, m_id=met_id: self.on_delete_metric_signal.emit(
+                self.subject_id, m_id
+            )
+        )
+
+        oper_frame = QFrame()
+        oper_cell = QHBoxLayout(oper_frame)
+        oper_cell.setContentsMargins(0, 0, 0, 0)
+        oper_cell.addWidget(edit_btn)
+        oper_cell.addWidget(delete_btn)
+        self.table.setCellWidget(row, 5, oper_frame)
+
     def updateTable(self, metrics=None):
         if metrics is not None:
             self.metrics = metrics
         self.table.setRowCount(len(self.metrics))
         for row, metric in enumerate(self.metrics):
-            m_id = metric.get("id", "")
             criteria = metric.get("criteria", ["", "", ""])
-            self.table.setItem(row, 0, QTableWidgetItem(str(metric.get("code", ""))))
-            self.table.setItem(row, 1, QTableWidgetItem(metric.get("transformed", "")))
-            self.table.setItem(row, 2, QTableWidgetItem(str(criteria[0])))
-            self.table.setItem(row, 3, QTableWidgetItem(str(criteria[1])))
-            self.table.setItem(row, 4, QTableWidgetItem(str(criteria[2])))
-            delete_btn = IconButton(
-                IconPaths.TRASH,
-                icon_size=14,
-                current_color=AppColors.BTN_ICON_DANGER_CONTENT,
-                hover_color=AppColors.BTN_ICON_DANGER_HOVER_BG,
+            self.set_table_item(
+                row,
+                metric.get("id", ""),
+                metric.get("code", ""),
+                metric.get("transformed", ""),
+                criteria[0],
+                criteria[1],
+                criteria[2],
             )
-            delete_btn.setProperty("btn-type", "ghost")
-            delete_btn.setToolTip("Метриканы жою")
-            delete_btn.clicked.connect(
-                lambda checked=False, mid=m_id: self.on_delete_metric_signal.emit(
-                    self.subject_id, mid
-                )
-            )
-            self.table.setCellWidget(row, 5, delete_btn)
         header = self.table.horizontalHeader()
         for i in range(0, self.table.columnCount() - 1):
             header.setSectionResizeMode(i, QHeaderView.ResizeMode.Stretch)
@@ -155,3 +185,8 @@ class SubjectBlock(QFrame):
             new_name = dialog.getText()
             if new_name:
                 self.on_edit_signal.emit(self.subject_id, new_name)
+
+    def on_edit_metric_clicked(self, sub_id, met_id):
+        # open edit metric dialog
+        # self.on_edit_metric_signal.emit(self.subject_id, new_name)
+        pass
