@@ -18,6 +18,7 @@ class EditMetricDialog(QDialog):
     def __init__(self, met_id, code, desc, c1, c2, c3, parent=None):
         super().__init__(parent)
         self.Accepted = QDialog.Accepted
+        self._drag_pos = None
         self.setWindowTitle("Индикаторды (метрика) өзгерту")
         self.setFixedSize(700, 650)
         self.setWindowFlags(Qt.WindowType.FramelessWindowHint | Qt.WindowType.Dialog)
@@ -35,11 +36,13 @@ class EditMetricDialog(QDialog):
         )
         close_btn.setProperty("btn-type", "ghost")
         close_btn.setFixedSize(24, 24)
+        close_btn.setCursor(Qt.CursorShape.ArrowCursor)
         close_btn.clicked.connect(self.reject)
 
-        header = QFrame()
-        header.setFixedHeight(60)
-        header_layout = QHBoxLayout(header)
+        self.header = QFrame()
+        self.header.setFixedHeight(60)
+        self.header.setCursor(Qt.CursorShape.OpenHandCursor)
+        header_layout = QHBoxLayout(self.header)
         header_layout.setContentsMargins(20, 0, 20, 0)
         header_layout.addWidget(title)
         header_layout.addStretch()
@@ -138,7 +141,7 @@ class EditMetricDialog(QDialog):
         content_layout.setContentsMargins(0, 0, 0, 0)
         content_layout.setSpacing(0)
 
-        content_layout.addWidget(header)
+        content_layout.addWidget(self.header)
         content_layout.addWidget(line)
         content_layout.addWidget(body)
         content_layout.addStretch()
@@ -152,3 +155,22 @@ class EditMetricDialog(QDialog):
             "c2": self.c2_input.toPlainText().strip(),
             "c3": self.c3_input.toPlainText().strip(),
         }
+
+    def mousePressEvent(self, event):
+        if event.button() == Qt.MouseButton.LeftButton:
+            if self.header.underMouse():
+                self.header.setCursor(Qt.CursorShape.ClosedHandCursor)
+                self._drag_pos = event.globalPosition().toPoint()
+                event.accept()
+
+    def mouseMoveEvent(self, event):
+        if self._drag_pos is not None:
+            delta = event.globalPosition().toPoint() - self._drag_pos
+            self.move(self.pos() + delta)
+            self._drag_pos = event.globalPosition().toPoint()
+            event.accept()
+
+    def mouseReleaseEvent(self, event):
+        self.header.setCursor(Qt.CursorShape.OpenHandCursor)
+        self._drag_pos = None
+        event.accept()
