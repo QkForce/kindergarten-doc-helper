@@ -85,6 +85,7 @@ class SettingsDialog(QDialog):
                 self.on_edit_subject,
                 self.on_delete_subject,
                 self.on_add_metric,
+                self.on_edit_metric,
                 self.on_delete_metric,
             )
 
@@ -234,6 +235,7 @@ class SettingsDialog(QDialog):
                 self.on_edit_subject,
                 self.on_delete_subject,
                 self.on_add_metric,
+                self.on_edit_metric,
                 self.on_delete_metric,
             )
             self.body.scrollToBottom()
@@ -277,6 +279,20 @@ class SettingsDialog(QDialog):
         dn = dom.get("name", "X")
         prefix = f"{ag_idx + 1}-{dn[0].upper()}"
         self.store.add_metric(ag["id"], dom["id"], sub["id"], prefix)
+
+        self.body.updateMetrics(subject_id, sub["metrics"])
+
+    def on_edit_metric(self, subject_id, met_id, new_data):
+        ag = self.current_age_group
+        if not ag:
+            return
+        dom = self.current_domain
+        if not dom:
+            return
+        sub = self.store.find_sub(ag["id"], dom["id"], subject_id)
+        if not sub:
+            return
+        self.store.edit_metric(ag["id"], dom["id"], sub["id"], met_id, new_data)
 
         self.body.updateMetrics(subject_id, sub["metrics"])
 

@@ -190,5 +190,5 @@ class SubjectBlock(QFrame):
     def on_edit_metric_clicked(self, met_id, code, desc, c1, c2, c3):
         dialog = EditMetricDialog(met_id, code, desc, c1, c2, c3)
         if dialog.exec() == dialog.Accepted:
-            met_data = dialog.getData()
-            print(met_data)
+            new_data = dialog.getData()
+            self.on_edit_metric_signal.emit(self.subject_id, met_id, new_data)

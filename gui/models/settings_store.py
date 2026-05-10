@@ -97,6 +97,11 @@ class SettingsStore:
         dom["subjects"] = [sub for sub in dom["subjects"] if sub["id"] != sub_id]
 
     # --- METRIC ---
+    def find_met(self, ag_id, dom_id, sub_id, met_id):
+        sub = self.find_sub(ag_id, dom_id, sub_id)
+        if sub:
+            return next((m for m in sub["metrics"] if m["id"] == met_id), None)
+        return None
 
     def add_metric(self, ag_id, dom_id, sub_id, code_prefix):
         sub = self.find_sub(ag_id, dom_id, sub_id)
@@ -110,6 +115,19 @@ class SettingsStore:
             sub["metrics"].append(new_met)
             return new_met
         return None
+
+    def edit_metric(self, ag_id, dom_id, sub_id, met_id, new_data):
+        met = self.find_met(ag_id, dom_id, sub_id, met_id)
+        if met:
+            met["code"] = new_data.get("code", met["code"])
+            met["transformed"] = new_data.get("desc", met["transformed"])
+            met["criteria"] = [
+                new_data.get("c1", met["criteria"][0]),
+                new_data.get("c2", met["criteria"][1]),
+                new_data.get("c3", met["criteria"][2]),
+            ]
+            return True
+        return False
 
     def delete_metric(self, ag_id, dom_id, sub_id, met_id):
         sub = self.find_sub(ag_id, dom_id, sub_id)

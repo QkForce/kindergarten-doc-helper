@@ -99,7 +99,13 @@ class SubjectListWidget(QFrame):
     # --- SUBJECT METHODS ---
 
     def addSubject(
-        self, sub, on_edit_subject, on_delete_subject, on_add_metric, on_delete_metric
+        self,
+        sub,
+        on_edit_subject,
+        on_delete_subject,
+        on_add_metric,
+        on_edit_metric,
+        on_delete_metric,
     ):
         item = QListWidgetItem(self.list)
         custom_widget = SubjectBlock(sub["id"], sub["name"], sub["metrics"])
@@ -110,6 +116,7 @@ class SubjectListWidget(QFrame):
         custom_widget.on_edit_signal.connect(on_edit_subject)
         custom_widget.on_delete_signal.connect(on_delete_subject)
         custom_widget.on_add_metric_signal.connect(on_add_metric)
+        custom_widget.on_edit_metric_signal.connect(on_edit_metric)
         custom_widget.on_delete_metric_signal.connect(on_delete_metric)
 
         self.list.setVisible(True)
