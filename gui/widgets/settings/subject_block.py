@@ -14,6 +14,7 @@ from PySide6.QtCore import Qt, Signal
 from gui.constants.colors import AppColors
 from gui.constants.icons import IconPaths
 from gui.dialogs.rename_dialog import RenameDialog
+from gui.dialogs.edit_metric_dialog import EditMetricDialog
 from gui.widgets.icon_button import IconButton
 
 
@@ -116,7 +117,7 @@ class SubjectBlock(QFrame):
         edit_btn.setToolTip("Метриканы өзгерту")
         edit_btn.clicked.connect(
             lambda checked=False, m_id=met_id: self.on_edit_metric_clicked(
-                self.subject_id, m_id
+                m_id, code, desc, c1, c2, c3
             )
         )
 
@@ -186,7 +187,8 @@ class SubjectBlock(QFrame):
             if new_name:
                 self.on_edit_signal.emit(self.subject_id, new_name)
 
-    def on_edit_metric_clicked(self, sub_id, met_id):
-        # open edit metric dialog
-        # self.on_edit_metric_signal.emit(self.subject_id, new_name)
-        pass
+    def on_edit_metric_clicked(self, met_id, code, desc, c1, c2, c3):
+        dialog = EditMetricDialog(met_id, code, desc, c1, c2, c3)
+        if dialog.exec() == dialog.Accepted:
+            met_data = dialog.getData()
+            print(met_data)

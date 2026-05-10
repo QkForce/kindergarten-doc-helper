@@ -172,9 +172,10 @@ QTextEdit[textedit-style="box"] {
 QPlainTextEdit {
     border: 1px solid @BORDER;
     border-radius: 8px;
-    padding: 12px;
+    padding: 2px;
     font-size: 14px;
     color: @TEXT_MAIN;
+    background-color: @SIDEBAR;
 }
 QPlainTextEdit:focus {
     border: 1px solid @PRIMARY;
