@@ -181,7 +181,7 @@ class SubjectBlock(QFrame):
         self.title.setText(name)
 
     def on_edit_clicked(self):
-        dialog = NameDialog(self.subject_name, self)
+        dialog = NameDialog(self.subject_name, "АТАУДЫ ӨЗГЕРТУ", self)
         if dialog.exec() == dialog.Accepted:
             new_name = dialog.getText()
             if new_name:

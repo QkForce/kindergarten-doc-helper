@@ -25,8 +25,8 @@ class SettingsDialog(QDialog):
         self.setMinimumSize(950, 650)
 
         # SIDEBAR
-        self.age_group_list = SimpleListWidget("Жас топтары")
-        self.domain_list = SimpleListWidget("Бағыттар")
+        self.age_group_list = SimpleListWidget("Жас топтары", "Жаңа жас тобын қосу")
+        self.domain_list = SimpleListWidget("Бағыттар", "Жаңа бағыт қосу")
 
         sidebar_frame = QFrame()
         sidebar_frame.setObjectName("sidebar_frame")
@@ -159,8 +159,8 @@ class SettingsDialog(QDialog):
 
     # --- AGE GROUP ACTION HANDLERS ---
 
-    def on_add_age_group_clicked(self):
-        ag = self.store.add_age_group()
+    def on_add_age_group_clicked(self, name):
+        ag = self.store.add_age_group(name)
         self.age_group_list.addItem(
             ag["id"],
             ag["name"],
@@ -188,10 +188,10 @@ class SettingsDialog(QDialog):
 
     # --- DOMAIN ACTION HANDLERS ---
 
-    def on_add_domain_clicked(self):
+    def on_add_domain_clicked(self, name):
         ag = self.current_age_group
         if ag:
-            dom = self.store.add_domain(ag["id"])
+            dom = self.store.add_domain(ag["id"], name)
             self.domain_list.addItem(
                 dom["id"],
                 dom["name"],

@@ -9,18 +9,18 @@ from PySide6.QtWidgets import (
 from PySide6.QtCore import Qt, Signal
 
 from gui.constants.icons import IconPaths
+from gui.dialogs.name_dialog import NameDialog
 from gui.widgets.settings.simple_list_item_widget import SimpleListItemWidget
 from gui.widgets.icon_button import IconButton
 
 
 class SimpleListWidget(QFrame):
-    on_add_signal = Signal()
-    on_selection_changed_signal = Signal(
-        str, str
-    )  # Emits the ID and name of the selected item
+    on_add_signal = Signal(str)  # name
+    on_selection_changed_signal = Signal(str, str)  # ID and name of the selected item
 
-    def __init__(self, title, parent=None):
+    def __init__(self, title, add_title, parent=None):
         super().__init__(parent)
+        self.add_title = add_title
         self.setObjectName("simple_list_widget")
 
         title_lbl = QLabel(title)
@@ -31,7 +31,7 @@ class SimpleListWidget(QFrame):
         add_btn = IconButton(IconPaths.CIRCLE_PLUS, icon_size=12)
         add_btn.setProperty("btn-type", "ghost")
         add_btn.setFixedSize(16, 16)
-        add_btn.clicked.connect(self.on_add_signal.emit)
+        add_btn.clicked.connect(self.on_add_clicked)
 
         header_layout = QHBoxLayout()
         header_layout.addWidget(title_lbl)
@@ -136,6 +136,15 @@ class SimpleListWidget(QFrame):
         self.list.blockSignals(True)
         self.list.clear()
         self.list.blockSignals(False)
+
+    # --- event handlers ---
+
+    def on_add_clicked(self):
+        dialog = NameDialog("", self.add_title, self)
+        if dialog.exec() == dialog.Accepted:
+            new_name = dialog.getText()
+            if new_name:
+                self.on_add_signal.emit(new_name)
 
     def on_delete_clicked(self, id, on_delete):
         self.deleteItem(id)

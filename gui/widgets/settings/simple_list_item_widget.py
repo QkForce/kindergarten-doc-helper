@@ -40,7 +40,7 @@ class SimpleListItemWidget(QFrame):
         layout.addWidget(delete_btn)
 
     def start_edit(self):
-        dialog = NameDialog(self.name, self)
+        dialog = NameDialog(self.name, "АТАУДЫ ӨЗГЕРТУ", self)
         if dialog.exec() == dialog.Accepted:
             new_name = dialog.getText()
             if new_name:
