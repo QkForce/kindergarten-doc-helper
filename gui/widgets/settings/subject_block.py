@@ -13,7 +13,7 @@ from PySide6.QtCore import Qt, Signal
 
 from gui.constants.colors import AppColors
 from gui.constants.icons import IconPaths
-from gui.dialogs.rename_dialog import RenameDialog
+from gui.dialogs.name_dialog import NameDialog
 from gui.dialogs.edit_metric_dialog import EditMetricDialog
 from gui.widgets.icon_button import IconButton
 
@@ -181,7 +181,7 @@ class SubjectBlock(QFrame):
         self.title.setText(name)
 
     def on_edit_clicked(self):
-        dialog = RenameDialog(self.subject_name, self)
+        dialog = NameDialog(self.subject_name, self)
         if dialog.exec() == dialog.Accepted:
             new_name = dialog.getText()
             if new_name:

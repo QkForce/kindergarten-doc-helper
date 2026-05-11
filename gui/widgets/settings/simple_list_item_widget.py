@@ -3,7 +3,7 @@ from PySide6.QtCore import Signal
 
 from gui.constants.icons import IconPaths
 from gui.widgets.icon_button import IconButton
-from gui.dialogs.rename_dialog import RenameDialog
+from gui.dialogs.name_dialog import NameDialog
 
 
 class SimpleListItemWidget(QFrame):
@@ -40,7 +40,7 @@ class SimpleListItemWidget(QFrame):
         layout.addWidget(delete_btn)
 
     def start_edit(self):
-        dialog = RenameDialog(self.name, self)
+        dialog = NameDialog(self.name, self)
         if dialog.exec() == dialog.Accepted:
             new_name = dialog.getText()
             if new_name:

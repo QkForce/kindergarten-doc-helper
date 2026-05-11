@@ -6,7 +6,7 @@ from PySide6.QtWidgets import (
 from gui.dialogs.base_dialog import BaseDialog
 
 
-class RenameDialog(BaseDialog):
+class NameDialog(BaseDialog):
     def __init__(self, current_name, parent=None):
         super().__init__("АТАУДЫ ӨЗГЕРТУ", parent)
         self.setFixedSize(500, 350)
