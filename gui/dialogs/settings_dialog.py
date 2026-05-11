@@ -39,7 +39,7 @@ class SettingsDialog(QDialog):
         sidebar_layout.addWidget(self.domain_list)
 
         # BODY
-        self.body = SubjectListWidget()
+        self.body = SubjectListWidget("Жаңа пән қосу")
 
         layout = QHBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)
@@ -225,11 +225,11 @@ class SettingsDialog(QDialog):
 
     # --- SUBJECT ACTION HANDLERS ---
 
-    def on_add_subject_clicked(self):
+    def on_add_subject_clicked(self, name):
         ag = self.current_age_group
         dom = self.current_domain
         if ag and dom:
-            sub = self.store.add_subject(ag["id"], dom["id"])
+            sub = self.store.add_subject(ag["id"], dom["id"], name)
             self.body.addSubject(
                 sub,
                 self.on_edit_subject,

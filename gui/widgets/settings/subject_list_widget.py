@@ -12,16 +12,18 @@ from PySide6.QtGui import QIcon
 
 from gui.constants.colors import AppColors
 from gui.constants.icons import IconPaths
+from gui.dialogs.name_dialog import NameDialog
 from gui.utils.icon_utils import get_svg_pixmap
 from gui.widgets.settings.subject_block import SubjectBlock
 
 
 class SubjectListWidget(QFrame):
-    on_add_subject_signal = Signal()
+    on_add_subject_signal = Signal(str)  # name
     on_edit_subject_signal = Signal(str, str)  # id, new name
 
-    def __init__(self, parent=None):
+    def __init__(self, add_title, parent=None):
         super().__init__(parent)
+        self.add_title = add_title
         self.setup_ui()
 
     def setup_ui(self):
@@ -42,7 +44,7 @@ class SubjectListWidget(QFrame):
         add_icon = get_svg_pixmap(IconPaths.PLUS, AppColors.CANVAS, 14)
         add_subject_btn.setIcon(QIcon(add_icon))
         add_subject_btn.setFixedHeight(26)
-        add_subject_btn.clicked.connect(self.on_add_subject_signal.emit)
+        add_subject_btn.clicked.connect(self.on_add_subject_clicked)
 
         self.header_frame = QFrame()
         self.header_frame.setObjectName("header_frame")
@@ -71,6 +73,15 @@ class SubjectListWidget(QFrame):
         layout.addWidget(self.header_frame, 0)
         layout.addWidget(self.list, 1)
         layout.addWidget(self.empty_label, 1)
+
+    # --- event handlers ---
+
+    def on_add_subject_clicked(self):
+        dialog = NameDialog("", self.add_title, self)
+        if dialog.exec() == dialog.Accepted:
+            new_name = dialog.getText()
+            if new_name:
+                self.on_add_subject_signal.emit(new_name)
 
     # --- BREADCRUMB METHODS ---
 
