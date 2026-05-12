@@ -30,6 +30,7 @@ from gui.constants.icons import IconPaths, AnimationPaths
 from gui.utils.icon_utils import get_svg_pixmap
 from gui.utils.style_utils import apply_shadow
 from logic.worker import start_worker_task
+from logic.exporter import ExportResult
 
 T = TypeVar("T", bound=ChecklistBaseState)
 
@@ -334,9 +335,18 @@ class StepFileExport(BaseStep[T]):
             val = int((current_index / total_children) * 100)
             self.progress_bar.setValue(val)
 
-    def _export_finished(self, result_file):
-        self.result_file = result_file
-        self.sig_result_state.emit()
+    def _export_finished(self, result: ExportResult):
+        self.result_file = result.data
+
+        if result.is_success:
+            self.sig_result_state.emit()
+        else:
+            names = "\n".join([f"• {e}" for e in result.errors])
+            self.last_error = (
+                "Кейбір деректер табылмады",
+                f"Құжаттан мына балалар табылмады:\n{names}",
+            )
+            self.sig_error_state.emit()
 
     def _export_failed(self, error):
         self.last_error = (

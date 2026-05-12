@@ -63,7 +63,7 @@ class WizardWidget(QFrame, Generic[T]):
         self.steps = [None] * len(self._step_configs)
 
         # NAVIGATION BUTTONS
-        self.btn_back = IconButton(IconPaths.CHEVRON_LEFT, "Артқа")
+        self.btn_back = IconButton(IconPaths.CHEVRON_LEFT, text="Артқа")
         self.btn_back.setMinimumWidth(200)
         self.btn_back.setProperty("btn-type", "ghost")
         self.btn_back.setProperty("btn-size", "large")

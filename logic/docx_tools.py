@@ -63,18 +63,17 @@ def iter_block_items(parent):
 
 
 def fill_specific_child_in_big_file(doc, target_child_name, values, col_index=2):
-    found_child = False
+    is_fully_processed = False
+    found_child_paragraph = False
 
     for block in iter_block_items(doc):
-        # 1. Search for a child's name (Paragraph)
+        # Search for a child's name (Paragraph)
         if isinstance(block, Paragraph) and "Баланың Т.А.Ә" in block.text:
             if target_child_name in block.text:
-                found_child = True
+                found_child_paragraph = True
             continue
 
-        # 2. Fill in the table (Table)
-        if isinstance(block, Table) and found_child:
-            # Table Validation (Guard Clause)
+        if isinstance(block, Table) and found_child_paragraph:
             if not block.rows or "Құзыреттіліктер" not in block.cell(0, 0).text:
                 continue
 
@@ -83,26 +82,30 @@ def fill_specific_child_in_big_file(doc, target_child_name, values, col_index=2)
                 try:
                     block.cell(i, col_index).text = str(val)
                 except IndexError:
-                    print(f"Қате: {target_child_name} үшін жол ({i}) табылған жоқ")
+                    pass
 
-            # After filling, we reset the status.
-            found_child = False
+            is_fully_processed = True
+            found_child_paragraph = False
+            break
 
-    return doc
+    return is_fully_processed
 
 
 def fill_all_children_in_big_file(
     docx_path, children_data, col_index, progress_callback=None
 ):
     doc = Document(docx_path)
-    index = 1
-    total_children = len(children_data)
-    for child in children_data:
+    missing_children = []
+
+    for index, child in enumerate(children_data, start=1):
         child_name = child["fullname"]
         values = [v for k, v in child.items() if k != "fullname"]
         if progress_callback:
-            progress_callback(child_name, index, total_children)
-        doc = fill_specific_child_in_big_file(doc, child_name, values, col_index)
-        index += 1
+            progress_callback(child_name, index, len(children_data))
 
-    return doc
+        success = fill_specific_child_in_big_file(doc, child_name, values, col_index)
+
+        if not success:
+            missing_children.append(child_name)
+
+    return doc, missing_children

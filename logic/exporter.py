@@ -5,11 +5,18 @@ from logic.xlsx_tools import fill_assessment_table
 from logic.config_tools import get_all_metric_codes
 
 
+class ExportResult:
+    def __init__(self, data, errors=None):
+        self.data = data
+        self.errors = errors or []
+        self.is_success = len(self.errors) == 0
+
+
 class Exporter:
     def set_data(self, state: ChecklistBaseState, progress_callback):
         pass
 
-    def export(self):
+    def export(self) -> ExportResult:
         pass
 
 
@@ -28,7 +35,7 @@ class DocxGenerateExporter(Exporter):
             self.all_children_data,
             self.progress_callback,
         )
-        return docx
+        return ExportResult(docx)
 
 
 class DocxFillExporter(Exporter):
@@ -41,13 +48,13 @@ class DocxFillExporter(Exporter):
         )
 
     def export(self):
-        docx = fill_all_children_in_big_file(
+        docx, missing_children = fill_all_children_in_big_file(
             self.state.temp_file_path,
             self.all_children_data,
             self.state.control_type,
             self.progress_callback,
         )
-        return docx
+        return ExportResult(docx, missing_children)
 
 
 class SmartEntryExporter(Exporter):
@@ -79,4 +86,4 @@ class SmartEntryExporter(Exporter):
             children_data=self.children_data,
             progress_callback=self.progress_callback,
         )
-        return workbook
+        return ExportResult(workbook)
