@@ -5,9 +5,7 @@ from PySide6.QtWidgets import (
     QHBoxLayout,
     QLabel,
     QPushButton,
-    QScrollArea,
     QGridLayout,
-    QWidget,
 )
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QIcon
@@ -29,12 +27,16 @@ class HubPage(QFrame):
     generator_requested = Signal()
     template_requested = Signal()
     entry_requested = Signal()
+    monform_requested = Signal()
 
     def __init__(self):
         super().__init__()
         self.setObjectName("hub_page")
+        self.setup_ui()
+        self.connect_signals()
 
-        # 1. Header
+    def setup_ui(self):
+        # Header
         logo_btn = QPushButton("K")
         logo_btn.setObjectName("breadcrumb_logo")
         logo_btn.setFixedSize(32, 32)
@@ -43,13 +45,12 @@ class HubPage(QFrame):
         logo_lbl = QLabel("KinderDoc")
         logo_lbl.setObjectName("logo_lbl")
 
-        settings_btn = IconButton(IconPaths.SETTINGS)
-        settings_btn.setFixedSize(32, 32)
-        settings_btn.setObjectName("settings_btn")
-        settings_btn.clicked.connect(self.open_settings)
+        self.settings_btn = IconButton(IconPaths.SETTINGS)
+        self.settings_btn.setFixedSize(32, 32)
+        self.settings_btn.setObjectName("settings_btn")
         settings_icon = get_svg_pixmap(IconPaths.SETTINGS, AppColors.BTN_ICON_TEXT, 16)
-        settings_btn.setIcon(QIcon(settings_icon))
-        apply_shadow(settings_btn, blur_radius=15, offset_y=4)
+        self.settings_btn.setIcon(QIcon(settings_icon))
+        apply_shadow(self.settings_btn, blur_radius=15, offset_y=4)
 
         header_frame = QFrame()
         header_frame.setObjectName("header_frame")
@@ -58,15 +59,16 @@ class HubPage(QFrame):
         header_layout.addWidget(logo_btn)
         header_layout.addWidget(logo_lbl, 0, Qt.AlignVCenter)
         header_layout.addStretch()
-        header_layout.addWidget(settings_btn, 0, Qt.AlignVCenter)
+        header_layout.addWidget(self.settings_btn, 0, Qt.AlignVCenter)
 
+        # Title, subtitle
         title = QLabel(AppStrings.HUB_TITLE)
         title.setObjectName("hub_main_title")
 
         subtitle = QLabel(AppStrings.HUB_SUBTITLE)
         subtitle.setObjectName("hub_subtitle")
 
-        # 2. Cards Grid
+        # Cards Grid
         self.card_gen = FeatureCard(
             AppStrings.CARD_GEN_TITLE,
             AppStrings.CARD_GEN_DESC,
@@ -106,11 +108,13 @@ class HubPage(QFrame):
         main_layout.addSpacing(20)
         main_layout.addLayout(cards_layout)
 
+    def connect_signals(self):
+        self.settings_btn.clicked.connect(self.open_settings)
         # Connect card clicks to signals that MainWindow will listen to for navigation
         self.card_gen.clicked.connect(self.generator_requested.emit)
         self.card_tpl.clicked.connect(self.template_requested.emit)
         self.card_entry.clicked.connect(self.entry_requested.emit)
-        self.card_monform.clicked.connect(self.entry_requested.emit)
+        self.card_monform.clicked.connect(self.monform_requested.emit)
 
     def open_settings(self):
         settings = load_config()

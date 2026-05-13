@@ -2,8 +2,9 @@ from PySide6.QtWidgets import QMainWindow, QStackedWidget, QVBoxLayout, QWidget
 
 from gui.pages.hub_page import HubPage
 from gui.pages.generator_page import GeneratorPage
-from gui.pages.smart_entry_page import SmartEntryPage
 from gui.pages.filler_page import FillerPage
+from gui.pages.smart_entry_page import SmartEntryPage
+from gui.pages.monform_page import MonFormPage
 from gui.constants.strings import AppStrings
 from gui.utils.window_utils import center_on_screen
 
@@ -37,6 +38,7 @@ class MainWindow(QMainWindow):
         hub.generator_requested.connect(self.show_generator)
         hub.template_requested.connect(self.show_filler)
         hub.entry_requested.connect(self.show_smart_entry)
+        hub.monform_requested.connect(self.show_monform)
 
         self.stack.addWidget(hub)
         self.stack.setCurrentWidget(hub)
@@ -51,6 +53,10 @@ class MainWindow(QMainWindow):
 
     def show_smart_entry(self):
         page = SmartEntryPage(on_finish=self.show_hub)
+        self._add_and_switch(page)
+
+    def show_monform(self):
+        page = MonFormPage(on_finish=self.show_hub)
         self._add_and_switch(page)
 
     def _add_and_switch(self, widget):
