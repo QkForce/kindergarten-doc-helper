@@ -5,6 +5,9 @@ from PySide6.QtWidgets import (
     QHBoxLayout,
     QLabel,
     QPushButton,
+    QScrollArea,
+    QGridLayout,
+    QWidget,
 )
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QIcon
@@ -12,6 +15,7 @@ from PySide6.QtGui import QIcon
 from gui.constants.colors import AppColors
 from gui.widgets.feature_card import FeatureCard
 from gui.widgets.icon_button import IconButton
+from gui.widgets.flow_layout import FlowLayout
 from gui.constants.icons import IconPaths
 from gui.constants.strings import AppStrings
 from gui.utils.icon_utils import get_svg_pixmap
@@ -78,12 +82,20 @@ class HubPage(QFrame):
             AppStrings.CARD_ENTRY_DESC,
             IconPaths.FEATURE_ENTRY_XLSX,
         )
+        self.card_monform = FeatureCard(
+            AppStrings.CARD_MONFORM_TITLE,
+            AppStrings.CARD_MONFORM_DESC,
+            IconPaths.FEATURE_MONFORM,
+        )
 
-        cards_layout = QHBoxLayout()
+        cards_layout = QGridLayout()
+        cards_layout.setSpacing(20)
         cards_layout.setContentsMargins(10, 20, 10, 20)
-        cards_layout.addWidget(self.card_gen)
-        cards_layout.addWidget(self.card_tpl)
-        cards_layout.addWidget(self.card_entry)
+        cards_layout.setAlignment(Qt.AlignCenter)
+        cards_layout.addWidget(self.card_gen, 0, 0)
+        cards_layout.addWidget(self.card_tpl, 0, 1)
+        cards_layout.addWidget(self.card_entry, 0, 2)
+        cards_layout.addWidget(self.card_monform, 0, 3)
 
         main_layout = QVBoxLayout(self)
         main_layout.setContentsMargins(10, 0, 10, 10)
@@ -92,13 +104,13 @@ class HubPage(QFrame):
         main_layout.addWidget(title, 0, Qt.AlignCenter)
         main_layout.addWidget(subtitle, 0, Qt.AlignCenter)
         main_layout.addSpacing(20)
-        main_layout.addLayout(cards_layout, 0)
-        main_layout.addStretch()
+        main_layout.addLayout(cards_layout)
 
         # Connect card clicks to signals that MainWindow will listen to for navigation
         self.card_gen.clicked.connect(self.generator_requested.emit)
         self.card_tpl.clicked.connect(self.template_requested.emit)
         self.card_entry.clicked.connect(self.entry_requested.emit)
+        self.card_monform.clicked.connect(self.entry_requested.emit)
 
     def open_settings(self):
         settings = load_config()

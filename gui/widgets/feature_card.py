@@ -16,13 +16,13 @@ class FeatureCard(QFrame):
 
     def __init__(self, title, description, icon_path: IconPaths):
         super().__init__()
-        self.setFixedSize(280, 340)
+        self.setFixedSize(200, 250)
         self.setObjectName("feature_card")
         self.setCursor(Qt.PointingHandCursor)
 
         layout = QVBoxLayout(self)
-        layout.setContentsMargins(30, 40, 30, 40)
-        layout.setSpacing(15)
+        layout.setContentsMargins(15, 15, 15, 15)
+        layout.setSpacing(10)
         layout.setAlignment(Qt.AlignCenter)
 
         # Icon
@@ -49,7 +49,7 @@ class FeatureCard(QFrame):
         apply_shadow(self)
 
     def set_icon(self, icon_path, color):
-        pixmap = get_svg_pixmap(icon_path, color, size=48)
+        pixmap = get_svg_pixmap(icon_path, color, size=40)
         self.icon_label.setPixmap(pixmap)
 
     def mousePressEvent(self, event):

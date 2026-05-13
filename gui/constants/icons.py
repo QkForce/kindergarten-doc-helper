@@ -10,6 +10,7 @@ class IconPaths:
     FEATURE_DOCX_GENERATOR = str(ICON_DIR / "file-plus.svg")
     FEATURE_TEMPLATE_FILLER = str(ICON_DIR / "file-pen.svg")
     FEATURE_ENTRY_XLSX = str(ICON_DIR / "table.svg")
+    FEATURE_MONFORM = str(ICON_DIR / "wand-sparkles.svg")
 
     # For navigation
     BACK = str(ICON_DIR / "arrow_back.png")

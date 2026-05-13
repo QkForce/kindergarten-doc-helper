@@ -19,6 +19,11 @@ class AppStrings:
     CARD_ENTRY_TITLE = "Smart Entry"
     CARD_ENTRY_DESC = "Create student data tables with an intuitive grid."
 
+    CARD_MONFORM_TITLE = "Monitoring Formatter"
+    CARD_MONFORM_DESC = (
+        "Excel кестесінің стильдерін және формулаларын автоматты түрде ретке келтіру."
+    )
+
     LOADING_CHILDREN_SCORES_TITLE = "Балалардың бағалары жүктелуде..."
     LOADING_CHILDREN_SCORES_DESC = "Файлдағы балалардың бағалары оқылуда. Күте тұрыңыз."
 
