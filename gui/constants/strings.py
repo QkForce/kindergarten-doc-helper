@@ -127,6 +127,12 @@ MONITORING_FORMATTER_OPTIONS = [
     },
 ]
 
+MONFORM_CHECKBOXES = [
+    {"id": "fix_borders", "label": "Кесте жиектерін форматтау (жуан/жіңішке сызықтар)"},
+    {"id": "round_numbers", "label": "Бөлшек сандарды бүтінге айналдыру"},
+    {"id": "fix_formulas", "label": "Формулалар диапазонын бала санына қарай түзету"},
+    {"id": "clean_errors", "label": "Техникалық қателерді (#DIV/0!) тазарту"},
+]
 
 AGE_GROUPS = {
     AgeGroup.EARLY_AGE.value: "Бөбек (ерте жас)",

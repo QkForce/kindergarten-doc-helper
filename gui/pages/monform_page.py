@@ -1,18 +1,20 @@
 from typing import Callable
 
 from gui.steps.common.step_file_select import StepFileSelect
+from gui.steps.step_monform import StepMonitoringFormatter
 from gui.widgets.wizard_widget import WizardWidget, ModuleOptions
-from gui.state import ChecklistBaseState
+from gui.state import MonFormState
 from logic.types import Step
 from gui.constants.strings import MONITORING_FORMATTER_OPTIONS
 from gui.constants.icons import IconPaths
 
 
-class MonFormPage(WizardWidget[ChecklistBaseState]):
+class MonFormPage(WizardWidget[MonFormState]):
     def __init__(self, on_finish: Callable):
-        state = ChecklistBaseState()
+        state = MonFormState()
         step_factories = [
             lambda: StepFileSelect(state),
+            lambda: StepMonitoringFormatter(state),
         ]
         steps = []
         for index, factory in enumerate(step_factories):

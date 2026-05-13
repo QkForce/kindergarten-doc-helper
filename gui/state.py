@@ -61,3 +61,9 @@ class SmartEntryState(ChecklistBaseState):
         self.children_scores: Dict[str, dict[str, dict[str, dict[str, int | None]]]] = (
             {}
         )
+
+
+class MonFormState(ChecklistBaseState):
+    def __init__(self):
+        super().__init__()
+        self.actions: dict = {}
