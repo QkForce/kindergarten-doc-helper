@@ -1,7 +1,13 @@
+from openpyxl import load_workbook
+
 from gui.state import ChecklistBaseState
 from logic.docx_tools import create_children_grow_cards, fill_all_children_in_big_file
 from logic.metrics_tools import build_all_grow_cards
-from logic.xlsx_tools import fill_assessment_table
+from logic.xlsx_tools import (
+    fill_assessment_table,
+    get_table_boundaries,
+    apply_complex_monitoring_borders,
+)
 from logic.config_tools import get_all_metric_codes
 
 
@@ -29,7 +35,7 @@ class DocxGenerateExporter(Exporter):
             state.children_scores, state.age_group_data
         )
 
-    def export(self):
+    def export(self) -> ExportResult:
         docx = create_children_grow_cards(
             self.state.temp_file_path,
             self.all_children_data,
@@ -47,7 +53,7 @@ class DocxFillExporter(Exporter):
             state.children_scores, state.age_group_data
         )
 
-    def export(self):
+    def export(self) -> ExportResult:
         docx, missing_children = fill_all_children_in_big_file(
             self.state.temp_file_path,
             self.all_children_data,
@@ -75,7 +81,7 @@ class SmartEntryExporter(Exporter):
         self.state = state
         self.progress_callback = progress_callback
 
-    def export(self):
+    def export(self) -> ExportResult:
         workbook = fill_assessment_table(
             file_path=self.state.file_path,
             sheet_name=self.state.sheet_name,
@@ -86,4 +92,34 @@ class SmartEntryExporter(Exporter):
             children_data=self.children_data,
             progress_callback=self.progress_callback,
         )
+        return ExportResult(workbook)
+
+
+class MonFormExporter:
+    def set_data(self, state: ChecklistBaseState, progress_callback):
+        self.state = state
+        self.action_index = 0
+        active_actions = [a for a in self.state.actions.values() if a]
+        self.total_actions = 2 + len(active_actions)  # load + detect + actions
+        self.progress_callback = progress_callback
+
+    def progress(self, label: str):
+        self.action_index += 1
+        self.progress_callback(label, self.action_index, self.total_actions)
+
+    def export(self) -> ExportResult:
+        self.progress("Файлды оқу...")
+        workbook = load_workbook(
+            filename=self.state.file_path,
+            read_only=False,
+        )
+        sheet = workbook[self.state.sheet_name]
+
+        self.progress("Құрылымын анықтау...")
+        b = get_table_boundaries(sheet)
+
+        if self.state.actions["fix_borders"]:
+            self.progress("Жиектерді сызу...")
+            apply_complex_monitoring_borders(sheet, **b)
+
         return ExportResult(workbook)

@@ -1,6 +1,15 @@
 from time import sleep
 from openpyxl import load_workbook
+from openpyxl.styles import Border, Side
+
 from config.config import AGE_GROUP_DATA
+from logic.xlsx_detectors import (
+    find_table_origin,
+    find_student_list_start_row,
+    find_student_name_col_index,
+    find_footer_row_index,
+    find_last_data_col_index,
+)
 
 METRIC_CODES = [
     code
@@ -79,3 +88,90 @@ def fill_assessment_table(
         current_row += 1
         sleep(0.01)  # Simulate processing time
     return workbook
+
+
+def get_table_boundaries(sheet):
+    start_row, start_col = find_table_origin(sheet)
+
+    footer_row = find_footer_row_index(sheet)
+    if not footer_row:
+        return None
+
+    student_start_row = find_student_list_start_row(sheet, start_row, start_col)
+    student_col = find_student_name_col_index(sheet, header_row=student_start_row - 2)
+    last_col = find_last_data_col_index(sheet, footer_row)
+
+    return {
+        "start_row": start_row,
+        "start_col": start_col,
+        "student_start_row": student_start_row,
+        "student_col": student_col,
+        "last_student_row": footer_row - 1,
+        "end_col": last_col,
+    }
+
+
+def apply_complex_monitoring_borders(
+    sheet,
+    start_row,
+    start_col,
+    student_start_row,
+    last_student_row,
+    end_col,
+    student_col,
+):
+    thin = Side(style="thin")
+    medium = Side(style="medium")
+
+    # Draw a thin line across the entire range (from Header to Footer)
+    for row in sheet.iter_rows(
+        min_row=start_row,
+        max_row=last_student_row + 2,
+        min_col=start_col,
+        max_col=end_col,
+    ):
+        for cell in row:
+            cell.border = Border(top=thin, left=thin, right=thin, bottom=thin)
+
+    # Vertical medium lines
+    important_columns = [start_col, student_col]
+    for col in range(student_col + 1, end_col + 1, 3):
+        important_columns.append(col)
+    important_columns.append(end_col + 1)
+
+    for col in important_columns:
+        for row in range(start_row, last_student_row + 3):
+            if col <= end_col:
+                cell = sheet.cell(row=row, column=col)
+                curr = cell.border
+                cell.border = Border(
+                    left=medium, right=curr.right, top=curr.top, bottom=curr.bottom
+                )
+            else:
+                cell = sheet.cell(row=row, column=end_col)
+                curr = cell.border
+                cell.border = Border(
+                    left=curr.left, right=medium, top=curr.top, bottom=curr.bottom
+                )
+
+    # Horizontal medium lines
+    horizontal_medium_rows = [
+        {"row": start_row, "from_col": start_col, "end_col": end_col},
+        {"row": start_row + 1, "from_col": student_col + 1, "end_col": end_col},
+        {
+            "row": student_start_row - 3,
+            "from_col": student_col + 1,
+            "end_col": end_col,
+        },
+        {"row": student_start_row, "from_col": start_col, "end_col": end_col},
+        {"row": last_student_row + 1, "from_col": start_col, "end_col": end_col},
+        {"row": last_student_row + 3, "from_col": start_col, "end_col": end_col},
+    ]
+
+    for d in horizontal_medium_rows:
+        for col in range(d["from_col"], d["end_col"] + 1):
+            cell = sheet.cell(row=d["row"], column=col)
+            curr = cell.border
+            cell.border = Border(
+                top=medium, left=curr.left, right=curr.right, bottom=curr.bottom
+            )
