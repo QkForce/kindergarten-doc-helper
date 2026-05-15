@@ -233,7 +233,7 @@ class StepFileExport(BaseStep[T]):
         st_error = QState()
 
         # --- PROGRESS MODE ---
-        st_progress.entered.connect(self.run_auto_load)
+        # st_progress.entered.connect(self.run_auto_load)
         st_progress.entered.connect(
             lambda: self.state_icon_frame.applyStatus("status-loading")
         )
