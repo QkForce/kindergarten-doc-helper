@@ -159,6 +159,22 @@ QPushButton#score_btn_3:checked {
     color: @CANVAS;
 }
 
+/* QCheckBox */
+
+QCheckBox::indicator {
+    width: 16px;
+    height: 16px;
+    border: 1px solid @BORDER;
+    border-radius: 4px;
+    background-color: white;
+}
+
+QCheckBox::indicator:checked {
+    background-color: @PRIMARY;
+    border: 1px solid @BORDER;
+    image: url(gui/resources/icons/check-white.svg); 
+}
+
 /* QTextEdit */
 
 QTextEdit[textedit-style="box"] {
