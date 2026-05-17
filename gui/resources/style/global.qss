@@ -34,6 +34,10 @@ QLabel#status_placeholder_desc {
 
 /* ------ Buttons ------ */
 
+QPushButton {
+    outline: none;
+}
+
 QPushButton[btn-size="small"] {
     padding: 3px 7px 3px 7px;
     font-size: 12px;
@@ -161,12 +165,33 @@ QPushButton#score_btn_3:checked {
 
 /* QCheckBox */
 
-QCheckBox::indicator {
-    width: 16px;
-    height: 16px;
-    border: 1px solid @BORDER;
-    border-radius: 4px;
+QCheckBox {
     background-color: white;
+    border: 1px solid @BORDER;
+    border-radius: 8px;
+    padding: 12px 16px;
+    spacing: 12px;
+    color: @TEXT_MAIN;
+    font-size: 14px;
+    outline: none;
+}
+
+QCheckBox:hover {
+    border: 1px solid @PRIMARY;
+    background-color: @SIDEBAR;
+}
+
+QCheckBox::indicator {
+    width: 18px;
+    height: 18px;
+    border: 1px solid #BCBCBC;
+    border-radius: 4px;
+    background-color: @CANVAS;
+}
+
+QCheckBox:checked {
+    border: 1px solid @PRIMARY;
+    background-color: @BG;
 }
 
 QCheckBox::indicator:checked {
