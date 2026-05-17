@@ -1,6 +1,6 @@
 from time import sleep
 from openpyxl import load_workbook
-from openpyxl.styles import Border, Side
+from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
 
 from config.config import AGE_GROUP_DATA
 from logic.xlsx_detectors import (
@@ -111,6 +111,46 @@ def get_table_boundaries(sheet):
     }
 
 
+def reset_cell_to_default(cell):
+    # Default font
+    cell.font = Font(name="Calibri", size=11, bold=False, italic=False, color="000000")
+
+    # Remove bg
+    cell.fill = PatternFill(fill_type=None)
+
+    # Remove borders
+    cell.border = Border(
+        left=Side(style=None),
+        right=Side(style=None),
+        top=Side(style=None),
+        bottom=Side(style=None),
+    )
+
+    # Set default alignment
+    cell.alignment = Alignment(horizontal="general", vertical="bottom")
+
+    # Change number format (General / Non-Text)
+    cell.number_format = "General"
+
+
+def get_skip_cells(sheet):
+    # Identify all merged ranges in the sheet
+    merged_ranges = sheet.merged_cells.ranges
+
+    # We collect the coordinates of their inner cells for easy searching as a list
+    # We mark all cells except the top-left as "not to be touched"
+    skip_cells = set()
+    for rng in merged_ranges:
+        # rng.cells will contain a tuple of all cells (row, col) in this range
+        cells_list = list(rng.cells)
+        if cells_list:
+            top_left = cells_list[0]  # The first main cell (it can be cleared)
+            for c in cells_list[1:]:
+                skip_cells.add((c[0], c[1]))
+
+    return skip_cells
+
+
 def apply_complex_monitoring_borders(
     sheet,
     start_row,
@@ -175,3 +215,73 @@ def apply_complex_monitoring_borders(
             cell.border = Border(
                 top=medium, left=curr.left, right=curr.right, bottom=curr.bottom
             )
+
+
+def apply_monitoring_typography(
+    sheet,
+    start_row,
+    start_col,
+    student_start_row,
+    last_student_row,
+    end_col,
+    student_col,
+):
+    skip_cells = get_skip_cells(sheet)
+    # Table titles
+    for row in range(1, start_row - 1):
+        for col in range(1, end_col + 1):
+            if (row, col) in skip_cells:
+                continue
+            cell = sheet.cell(row=row, column=col)
+            if cell.value:
+                cell.font = Font(name="Times New Roman", size=12, bold=True)
+            else:
+                reset_cell_to_default(cell)
+
+    # Table headers
+    for row in range(start_row, start_row + 1):
+        for col in range(1, end_col + 1):
+            cell = sheet.cell(row=row, column=col)
+            if cell.value:
+                cell.font = Font(name="Times New Roman", size=12, bold=True)
+
+    # Secondary table headers
+    font_header = Font(name="Times New Roman", size=9, bold=False)
+    for row in range(student_start_row - 3, student_start_row - 1):
+        for col in range(student_col + 1, end_col + 1):
+            cell = sheet.cell(row=row, column=col)
+            if cell.value:
+                cell.font = font_header
+
+    # Number and header
+    cell = sheet.cell(row=student_start_row - 1, column=student_col)
+    if cell.value:
+        cell.font = font_header
+    cell = sheet.cell(row=student_start_row - 1, column=student_col - 1)
+    if cell.value:
+        cell.font = font_header
+
+    # Student list and Data Rows
+    font_data = Font(name="Times New Roman", size=12, bold=False)
+    for row in range(student_start_row, last_student_row + 1):
+        for col in range(start_col, end_col + 1):
+            cell = sheet.cell(row=row, column=col)
+            cell.font = font_data
+
+    # Footer
+    font_footer = Font(name="Times New Roman", size=11, bold=True)
+    for row in range(last_student_row + 1, last_student_row + 3):
+        for col in range(start_col, end_col + 1):
+            cell = sheet.cell(row=row, column=col)
+            if cell.value:
+                cell.font = font_footer
+
+    # Secondary tables
+    font_secondary_tables = Font(name="Times New Roman", size=11, bold=False)
+    for row in range(last_student_row + 3, last_student_row + 30):
+        for col in range(1, end_col + 1):
+            cell = sheet.cell(row=row, column=col)
+            if cell.value:
+                cell.font = font_secondary_tables
+            elif (cell.row, cell.column) not in skip_cells:
+                reset_cell_to_default(cell)
