@@ -1,4 +1,5 @@
 from openpyxl.worksheet.worksheet import Worksheet
+from logic.loaders.utils import normalize_text
 
 
 def find_table_origin(sheet, marker="№"):
@@ -37,6 +38,26 @@ def find_student_name_col_index(sheet: Worksheet, header_row=12, marker="бал�
         if val and marker in str(val).lower():
             return col
     return 2
+
+
+def detect_actual_student_count(
+    sheet: Worksheet, student_start_row: int, student_col: int
+) -> int:
+    stop_words = ["барлығы", "қорытынды", "ескерту", "жоғары", "орташа", "төмен"]
+    student_count = 0
+
+    for row in range(student_start_row, sheet.max_row + 1):
+        cell_value = sheet.cell(row=row, column=student_col).value
+        txt = normalize_text(cell_value)
+
+        if not txt:
+            continue
+        if any(word in txt for word in stop_words):
+            break
+
+        student_count += 1
+
+    return student_count
 
 
 def find_footer_row_index(sheet: Worksheet, marker="барлығы"):

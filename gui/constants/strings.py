@@ -131,7 +131,10 @@ MONFORM_CHECKBOXES = [
     {"id": "fix_borders", "label": "Кесте жиектерін форматтау (жуан/жіңішке сызықтар)"},
     {"id": "fix_typography", "label": "Парақ қаріптерін реттеу"},
     {"id": "round_numbers", "label": "Бөлшек сандарды бүтінге айналдыру"},
-    {"id": "fix_formulas", "label": "Формулалар диапазонын бала санына қарай түзету"},
+    {
+        "id": "sync_formulas_with_student_count",
+        "label": "Формулаларды кестедегі балалардың санына сәйкестендіру",
+    },
     {"id": "clean_errors", "label": "Техникалық қателерді (#DIV/0!) тазарту"},
 ]
 

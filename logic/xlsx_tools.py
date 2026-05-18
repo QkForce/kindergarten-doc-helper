@@ -1,3 +1,4 @@
+import re
 from time import sleep
 from openpyxl import load_workbook
 from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
@@ -9,6 +10,7 @@ from logic.xlsx_detectors import (
     find_student_name_col_index,
     find_footer_row_index,
     find_last_data_col_index,
+    detect_actual_student_count,
 )
 
 METRIC_CODES = [
@@ -304,3 +306,53 @@ def apply_monitoring_number_rounding(
                 # If the cell contains a formula (for example, =SUM...) or a number
                 if val_str.startswith("=") or isinstance(cell.value, (int, float)):
                     cell.number_format = "0"
+
+
+def apply_monitoring_formula_fixing(
+    sheet,
+    start_row,
+    start_col,
+    student_start_row,
+    last_student_row,
+    end_col,
+    student_col,
+):
+    actual_student_count = detect_actual_student_count(
+        sheet, student_start_row, student_col
+    )
+
+    if actual_student_count <= 0:
+        return
+
+    for row in range(last_student_row + 1, last_student_row + 30):
+        for col in range(1, end_col + 1):
+            cell = sheet.cell(row=row, column=col)
+            if not (cell.value and str(cell.value).startswith("=")):
+                continue
+            formula = str(cell.value)
+            updated_formula = formula
+
+            # Template 1: =R[-1]C*100/24 → =E39*100/24
+            if "*100/" in updated_formula:
+                updated_formula = re.sub(
+                    r"(=[A-Z]+\d+\*100/)\d+$",
+                    f"\\g<1>{actual_student_count}",
+                    updated_formula,
+                )
+            # Template 2: =R[-1]C/24% → =E39/24%
+            elif "%" in updated_formula and "/" in updated_formula:
+                updated_formula = re.sub(
+                    r"(=[A-Z]+\d+/)\d+(%)",
+                    f"\\g<1>{actual_student_count}\\g<2>",
+                    updated_formula,
+                )
+            # Template 3: =RC[1]/100*24 → =F39/100*24
+            elif "/100*" in updated_formula:
+                updated_formula = re.sub(
+                    r"(=[A-Z]+\d+/100\*)\d+$",
+                    f"\\g<1>{actual_student_count}",
+                    updated_formula,
+                )
+
+            if updated_formula != formula:
+                cell.value = updated_formula

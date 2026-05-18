@@ -9,6 +9,7 @@ from logic.xlsx_tools import (
     apply_complex_monitoring_borders,
     apply_monitoring_typography,
     apply_monitoring_number_rounding,
+    apply_monitoring_formula_fixing,
 )
 from logic.config_tools import get_all_metric_codes
 
@@ -129,5 +130,8 @@ class MonFormExporter:
         if self.state.actions["round_numbers"]:
             self.progress("Сандарды бүтіндеу...")
             apply_monitoring_number_rounding(sheet, **b)
+        if self.state.actions["sync_formulas_with_student_count"]:
+            self.progress("Формулаларды бала санына сәйкестендіру...")
+            apply_monitoring_formula_fixing(sheet, **b)
 
         return ExportResult(workbook)
