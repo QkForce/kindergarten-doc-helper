@@ -8,6 +8,7 @@ from logic.xlsx_tools import (
     get_table_boundaries,
     apply_complex_monitoring_borders,
     apply_monitoring_typography,
+    apply_monitoring_number_rounding,
 )
 from logic.config_tools import get_all_metric_codes
 
@@ -125,5 +126,8 @@ class MonFormExporter:
         if self.state.actions["fix_typography"]:
             self.progress("Қаріптерді реттеу...")
             apply_monitoring_typography(sheet, **b)
+        if self.state.actions["round_numbers"]:
+            self.progress("Сандарды бүтіндеу...")
+            apply_monitoring_number_rounding(sheet, **b)
 
         return ExportResult(workbook)

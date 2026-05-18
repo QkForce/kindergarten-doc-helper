@@ -285,3 +285,22 @@ def apply_monitoring_typography(
                 cell.font = font_secondary_tables
             elif (cell.row, cell.column) not in skip_cells:
                 reset_cell_to_default(cell)
+
+
+def apply_monitoring_number_rounding(
+    sheet,
+    start_row,
+    start_col,
+    student_start_row,
+    last_student_row,
+    end_col,
+    student_col,
+):
+    for row in range(last_student_row + 1, last_student_row + 30):
+        for col in range(start_col, end_col + 1):
+            cell = sheet.cell(row=row, column=col)
+            if cell.value is not None:
+                val_str = str(cell.value)
+                # If the cell contains a formula (for example, =SUM...) or a number
+                if val_str.startswith("=") or isinstance(cell.value, (int, float)):
+                    cell.number_format = "0"
