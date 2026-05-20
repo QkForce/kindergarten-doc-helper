@@ -4,6 +4,7 @@ from logic.types import AgeGroup, Domain, Subject
 class AppStrings:
     # App General
     APP_NAME = "KinderDoc Helper"
+    WARNING_TITLE = "Ескерту"
 
     # Hub Page Strings
     HUB_TITLE = "Жұмыс кеңістігі"
@@ -45,6 +46,8 @@ class AppStrings:
 
     ERROR_CHILDREN_SCORES_TITLE = "Балалардың бағаларын жүктеу кезінде қате"
     ERROR_CHILDREN_SCORES_DESC = "Автоматты жүктеу кезінде қате: {}"
+
+    MONFORM_NO_ACTION_SELECTED = "Кем дегенде бір әрекетті таңдаңыз."
 
     EXPORT_BTN_LBL_SAVE_FILE = "Нәтижені жүктеу (сақтау)"
     EXPORT_DIALOG_TITLE_ASK_FILE_PATH = "Құжатты қайда сақтау керек?"

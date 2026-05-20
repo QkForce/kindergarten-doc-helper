@@ -5,7 +5,7 @@ from PySide6.QtWidgets import (
 
 from gui.steps.base_step import BaseStep
 from gui.state import MonFormState
-from gui.constants.strings import MONFORM_CHECKBOXES
+from gui.constants.strings import MONFORM_CHECKBOXES, AppStrings
 
 
 class StepMonitoringFormatter(BaseStep[MonFormState]):
@@ -32,7 +32,9 @@ class StepMonitoringFormatter(BaseStep[MonFormState]):
     def validate_before_next(self):
         actions = {id: cb.isChecked() for id, cb in self.checkboxes.items()}
         if not any(actions.values()):
-            QMessageBox.warning(self, "Ескерту", "Кем дегенде бір әрекетті таңдаңыз.")
+            QMessageBox.warning(
+                self, AppStrings.WARNING_TITLE, AppStrings.MONFORM_NO_ACTION_SELECTED
+            )
             return False
         self.state.actions = actions
         return True
