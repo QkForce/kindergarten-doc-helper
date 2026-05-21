@@ -138,7 +138,7 @@ MONFORM_CHECKBOXES = [
         "id": "sync_formulas_with_student_count",
         "label": "Формулаларды кестедегі балалардың санына сәйкестендіру",
     },
-    {"id": "clean_errors", "label": "Техникалық қателерді (#DIV/0!) тазарту"},
+    {"id": "remove_empty_spaces", "label": "Бос жолдар мен бағандарды орындарды жою"},
 ]
 
 AGE_GROUPS = {

@@ -1,4 +1,5 @@
 from openpyxl import load_workbook
+from openpyxl.utils.cell import range_boundaries
 
 from gui.state import ChecklistBaseState
 from logic.docx_tools import create_children_grow_cards, fill_all_children_in_big_file
@@ -10,6 +11,7 @@ from logic.xlsx_tools import (
     apply_monitoring_typography,
     apply_monitoring_number_rounding,
     apply_monitoring_formula_fixing,
+    remove_empty_rows_and_cols
 )
 from logic.config_tools import get_all_metric_codes
 
@@ -133,5 +135,14 @@ class MonFormExporter:
         if self.state.actions["sync_formulas_with_student_count"]:
             self.progress("Формулаларды бала санына сәйкестендіру...")
             apply_monitoring_formula_fixing(sheet, **b)
+        if self.state.actions["remove_empty_spaces"]:
+            self.progress("Бос жолдар мен бағандарды жою...")
+            remove_empty_rows_and_cols(sheet, **b)
 
+        # merged_ranges = list(sheet.merged_cells.ranges)
+        # print("*****")
+        # for m_range in merged_ranges:
+        #     coord = m_range.coord
+        #     min_col, min_row, max_col, max_row = range_boundaries(coord)
+        #     print(coord, min_col, min_row, max_col, max_row)
         return ExportResult(workbook)

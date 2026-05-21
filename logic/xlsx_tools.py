@@ -4,6 +4,7 @@ from openpyxl import load_workbook
 from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
 
 from config.config import AGE_GROUP_DATA
+from logic.xlsx_core_tools import delete_row
 from logic.xlsx_detectors import (
     find_table_origin,
     find_student_list_start_row,
@@ -356,3 +357,48 @@ def apply_monitoring_formula_fixing(
 
             if updated_formula != formula:
                 cell.value = updated_formula
+
+
+def remove_empty_rows_and_cols(
+    sheet,
+    start_row,
+    start_col,
+    student_start_row,
+    last_student_row,
+    end_col,
+    student_col,
+):
+    # БОС ЖОЛДАРДЫ ТАЗАРТУ (Төменнен жоғары қарай жүреміз)
+    current_row = last_student_row + 2
+
+    while current_row >= start_row:
+        row_is_empty = True
+
+        # Осы жолдың ішінде бірде-бір мән бар-жоғын тексереміз
+        for col in range(start_col, sheet.max_column + 1):
+            if sheet.cell(row=current_row, column=col).value is not None:
+                row_is_empty = False
+                break
+
+        # Егер жол таза бос болса - біздің қауіпсіз delete_row арқылы жоямыз
+        if row_is_empty:
+            delete_row(sheet, row_idx=current_row)
+
+        current_row -= 1
+
+    # БОС БАҒАНДАРДЫ ТАЗАРТУ (Оңнан солға қарай жүреміз)
+    current_col = sheet.max_column
+    while current_col >= start_col:
+        col_is_empty = True
+
+        # Осы бағанның ішінде мән бар-жоғын тексереміз
+        for row in range(start_row, sheet.max_row + 1):
+            if sheet.cell(row=row, column=current_col).value is not None:
+                col_is_empty = False
+                break
+
+        # Егер баған бос болса - оны да жоямыз (openpyxl-де бағандарға арналған тура сондай әдіс бар)
+        if col_is_empty:
+            sheet.delete_cols(current_col, amount=1)
+
+        current_col -= 1
