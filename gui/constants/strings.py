@@ -131,14 +131,31 @@ MONITORING_FORMATTER_OPTIONS = [
 ]
 
 MONFORM_CHECKBOXES = [
-    {"id": "fix_borders", "label": "Кесте жиектерін форматтау (жуан/жіңішке сызықтар)"},
-    {"id": "fix_typography", "label": "Парақ қаріптерін реттеу"},
-    {"id": "round_numbers", "label": "Бөлшек сандарды бүтінге айналдыру"},
+    {
+        "id": "fix_borders",
+        "title": "Кесте жиектерін форматтау (жуан/жіңішке сызықтар)",
+        "default": True,
+    },
+    {
+        "id": "fix_typography",
+        "title": "Парақ қаріптерін реттеу",
+        "default": True,
+    },
+    {
+        "id": "round_numbers",
+        "title": "Бөлшек сандарды бүтінге айналдыру",
+        "default": True,
+    },
     {
         "id": "sync_formulas_with_student_count",
-        "label": "Формулаларды кестедегі балалардың санына сәйкестендіру",
+        "title": "Формулаларды кестедегі балалардың санына сәйкестендіру",
+        "default": True,
     },
-    {"id": "remove_empty_spaces", "label": "Бос жолдар мен бағандарды орындарды жою"},
+    {
+        "id": "remove_empty_spaces",
+        "title": "Бос жолдар мен бағандарды орындарды жою",
+        "default": False,
+    },
 ]
 
 AGE_GROUPS = {

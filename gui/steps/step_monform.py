@@ -12,9 +12,9 @@ class StepMonitoringFormatter(BaseStep[MonFormState]):
     def setup_ui(self):
         self.checkboxes = {}
         for action in MONFORM_CHECKBOXES:
-            cb = QCheckBox(action["label"])
+            cb = QCheckBox(action["title"])
             cb.setObjectName(action["id"])
-            cb.setChecked(True)
+            cb.setChecked(action["default"])
             self.layout.addWidget(cb)
             self.checkboxes[action["id"]] = cb
 
