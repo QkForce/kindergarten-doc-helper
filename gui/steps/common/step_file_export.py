@@ -371,13 +371,25 @@ class StepFileExport(BaseStep[T]):
         if not file_path.lower().endswith(self.options.file_extension):
             file_path += self.options.file_extension
 
-        self.result_file.save(file_path)
-
-        QMessageBox.information(
-            self,
-            AppStrings.EXPORT_SUCCESS_TITLE_SAVE_FILE,
-            AppStrings.EXPORT_SUCCESS_DESC_SAVE_FILE.format(file_path),
-        )
+        try:
+            self.result_file.save(file_path)
+            QMessageBox.information(
+                self,
+                AppStrings.EXPORT_SUCCESS_TITLE_SAVE_FILE,
+                AppStrings.EXPORT_SUCCESS_DESC_SAVE_FILE.format(file_path),
+            )
+        except PermissionError:
+            QMessageBox.critical(
+                self,
+                "Қателік орын алды",
+                f"Файлды сақтау мүмкін емес!\n\n"
+                f"Мына файл басқа бағдарламада (мысалы, Excel-де) "
+                f"ашық тұрған сияқты. Оны жауып, қайта байқап көріңіз:\n\n{file_path}",
+            )
+        except Exception as e:
+            QMessageBox.critical(
+                self, "Жүйелік қате", f"Файлды жазу кезінде қате шықты:\n\n{str(e)}"
+            )
 
     def set_frame_status(self, status):
         self.state_icon_frame.setProperty("frame-style", status)
