@@ -8,7 +8,7 @@ from PySide6.QtWidgets import QFileDialog, QMessageBox, QApplication
 from gui.pages.generator_page import GeneratorPage
 import gui.steps.common.step_children_scores as step2_module
 import gui.steps.common.step_file_export as step4_module
-from tests.e2e.helpers import mock_file_dialog, wait_until_visible
+from tests.e2e.helpers import mock_file_dialog, wait_until_visible, load_stylesheets
 
 
 def sync_worker(task_function, finished_slot, error_slot):
@@ -33,6 +33,14 @@ def test_docx_generator_ui_flow(qtbot, monkeypatch, tmp_path):
 
     page = GeneratorPage(on_finish=lambda: None)
     qtbot.addWidget(page)
+    assert load_stylesheets(
+        QApplication.instance(),
+        [
+            "gui/resources/style/global.qss",
+            "gui/resources/style/style.qss",
+            "gui/resources/style/step1.qss",
+        ],
+    )
     page.show()
     qtbot.waitExposed(page)
 
