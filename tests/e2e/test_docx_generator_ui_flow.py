@@ -1,6 +1,3 @@
-import os
-from pathlib import Path
-
 from PySide6.QtCore import Qt
 from PySide6.QtTest import QTest
 from PySide6.QtWidgets import QFileDialog, QMessageBox, QApplication
@@ -9,6 +6,7 @@ from gui.pages.generator_page import GeneratorPage
 import gui.steps.common.step_children_scores as step2_module
 import gui.steps.common.step_file_export as step4_module
 from tests.e2e.helpers import mock_file_dialog, wait_until_visible, load_stylesheets
+from tests.e2e.test_config import docx_gen_cfg as conf
 
 
 def sync_worker(task_function, finished_slot, error_slot):
@@ -24,12 +22,10 @@ def sync_worker(task_function, finished_slot, error_slot):
 
 
 def test_docx_generator_ui_flow(qtbot, monkeypatch, tmp_path):
-    excel_path = Path(os.getenv("TEST_UIE2E_DOCXGEN_XLSX_PATH"))
-    template_path = Path(os.getenv("TEST_UIE2E_DOCXGEN_TEMP_PATH"))
     output_path = tmp_path / "generated_docx_output.docx"
 
-    assert excel_path.exists(), f"Мониторинг файлы жоқ: {excel_path}"
-    assert template_path.exists(), f"Шаблон жоқ: {template_path}"
+    assert conf.xlsx_path.exists(), f"Мониторинг файлы жоқ: {conf.xlsx_path}"
+    assert conf.temp_path.exists(), f"Шаблон жоқ: {conf.temp_path}"
 
     page = GeneratorPage(on_finish=lambda: None)
     qtbot.addWidget(page)
@@ -52,13 +48,15 @@ def test_docx_generator_ui_flow(qtbot, monkeypatch, tmp_path):
     # =========================================================================
     # STEP-1: Select xlsx file
     # =========================================================================
-    monkeypatch.setattr(QFileDialog, "getOpenFileName", mock_file_dialog(excel_path))
+    monkeypatch.setattr(
+        QFileDialog, "getOpenFileName", mock_file_dialog(conf.xlsx_path)
+    )
     step1 = page.get_step(0)
     QTest.mouseClick(step1.file_select_widget.btn_browse, Qt.LeftButton)
 
     qtbot.waitUntil(lambda: step1.combo_sheet.count() > 0, timeout=15000)
-    step1.combo_sheet.setCurrentIndex(int(os.getenv("TEST_UIE2E_DOCXGEN_SHEET_IDX")))
-    step1.combo_group.setCurrentIndex(int(os.getenv("TEST_UIE2E_DOCXGEN_AGEGROUP_IDX")))
+    step1.combo_sheet.setCurrentIndex(conf.sheet_idx)
+    step1.combo_group.setCurrentIndex(conf.group_idx)
 
     assert page.btn_next.isEnabled(), "STEP-1: 'Келесі' батырмасы белсенді емес!"
     QTest.mouseClick(page.btn_next, Qt.LeftButton)
@@ -86,7 +84,9 @@ def test_docx_generator_ui_flow(qtbot, monkeypatch, tmp_path):
     # =========================================================================
     # STEP-3: Select docx template
     # =========================================================================
-    monkeypatch.setattr(QFileDialog, "getOpenFileName", mock_file_dialog(template_path))
+    monkeypatch.setattr(
+        QFileDialog, "getOpenFileName", mock_file_dialog(conf.temp_path)
+    )
     step3 = page.get_step(2)
     assert step3 is not None, "STEP-3 виджеті табылмады"
     qtbot.waitUntil(lambda: step3.isVisible(), timeout=5000)
