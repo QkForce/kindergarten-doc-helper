@@ -11,6 +11,7 @@ if env_path.exists():
 @dataclass(frozen=True)
 class TestConfig:
     out_dir: Path = Path("output")
+    out_file_name: str = "file_name"
 
 
 @dataclass(frozen=True)
@@ -19,6 +20,9 @@ class DocxGenConfig(TestConfig):
     sheet_idx: int = int(os.getenv("TEST_UIE2E_DOCXGEN_SHEET_IDX", 0))
     group_idx: int = int(os.getenv("TEST_UIE2E_DOCXGEN_AGEGROUP_IDX", 0))
     temp_path: Path = Path(os.getenv("TEST_UIE2E_DOCXGEN_TEMP_PATH", ""))
+    out_file_name: str = os.getenv(
+        "TEST_UIE2E_DOCXGEN_RES_FILE_NAME", "test_res_docxgen.docx"
+    )
 
 
 @dataclass(frozen=True)
@@ -28,6 +32,9 @@ class FillerConfig(TestConfig):
     group_idx: int = int(os.getenv("TEST_UIE2E_FILLER_AGEGROUP_IDX", 0))
     temp_path: Path = Path(os.getenv("TEST_UIE2E_FILLER_TEMP_PATH", ""))
     control_type_idx: int = int(os.getenv("TEST_UIE2E_FILLER_CONTROLTYPE_IDX", 0))
+    out_file_name: str = os.getenv(
+        "TEST_UIE2E_FILLER_RES_FILE_NAME", "test_res_filler.docx"
+    )
 
 
 @dataclass(frozen=True)

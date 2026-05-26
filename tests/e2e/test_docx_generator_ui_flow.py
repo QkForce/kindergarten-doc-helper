@@ -72,5 +72,5 @@ def test_docx_generator_ui_flow(qtbot, monkeypatch, tmp_path):
         sync_worker,
         output_path,
         conf.out_dir,
-        "docx_generator_result.docx",
+        conf.out_file_name,
     )
