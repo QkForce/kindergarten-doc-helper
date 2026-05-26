@@ -1,12 +1,16 @@
-from PySide6.QtCore import Qt
-from PySide6.QtTest import QTest
-from PySide6.QtWidgets import QFileDialog, QMessageBox, QApplication
+from PySide6.QtWidgets import QMessageBox, QApplication
 
 from gui.pages.generator_page import GeneratorPage
 import gui.steps.common.step_children_scores as step2_module
 import gui.steps.common.step_file_export as step4_module
-from tests.e2e.helpers import mock_file_dialog, wait_until_visible, load_stylesheets
+from tests.e2e.helpers import load_stylesheets
 from tests.e2e.test_config import docx_gen_cfg as conf
+from tests.e2e.step_assertions import (
+    assert_step_file_select,
+    assert_step_children_scores,
+    assert_step_docx_template,
+    assert_step_file_export,
+)
 
 
 def sync_worker(task_function, finished_slot, error_slot):
@@ -45,82 +49,28 @@ def test_docx_generator_ui_flow(qtbot, monkeypatch, tmp_path):
     monkeypatch.setattr(QMessageBox, "warning", lambda *args, **kwargs: None)
     monkeypatch.setattr(QMessageBox, "critical", lambda *args, **kwargs: None)
 
-    # =========================================================================
-    # STEP-1: Select xlsx file
-    # =========================================================================
-    monkeypatch.setattr(
-        QFileDialog, "getOpenFileName", mock_file_dialog(conf.xlsx_path)
+    assert_step_file_select(
+        qtbot, monkeypatch, page, conf.xlsx_path, conf.sheet_idx, conf.group_idx
     )
-    step1 = page.get_step(0)
-    QTest.mouseClick(step1.file_select_widget.btn_browse, Qt.LeftButton)
 
-    qtbot.waitUntil(lambda: step1.combo_sheet.count() > 0, timeout=15000)
-    step1.combo_sheet.setCurrentIndex(conf.sheet_idx)
-    step1.combo_group.setCurrentIndex(conf.group_idx)
-
-    assert page.btn_next.isEnabled(), "STEP-1: 'Келесі' батырмасы белсенді емес!"
-    QTest.mouseClick(page.btn_next, Qt.LeftButton)
-    QApplication.processEvents()
-
-    # =========================================================================
-    # STEP-2: Load children scores
-    # =========================================================================
-    step2 = page.get_step(1)
-    assert step2 is not None, "STEP-2 виджеті табылмады"
-
-    qtbot.waitUntil(lambda: step2.isVisible(), timeout=5000)
-    QApplication.processEvents()
-
-    monkeypatch.setattr(step2_module, "start_worker_task", sync_worker)
-    step2.run_auto_load()
-
-    check_step2_visible = wait_until_visible(lambda: step2.content_widget.isVisible())
-    qtbot.waitUntil(check_step2_visible, timeout=15000)
-
-    assert page.btn_next.isEnabled(), "STEP-2: 'Келесі' батырмасы белсенді емес!"
-    QTest.mouseClick(page.btn_next, Qt.LeftButton)
-    QApplication.processEvents()
-
-    # =========================================================================
-    # STEP-3: Select docx template
-    # =========================================================================
-    monkeypatch.setattr(
-        QFileDialog, "getOpenFileName", mock_file_dialog(conf.temp_path)
+    assert_step_children_scores(
+        qtbot, monkeypatch, page, step2_module, sync_worker=sync_worker
     )
-    step3 = page.get_step(2)
-    assert step3 is not None, "STEP-3 виджеті табылмады"
-    qtbot.waitUntil(lambda: step3.isVisible(), timeout=5000)
 
-    QTest.mouseClick(step3.file_select_widget.btn_browse, Qt.LeftButton)
-    QApplication.processEvents()
+    assert_step_docx_template(
+        qtbot,
+        monkeypatch,
+        page,
+        conf.temp_path,
+    )
 
-    qtbot.wait(500)
-    assert (
-        page.btn_next.isEnabled()
-    ), "STEP-3: Шаблон таңдалмады немесе 'Келесі' батырмасы бұғаттаулы!"
-
-    QTest.mouseClick(page.btn_next, Qt.LeftButton)
-    QApplication.processEvents()
-
-    # =========================================================================
-    # STEP-4: Export and Save result
-    # =========================================================================
-    monkeypatch.setattr(QFileDialog, "getSaveFileName", mock_file_dialog(output_path))
-    step4 = page.get_step(3)
-    assert step4 is not None, "STEP-4 виджеті табылмады"
-
-    qtbot.waitUntil(lambda: step4.isVisible(), timeout=5000)
-    QApplication.processEvents()
-
-    monkeypatch.setattr(step4_module, "start_worker_task", sync_worker)
-    step4.run_auto_load()
-
-    check_step4_ready = wait_until_visible(lambda: step4.btn_save.isVisible())
-    qtbot.waitUntil(check_step4_ready, timeout=15000)
-
-    QTest.mouseClick(step4.btn_save, Qt.LeftButton)
-    QApplication.processEvents()
-
-    # Check the result
-    qtbot.waitUntil(lambda: output_path.exists(), timeout=5000)
-    assert output_path.stat().st_size > 0
+    assert_step_file_export(
+        qtbot,
+        monkeypatch,
+        page,
+        step4_module,
+        sync_worker,
+        output_path,
+        conf.out_dir,
+        "docx_generator_result.docx",
+    )

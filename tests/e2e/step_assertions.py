@@ -63,6 +63,24 @@ def assert_step_fill_setup(qtbot, monkeypatch, page, control_type_idx, temp_path
     QApplication.processEvents()
 
 
+def assert_step_docx_template(qtbot, monkeypatch, page, temp_path):
+    step3 = page.get_step(2)
+    assert step3 is not None, "step_docx_template виджеті табылмады"
+    qtbot.waitUntil(lambda: step3.isVisible(), timeout=5000)
+
+    monkeypatch.setattr(QFileDialog, "getOpenFileName", mock_file_dialog(temp_path))
+    QTest.mouseClick(step3.file_select_widget.btn_browse, Qt.LeftButton)
+    QApplication.processEvents()
+
+    qtbot.waitUntil(lambda: page.btn_next.isEnabled(), timeout=5000)
+    assert (
+        page.btn_next.isEnabled()
+    ), "step_docx_template: Шаблон таңдалмады немесе 'Келесі' батырмасы бұғаттаулы!"
+
+    QTest.mouseClick(page.btn_next, Qt.LeftButton)
+    QApplication.processEvents()
+
+
 def assert_step_file_export(
     qtbot,
     monkeypatch,
