@@ -1,9 +1,9 @@
-from PySide6.QtWidgets import QMessageBox, QApplication
+from PySide6.QtWidgets import QApplication
 
 from gui.pages.generator_page import GeneratorPage
 import gui.steps.common.step_children_scores as step2_module
 import gui.steps.common.step_file_export as step4_module
-from tests.e2e.helpers import load_stylesheets
+from tests.e2e.helpers import load_stylesheets, mock_ui_dialogs
 from tests.e2e.test_config import docx_gen_cfg as conf
 from tests.e2e.step_assertions import (
     assert_step_file_select,
@@ -25,6 +25,7 @@ def sync_worker(task_function, finished_slot, error_slot):
         raise exc
 
 
+@mock_ui_dialogs
 def test_docx_generator_ui_flow(qtbot, monkeypatch, tmp_path):
     output_path = tmp_path / "generated_docx_output.docx"
 
@@ -43,11 +44,6 @@ def test_docx_generator_ui_flow(qtbot, monkeypatch, tmp_path):
     )
     page.show()
     qtbot.waitExposed(page)
-
-    # --- CHEATING UI DIALOGS ---
-    monkeypatch.setattr(QMessageBox, "information", lambda *args, **kwargs: None)
-    monkeypatch.setattr(QMessageBox, "warning", lambda *args, **kwargs: None)
-    monkeypatch.setattr(QMessageBox, "critical", lambda *args, **kwargs: None)
 
     assert_step_file_select(
         qtbot, monkeypatch, page, conf.xlsx_path, conf.sheet_idx, conf.group_idx

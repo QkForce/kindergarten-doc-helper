@@ -1,5 +1,7 @@
 from pathlib import Path
-from PySide6.QtWidgets import QApplication
+from functools import wraps
+
+from PySide6.QtWidgets import QApplication, QMessageBox
 
 from gui.constants.colors import AppColors
 
@@ -51,3 +53,25 @@ def load_stylesheets(target, qss_file_paths: list[str]):
         QApplication.processEvents()
         return True
     return False
+
+
+def mock_ui_dialogs(test_func):
+    @wraps(test_func)
+    def wrapper(*args, **kwargs):
+        monkeypatch = kwargs.get("monkeypatch")
+        if not monkeypatch:
+            for arg in args:
+                if type(arg).__name__ == "MonkeyPatch":
+                    monkeypatch = arg
+                    break
+
+        if monkeypatch:
+            monkeypatch.setattr(
+                QMessageBox, "information", lambda *args, **kwargs: None
+            )
+            monkeypatch.setattr(QMessageBox, "warning", lambda *args, **kwargs: None)
+            monkeypatch.setattr(QMessageBox, "critical", lambda *args, **kwargs: None)
+
+        return test_func(*args, **kwargs)
+
+    return wrapper
