@@ -57,6 +57,20 @@ def load_stylesheets(target, qss_file_paths: list[str]):
     return False
 
 
+def init_test_page(qtbot, page_class, stylesheets: list, config, **kwargs):
+    page = page_class(**kwargs)
+    qtbot.addWidget(page)
+
+    app = QApplication.instance() or QApplication([])
+    load_stylesheets(app, stylesheets)
+    page.setMinimumSize(config.window_min_width, config.window_min_height)
+
+    page.show()
+    qtbot.waitExposed(page)
+
+    return page
+
+
 def mock_ui_dialogs(test_func):
     @wraps(test_func)
     def wrapper(*args, **kwargs):

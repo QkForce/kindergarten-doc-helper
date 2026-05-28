@@ -10,6 +10,8 @@ if env_path.exists():
 
 @dataclass(frozen=True)
 class TestConfig:
+    window_min_width: int = int(os.getenv("TEST_WINDOW_MIN_WIDTH", 800))
+    window_min_height: int = int(os.getenv("TEST_WINDOW_MIN_HEIGHT", 600))
     out_dir: Path = Path("output")
     out_file_name: str = "file_name"
 
