@@ -1,10 +1,11 @@
+import random
 import shutil
 
 from PySide6.QtCore import Qt
 from PySide6.QtTest import QTest
 from PySide6.QtWidgets import QFileDialog, QApplication
 
-from tests.e2e.helpers import mock_file_dialog, wait_until_visible
+from tests.e2e.helpers import mock_file_dialog, wait_until_visible, click_list_item
 
 
 def assert_step_file_select(qtbot, monkeypatch, page, xlsx_path, sheet_idx, group_idx):
@@ -118,3 +119,88 @@ def assert_step_file_export(
     destination = out_dir / result_file_name
     shutil.copy(output_path, destination)
     print(f"\n📁 The test result is saved to this direction: {destination}")
+
+
+def assert_step_child_assessment(qtbot, monkeypatch, page, step_module, sync_worker):
+    step = page.get_step(1)
+    assert step is not None, "step_child_assessment виджеті табылмады"
+    qtbot.waitUntil(lambda: step.isVisible(), timeout=15000)
+    QApplication.processEvents()
+
+    monkeypatch.setattr(step_module, "start_worker_task", sync_worker)
+    step.run_auto_load()
+
+    check_step2_visible = wait_until_visible(lambda: step.content_widget.isVisible())
+    qtbot.waitUntil(check_step2_visible, timeout=15000)
+    assert (
+        step.last_error is None
+    ), f"step_child_assessment: Жүктеу кезінде қате орын алған: {step.last_error}"
+
+    children_name_list = step.content_widget.selector.children_name_list
+    assert (
+        len(children_name_list) > 5
+    ), "step_child_assessment: Балалар тізімі толық жүктелмеген немесе бос!"
+
+    for idx, child_name in enumerate(children_name_list):
+        click_list_item(step.content_widget.selector.list_widget, idx)
+        qtbot.wait(150)
+        QApplication.processEvents()
+        qtbot.waitUntil(
+            lambda: step.content_widget.assessment_area.child_name == child_name,
+            timeout=5000,
+        )
+        QApplication.processEvents()
+
+        domain_blocks = step.content_widget.assessment_area.domain_blocks
+        assert len(domain_blocks.items()) > 0, (
+            "step_child_assessment: "
+            f"Бағыттар тізімі жүктелмеген немесе бос! (Бала: {child_name})"
+        )
+
+        for domain_block in domain_blocks.values():
+            assert domain_block.isVisible(), (
+                "step_child_assessment: Бағыт блогы көрінбейді! "
+                f"(Бала: {child_name}, Бағыт: {domain_block.domain_name})"
+            )
+
+            assert domain_block.subject_blocks, (
+                "step_child_assessment: Бағыттың пән блоктары жүктелмеген немесе бос! "
+                f"(Бала: {child_name}, Бағыт: {domain_block.domain_name})"
+            )
+
+            for subject_block in domain_block.subject_blocks.values():
+                assert subject_block.isVisible(), (
+                    "step_child_assessment: Пән блогы көрінбейді! "
+                    f"(Бала: {child_name}, Бағыт: {domain_block.domain_name}, "
+                    f"Пән: {subject_block.subject_name})"
+                )
+
+                assert len(subject_block.metric_items.items()) > 0, (
+                    "step_child_assessment: Пәннің көрсеткіш блоктары жүктелмеген немесе бос! "
+                    f"(Бала: {child_name}, Бағыт: {domain_block.domain_name}, "
+                    f"Пән: {subject_block.subject_name})"
+                )
+
+                assert subject_block.score_toggle.isVisible(), (
+                    "step_child_assessment: Пәннің балл тогглы көрінбейді!"
+                    f"(Бала: {child_name}, Бағыт: {domain_block.domain_name}, "
+                    f"Пән: {subject_block.subject_name})"
+                )
+                allowed_scores = [
+                    score
+                    for score in (1, 2, 3)
+                    if score != subject_block.score_toggle.get_score()
+                ]
+                QTest.mouseClick(
+                    subject_block.score_toggle.buttons[
+                        random.choice(allowed_scores or [1, 2, 3])
+                    ],
+                    Qt.LeftButton,
+                )
+                QApplication.processEvents()
+
+    assert (
+        page.btn_next.isEnabled()
+    ), "step_child_assessment: 'Келесі' батырмасы белсенді емес!"
+    QTest.mouseClick(page.btn_next, Qt.LeftButton)
+    QApplication.processEvents()

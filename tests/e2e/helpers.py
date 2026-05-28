@@ -1,6 +1,8 @@
 from pathlib import Path
 from functools import wraps
 
+from PySide6.QtCore import Qt
+from PySide6.QtTest import QTest
 from PySide6.QtWidgets import QApplication, QMessageBox
 
 from gui.constants.colors import AppColors
@@ -75,3 +77,12 @@ def mock_ui_dialogs(test_func):
         return test_func(*args, **kwargs)
 
     return wrapper
+
+
+def click_list_item(list_widget, idx):
+    item = list_widget.item(idx)
+    list_widget.scrollToItem(item)
+    QApplication.processEvents()
+    item_rect = list_widget.visualItemRect(item)
+    QTest.mouseClick(list_widget.viewport(), Qt.LeftButton, pos=item_rect.center())
+    QApplication.processEvents()

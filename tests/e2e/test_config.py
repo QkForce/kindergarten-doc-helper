@@ -39,8 +39,12 @@ class FillerConfig(TestConfig):
 
 @dataclass(frozen=True)
 class SmartEntryConfig(TestConfig):
-    input_xlsx: Path = Path(os.getenv("TEST_UIE2E_SMART_ENTRY_INPUT", ""))
-    target_dir: Path = Path(os.getenv("TEST_UIE2E_SMART_ENTRY_TARGET_DIR", ""))
+    xlsx_path: Path = Path(os.getenv("TEST_UIE2E_SMART_ENTRY_XLSX_PATH", ""))
+    sheet_idx: int = int(os.getenv("TEST_UIE2E_SMART_ENTRY_SHEET_IDX", 0))
+    group_idx: int = int(os.getenv("TEST_UIE2E_SMART_ENTRY_AGEGROUP_IDX", 0))
+    out_file_name: str = os.getenv(
+        "TEST_UIE2E_SMART_ENTRY_RES_FILE_NAME", "test_res_smart_entry.xlsx"
+    )
 
 
 docx_gen_cfg = DocxGenConfig()
