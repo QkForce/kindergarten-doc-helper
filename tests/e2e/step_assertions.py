@@ -84,33 +84,30 @@ def assert_step_docx_template(qtbot, monkeypatch, page, temp_path):
 def assert_step_file_export(
     qtbot,
     monkeypatch,
-    page,
+    step,
     step_module,
     sync_worker,
     output_path,
     out_dir,
     result_file_name: str,
 ):
-    step4 = page.get_step(3)
-    assert step4 is not None, "STEP-4 виджеті табылмады"
+    assert step is not None, "step_file_export виджеті табылмады"
 
-    qtbot.waitUntil(lambda: step4.isVisible(), timeout=5000)
+    qtbot.waitUntil(lambda: step.isVisible(), timeout=5000)
     QApplication.processEvents()
 
     monkeypatch.setattr(step_module, "start_worker_task", sync_worker)
-    step4.run_auto_load()
+    step.run_auto_load()
 
-    check_step4_ready = wait_until_visible(lambda: step4.btn_save.isVisible())
-    qtbot.waitUntil(check_step4_ready, timeout=15000)
+    check_step_ready = wait_until_visible(lambda: step.btn_save.isVisible())
+    qtbot.waitUntil(check_step_ready, timeout=15000)
     assert not any(
-        str(x).strip() for x in step4.last_error
-    ), f"step_file_export: Экспорт қатемен аяқталған: {step4.last_error}"
-    assert (
-        step4.result_file is not None
-    ), "step_file_export: result_file айнымалысы бос!"
+        str(x).strip() for x in step.last_error
+    ), f"step_file_export: Экспорт қатемен аяқталған: {step.last_error}"
+    assert step.result_file is not None, "step_file_export: result_file айнымалысы бос!"
 
     monkeypatch.setattr(QFileDialog, "getSaveFileName", mock_file_dialog(output_path))
-    QTest.mouseClick(step4.btn_save, Qt.LeftButton)
+    QTest.mouseClick(step.btn_save, Qt.LeftButton)
     QApplication.processEvents()
 
     # Check the result

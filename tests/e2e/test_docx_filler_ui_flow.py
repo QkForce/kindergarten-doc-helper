@@ -60,7 +60,7 @@ def test_docx_filler_ui_flow(qtbot, monkeypatch, tmp_path):
     assert_step_file_export(
         qtbot,
         monkeypatch,
-        page,
+        page.get_step(3),
         step4_module,
         sync_worker,
         output_path,
