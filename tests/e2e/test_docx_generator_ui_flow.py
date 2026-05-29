@@ -1,9 +1,7 @@
-from PySide6.QtWidgets import QApplication
-
 from gui.pages.generator_page import GeneratorPage
 import gui.steps.common.step_children_scores as step2_module
 import gui.steps.common.step_file_export as step4_module
-from tests.e2e.helpers import load_stylesheets, mock_ui_dialogs, init_test_page
+from tests.e2e.helpers import mock_ui_dialogs, sync_worker, init_test_page
 from tests.e2e.test_config import docx_gen_cfg as conf
 from tests.e2e.step_assertions import (
     assert_step_file_select,
@@ -13,21 +11,11 @@ from tests.e2e.step_assertions import (
 )
 
 
-def sync_worker(task_function, finished_slot, error_slot):
-    try:
-        print("\n[WORKER] Тапсырма орындалуда...")
-        result = task_function()
-        print("[WORKER] Тапсырма сәтті аяқталды!")
-        finished_slot(result)
-    except Exception as exc:
-        print(f"\n❌ [CRITICAL WORKER ERROR]: {exc}")
-        error_slot(str(exc))
-        raise exc
-
-
 @mock_ui_dialogs
 def test_docx_generator_ui_flow(qtbot, monkeypatch, tmp_path):
     output_path = tmp_path / "generated_docx_output.docx"
+    monkeypatch.setattr(step2_module, "start_worker_task", sync_worker)
+    monkeypatch.setattr(step4_module, "start_worker_task", sync_worker)
 
     assert conf.xlsx_path.exists(), f"Мониторинг файлы жоқ: {conf.xlsx_path}"
     assert conf.temp_path.exists(), f"Шаблон жоқ: {conf.temp_path}"
@@ -49,7 +37,9 @@ def test_docx_generator_ui_flow(qtbot, monkeypatch, tmp_path):
     )
 
     assert_step_children_scores(
-        qtbot, monkeypatch, page, step2_module, sync_worker=sync_worker
+        qtbot,
+        monkeypatch,
+        page,
     )
 
     assert_step_docx_template(
@@ -63,8 +53,6 @@ def test_docx_generator_ui_flow(qtbot, monkeypatch, tmp_path):
         qtbot,
         monkeypatch,
         page.get_step(3),
-        step4_module,
-        sync_worker,
         output_path,
         conf.out_dir,
         conf.out_file_name,

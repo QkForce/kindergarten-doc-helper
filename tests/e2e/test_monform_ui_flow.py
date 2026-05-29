@@ -1,6 +1,6 @@
 from gui.pages.monform_page import MonFormPage
 import gui.steps.common.step_file_export as step4_module
-from tests.e2e.helpers import mock_ui_dialogs, init_test_page
+from tests.e2e.helpers import mock_ui_dialogs, sync_worker, init_test_page
 from tests.e2e.test_config import monform_cfg as conf
 from tests.e2e.step_assertions import (
     assert_step_file_select,
@@ -9,21 +9,10 @@ from tests.e2e.step_assertions import (
 )
 
 
-def sync_worker(task_function, finished_slot, error_slot):
-    try:
-        print("\n[WORKER] Тапсырма орындалуда...")
-        result = task_function()
-        print("[WORKER] Тапсырма сәтті аяқталды!")
-        finished_slot(result)
-    except Exception as exc:
-        print(f"\n❌ [CRITICAL WORKER ERROR]: {exc}")
-        error_slot(str(exc))
-        raise exc
-
-
 @mock_ui_dialogs
 def test_monform_ui_flow(qtbot, monkeypatch, tmp_path):
     output_path = tmp_path / "monform_output.xlsx"
+    monkeypatch.setattr(step4_module, "start_worker_task", sync_worker)
 
     assert conf.xlsx_path.exists(), f"Мониторинг файлы жоқ: {conf.xlsx_path}"
 
@@ -53,8 +42,6 @@ def test_monform_ui_flow(qtbot, monkeypatch, tmp_path):
         qtbot,
         monkeypatch,
         page.get_step(2),
-        step4_module,
-        sync_worker,
         output_path,
         conf.out_dir,
         conf.out_file_name,

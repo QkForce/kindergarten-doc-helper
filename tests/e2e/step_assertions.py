@@ -24,18 +24,15 @@ def assert_step_file_select(qtbot, monkeypatch, page, xlsx_path, sheet_idx, grou
     QApplication.processEvents()
 
 
-def assert_step_children_scores(qtbot, monkeypatch, page, step_module, sync_worker):
-    step2 = page.get_step(1)
-    assert step2 is not None, "step_children_scores виджеті табылмады"
+def assert_step_children_scores(qtbot, monkeypatch, page):
+    step = page.get_step(1)
+    assert step is not None, "step_children_scores виджеті табылмады"
 
-    qtbot.waitUntil(lambda: step2.isVisible(), timeout=5000)
+    qtbot.waitUntil(lambda: step.isVisible(), timeout=5000)
     QApplication.processEvents()
 
-    monkeypatch.setattr(step_module, "start_worker_task", sync_worker)
-    step2.run_auto_load()
-
-    check_step2_visible = wait_until_visible(lambda: step2.content_widget.isVisible())
-    qtbot.waitUntil(check_step2_visible, timeout=15000)
+    check_step_visible = wait_until_visible(lambda: step.content_widget.isVisible())
+    qtbot.waitUntil(check_step_visible, timeout=15000)
 
     assert (
         page.btn_next.isEnabled()
@@ -86,8 +83,6 @@ def assert_step_file_export(
     qtbot,
     monkeypatch,
     step,
-    step_module,
-    sync_worker,
     output_path,
     out_dir,
     result_file_name: str,
@@ -96,9 +91,6 @@ def assert_step_file_export(
 
     qtbot.waitUntil(lambda: step.isVisible(), timeout=5000)
     QApplication.processEvents()
-
-    monkeypatch.setattr(step_module, "start_worker_task", sync_worker)
-    step.run_auto_load()
 
     check_step_ready = wait_until_visible(lambda: step.btn_save.isVisible())
     qtbot.waitUntil(check_step_ready, timeout=15000)
@@ -121,17 +113,14 @@ def assert_step_file_export(
     print(f"\n📁 The test result is saved to this direction: {destination}")
 
 
-def assert_step_child_assessment(qtbot, monkeypatch, page, step_module, sync_worker):
+def assert_step_child_assessment(qtbot, monkeypatch, page):
     step = page.get_step(1)
     assert step is not None, "step_child_assessment виджеті табылмады"
     qtbot.waitUntil(lambda: step.isVisible(), timeout=15000)
     QApplication.processEvents()
 
-    monkeypatch.setattr(step_module, "start_worker_task", sync_worker)
-    step.run_auto_load()
-
-    check_step2_visible = wait_until_visible(lambda: step.content_widget.isVisible())
-    qtbot.waitUntil(check_step2_visible, timeout=15000)
+    check_step_visible = wait_until_visible(lambda: step.content_widget.isVisible())
+    qtbot.waitUntil(check_step_visible, timeout=15000)
     assert (
         step.last_error is None
     ), f"step_child_assessment: Жүктеу кезінде қате орын алған: {step.last_error}"

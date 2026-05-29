@@ -100,3 +100,17 @@ def click_list_item(list_widget, idx):
     item_rect = list_widget.visualItemRect(item)
     QTest.mouseClick(list_widget.viewport(), Qt.LeftButton, pos=item_rect.center())
     QApplication.processEvents()
+
+
+def sync_worker(task_function, finished_slot, error_slot):
+    try:
+        print("\n[WORKER] Тапсырма орындалуда...")
+        result = task_function()
+        print("[WORKER] Тапсырма сәтті аяқталды!")
+        QApplication.processEvents()
+        finished_slot(result)
+        QApplication.processEvents()
+    except Exception as exc:
+        print(f"\n❌ [CRITICAL WORKER ERROR]: {exc}")
+        error_slot(str(exc))
+        raise exc
