@@ -49,6 +49,17 @@ class SmartEntryConfig(TestConfig):
     )
 
 
+@dataclass(frozen=True)
+class MonFormConfig(TestConfig):
+    xlsx_path: Path = Path(os.getenv("TEST_UIE2E_MONFORM_XLSX_PATH", ""))
+    sheet_idx: int = int(os.getenv("TEST_UIE2E_MONFORM_SHEET_IDX", 0))
+    group_idx: int = int(os.getenv("TEST_UIE2E_MONFORM_AGEGROUP_IDX", 0))
+    out_file_name: str = os.getenv(
+        "TEST_UIE2E_MONFORM_RES_FILE_NAME", "test_res_monform.xlsx"
+    )
+
+
 docx_gen_cfg = DocxGenConfig()
 filler_cfg = FillerConfig()
 smart_entry_cfg = SmartEntryConfig()
+monform_cfg = MonFormConfig()

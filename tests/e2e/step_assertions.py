@@ -204,3 +204,23 @@ def assert_step_child_assessment(qtbot, monkeypatch, page, step_module, sync_wor
     ), "step_child_assessment: 'Келесі' батырмасы белсенді емес!"
     QTest.mouseClick(page.btn_next, Qt.LeftButton)
     QApplication.processEvents()
+
+
+def assert_step_monform_setup(qtbot, monkeypatch, page):
+    step = page.get_step(1)
+    assert step is not None, "step_monform_setup виджеті табылмады"
+    qtbot.waitUntil(lambda: step.isVisible(), timeout=5000)
+    QApplication.processEvents()
+
+    for checkbox in step.checkboxes.values():
+        if not checkbox.isChecked():
+            checkbox.setChecked(True)
+            QApplication.processEvents()
+
+    qtbot.waitUntil(lambda: page.btn_next.isEnabled(), timeout=5000)
+    assert (
+        page.btn_next.isEnabled()
+    ), "step_monform_setup: 'Келесі' батырмасы белсенді емес!"
+
+    QTest.mouseClick(page.btn_next, Qt.LeftButton)
+    QApplication.processEvents()
