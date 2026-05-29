@@ -3,7 +3,7 @@ from PySide6.QtWidgets import QApplication
 from gui.pages.generator_page import GeneratorPage
 import gui.steps.common.step_children_scores as step2_module
 import gui.steps.common.step_file_export as step4_module
-from tests.e2e.helpers import load_stylesheets, mock_ui_dialogs
+from tests.e2e.helpers import load_stylesheets, mock_ui_dialogs, init_test_page
 from tests.e2e.test_config import docx_gen_cfg as conf
 from tests.e2e.step_assertions import (
     assert_step_file_select,
@@ -32,18 +32,17 @@ def test_docx_generator_ui_flow(qtbot, monkeypatch, tmp_path):
     assert conf.xlsx_path.exists(), f"Мониторинг файлы жоқ: {conf.xlsx_path}"
     assert conf.temp_path.exists(), f"Шаблон жоқ: {conf.temp_path}"
 
-    page = GeneratorPage(on_finish=lambda: None)
-    qtbot.addWidget(page)
-    assert load_stylesheets(
-        QApplication.instance(),
+    page = init_test_page(
+        qtbot,
+        GeneratorPage,
         [
             "gui/resources/style/global.qss",
             "gui/resources/style/style.qss",
             "gui/resources/style/step1.qss",
         ],
+        conf,
+        on_finish=lambda: None,
     )
-    page.show()
-    qtbot.waitExposed(page)
 
     assert_step_file_select(
         qtbot, monkeypatch, page, conf.xlsx_path, conf.sheet_idx, conf.group_idx
