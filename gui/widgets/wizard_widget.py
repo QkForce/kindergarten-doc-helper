@@ -28,8 +28,9 @@ class WizardWidget(QFrame, Generic[T]):
         state: T,
         on_finish: Callable,
         module_options: ModuleOptions,
+        parent=None,
     ):
-        super().__init__()
+        super().__init__(parent)
         self.current_step = 0
         self._step_configs = steps
         self.state = state

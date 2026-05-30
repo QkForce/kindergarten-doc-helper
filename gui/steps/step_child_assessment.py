@@ -27,7 +27,7 @@ class StepChildAssessment(BaseStep[SmartEntryState]):
         self.last_error = None
         self.loading = False
         self.status_placeholder = StatusPlaceholder()
-        self.content_widget = ChildrenAssessmentWidget()
+        self.content_widget = ChildrenAssessmentWidget(parent=self)
         self.content_widget.on_scores_updated.connect(
             lambda scores: setattr(self.state, "children_scores", scores)
         )

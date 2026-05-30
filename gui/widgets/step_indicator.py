@@ -4,8 +4,8 @@ from PySide6.QtWidgets import QWidget, QHBoxLayout, QLabel
 
 
 class StepIndicator(QWidget):
-    def __init__(self, step_labels: List[str], current_step: int = 0):
-        super().__init__()
+    def __init__(self, step_labels: List[str], current_step: int = 0, parent=None):
+        super().__init__(parent)
         self.step_labels = step_labels
         self.current_step = current_step
         self.steps = []

@@ -175,12 +175,14 @@ class StepFileExport(BaseStep[T]):
     sig_error_state = Signal()
     sig_progress = Signal(str, int, int)
 
-    def __init__(self, state, exporter, options: StepFileExportOptions = None):
+    def __init__(
+        self, state, exporter, options: StepFileExportOptions = None, parent=None
+    ):
         self.result_file = None
         self.exporter = exporter
         self.options = options
         self.last_error = ("", "")
-        super().__init__(state, parent=None)
+        super().__init__(state, parent=parent)
 
     def setup_ui(self):
         # --- STATE ICON ---

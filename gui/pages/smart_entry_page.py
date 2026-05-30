@@ -12,7 +12,7 @@ from gui.constants.icons import IconPaths
 
 
 class SmartEntryPage(WizardWidget[SmartEntryState]):
-    def __init__(self, on_finish: Callable):
+    def __init__(self, on_finish: Callable, parent=None):
         state = SmartEntryState()
         options = StepFileExportOptions(
             file_name="Мониторинг (2025-2026).xlsx",
@@ -43,7 +43,11 @@ class SmartEntryPage(WizardWidget[SmartEntryState]):
             icon_path=IconPaths.FEATURE_ENTRY_XLSX,
         )
         super().__init__(
-            steps=steps, state=state, on_finish=on_finish, module_options=module_options
+            steps=steps,
+            state=state,
+            on_finish=on_finish,
+            module_options=module_options,
+            parent=parent,
         )
 
     def get_progress_title(self, lbl, current, total):

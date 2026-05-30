@@ -13,7 +13,7 @@ from logic.exporter import DocxFillExporter
 
 
 class FillerPage(WizardWidget[FillerState]):
-    def __init__(self, on_finish: Callable):
+    def __init__(self, on_finish: Callable, parent=None):
         state = FillerState()
         options = StepFileExportOptions(
             file_name="Балалардың даму картасы (filled).docx",
@@ -43,7 +43,11 @@ class FillerPage(WizardWidget[FillerState]):
             icon_path=IconPaths.FEATURE_TEMPLATE_FILLER,
         )
         super().__init__(
-            steps=steps, state=state, on_finish=on_finish, module_options=module_options
+            steps=steps,
+            state=state,
+            on_finish=on_finish,
+            module_options=module_options,
+            parent=parent,
         )
 
     def get_progress_title(self, lbl, current, total):

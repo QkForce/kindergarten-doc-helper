@@ -16,8 +16,8 @@ from gui.utils.style_utils import apply_shadow
 class DomainBlock(QFrame):
     on_score_updated = Signal(str, dict)  # domain_name, subjects
 
-    def __init__(self, domain_name, subjects):
-        super().__init__()
+    def __init__(self, domain_name, subjects, parent=None):
+        super().__init__(parent)
         self.domain_name = domain_name
         self.subjects = subjects
         self.subject_blocks: dict[str, SubjectBlock] = {}
@@ -30,7 +30,7 @@ class DomainBlock(QFrame):
 
         title = QLabel(DOMAIN_NAMES.get(self.domain_name, self.domain_name))
         self.score_toggle = ScoreToggle(
-            btn_type=ScoreButtonType.DOMAIN, size=18, spacing=2
+            btn_type=ScoreButtonType.DOMAIN, size=18, spacing=2, parent=self
         )
         self.score_toggle.setObjectName("domain_score_toggle")
         self.score_toggle.scoreChanged.connect(self.on_bulk_score)
@@ -47,7 +47,7 @@ class DomainBlock(QFrame):
         for subject_name in self.subjects.keys():
             is_expanded = False
             subject_block = SubjectBlock(
-                subject_name, self.subjects[subject_name], is_expanded
+                subject_name, self.subjects[subject_name], is_expanded, parent=self
             )
             subject_block.on_score_updated.connect(self.handle_child_update)
             self.subject_blocks[subject_name] = subject_block

@@ -9,16 +9,16 @@ from logic.assessment_tools import get_assessment_status
 class ChildrenAssessmentWidget(QFrame):
     on_scores_updated = Signal(dict)  # child_name -> score_dict
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, parent=None):
+        super().__init__(parent)
         # children_scores = [{"name": "Child 1", "code-1": 2, "code-2": 3}, ...]
         self.children_scores = {}
         self.setObjectName("children_assessment_widget")
 
-        self.selector = ChildSelector()
+        self.selector = ChildSelector(parent=self)
         self.selector.childSelected.connect(self.handle_child_selection)
 
-        self.assessment_area = AssessmentArea()
+        self.assessment_area = AssessmentArea(parent=self)
         self.assessment_area.on_score_updated.connect(self.handle_score_update)
 
         layout = QHBoxLayout(self)

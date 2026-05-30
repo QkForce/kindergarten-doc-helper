@@ -9,9 +9,14 @@ class MetricItem(QFrame):
     on_score_updated = Signal(str, int)  # metric_name, score
 
     def __init__(
-        self, metric_name: str, description: str, criteria: list, score: int = 0
+        self,
+        metric_name: str,
+        description: str,
+        criteria: list,
+        score: int = 0,
+        parent=None,
     ):
-        super().__init__()
+        super().__init__(parent)
         self.metric_name = metric_name
         self.description = description
         self.criteria = [
@@ -32,6 +37,7 @@ class MetricItem(QFrame):
             btn_type=ScoreButtonType.BASE,
             size=14,
             spacing=2,
+            parent=self,
         )
         self.score_toggle.set_score(score)
         self.score_toggle.setObjectName("metric_score_toggle")

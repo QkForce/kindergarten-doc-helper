@@ -21,8 +21,8 @@ from logic.assessment_tools import bulk_update, get_common_score_type
 class AssessmentArea(QFrame):
     on_score_updated = Signal(str, dict)  # child_name, score_dict
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, parent=None):
+        super().__init__(parent)
         self.child_name = ""
         self.score_dict = {}
         self.domain_blocks: dict[str, DomainBlock] = {}
@@ -42,7 +42,7 @@ class AssessmentArea(QFrame):
         score_toggle_lbl = QLabel("Жаппай бағалау:")
         score_toggle_lbl.setObjectName("score_toggle_lbl")
         self.score_toggle = ScoreToggle(
-            btn_type=ScoreButtonType.BASE, size=20, spacing=2
+            btn_type=ScoreButtonType.BASE, size=20, spacing=2, parent=self
         )
         self.score_toggle.scoreChanged.connect(self.on_bulk_score)
         score_toggle_layout = QHBoxLayout()
@@ -126,7 +126,7 @@ class AssessmentArea(QFrame):
 
         self._clear_domain_blocks()
         for domain_name, subjects in self.score_dict.items():
-            domain_block = DomainBlock(domain_name, subjects)
+            domain_block = DomainBlock(domain_name, subjects, parent=self)
             domain_block.on_score_updated.connect(self.handle_child_update)
             self.domain_blocks[domain_name] = domain_block
             self.body_layout.addWidget(domain_block)

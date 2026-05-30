@@ -19,8 +19,10 @@ from logic.assessment_tools import set_metrics_score, get_subject_score_type
 class SubjectBlock(QFrame):
     on_score_updated = Signal(str, dict)  # subject_name, metrics
 
-    def __init__(self, subject_name: str, metrics: dict, is_expanded=False):
-        super().__init__()
+    def __init__(
+        self, subject_name: str, metrics: dict, is_expanded=False, parent=None
+    ):
+        super().__init__(parent)
         self.subject_name = subject_name
         self.metrics = metrics
         self.metric_items = {}
@@ -35,7 +37,7 @@ class SubjectBlock(QFrame):
         self.line.setObjectName("separator")
         self.line.setFrameShape(QFrame.Shape.HLine)
         self.score_toggle = ScoreToggle(
-            btn_type=ScoreButtonType.BASE, size=16, spacing=2
+            btn_type=ScoreButtonType.BASE, size=16, spacing=2, parent=self
         )
         self.score_toggle.setObjectName("subject_score_toggle")
         self.score_toggle.scoreChanged.connect(self.on_bulk_score)
@@ -46,13 +48,14 @@ class SubjectBlock(QFrame):
         header_layout.addWidget(title, stretch=1)
         header_layout.addWidget(self.score_toggle)
 
-        self.body_frame = QFrame()
+        self.body_frame = QFrame(parent=self)
         body_layout = QHBoxLayout(self.body_frame)
         for i, (mn, metric_data) in enumerate(self.metrics.items()):
             metric_item = MetricItem(
                 metric_name=mn,
                 description=metric_data["description"],
                 criteria=metric_data["criteria"],
+                parent=self.body_frame,
             )
             metric_item.on_score_updated.connect(self.handle_child_update)
             self.metric_items[mn] = metric_item
