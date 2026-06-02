@@ -6,18 +6,20 @@ from gui.utils.formatter import format_criterion_tooltip
 
 
 class MetricItem(QFrame):
-    on_score_updated = Signal(str, int)  # metric_name, score
+    on_score_updated = Signal(str, int)  # met_id, score
 
     def __init__(
         self,
-        metric_name: str,
+        id: str,
+        code: str,
         description: str,
         criteria: list,
         score: int = 0,
         parent=None,
     ):
         super().__init__(parent)
-        self.metric_name = metric_name
+        self.id = id
+        self.code = code
         self.description = description
         self.criteria = [
             format_criterion_tooltip(i, desc)
@@ -28,7 +30,7 @@ class MetricItem(QFrame):
         self.setFrameShape(QFrame.Shape.StyledPanel)
         self.setFrameStyle(QFrame.Shape.NoFrame)
 
-        title = QLabel(self.metric_name)
+        title = QLabel(self.code)
         title.setAlignment(Qt.AlignmentFlag.AlignCenter)
         title.setToolTip(self.description)
 
@@ -42,7 +44,7 @@ class MetricItem(QFrame):
         self.score_toggle.set_score(score)
         self.score_toggle.setObjectName("metric_score_toggle")
         self.score_toggle.scoreChanged.connect(
-            lambda score: self.on_score_updated.emit(self.metric_name, score)
+            lambda score: self.on_score_updated.emit(self.id, score)
         )
 
         layout = QVBoxLayout(self)

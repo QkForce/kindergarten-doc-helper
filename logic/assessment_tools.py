@@ -1,44 +1,50 @@
-from config.metrics_schema import METRICS_SCHEMA
+from config.metrics_schema import METRICS_SCHEMA_NEW as METRICS_SCHEMA
 from logic.types import AssessmentStatus
 
 
 def bulk_update(domains, score):
-    for dn, subjects in domains.items():
-        for sn, metrics in subjects.items():
-            for mn in metrics.keys():
-                domains[dn][sn][mn] = {
+    for dom_id, dom in domains.items():
+        for sub_id, sub in dom["subjects"].items():
+            for met_id, met in sub["metrics"].items():
+                domains[dom_id]["subjects"][sub_id]["metrics"][met_id] = {
                     "score": score,
-                    "description": metrics[mn]["description"],
-                    "criteria": metrics[mn]["criteria"],
+                    "id": met_id,
+                    "code": met["code"],
+                    "description": met["description"],
+                    "criteria": met["criteria"],
                 }
 
 
 def set_subjects_score(subjects, score):
-    for sn, metrics in subjects.items():
-        for mn in metrics.keys():
-            subjects[sn][mn] = {
+    for sub_id, sub in subjects.items():
+        for met_id, met in sub["metrics"].items():
+            subjects[sub_id]["metrics"][met_id] = {
                 "score": score,
-                "description": metrics[mn]["description"],
-                "criteria": metrics[mn]["criteria"],
+                "id": met_id,
+                "code": met["code"],
+                "description": met["description"],
+                "criteria": met["criteria"],
             }
 
 
 def set_metrics_score(metrics, score):
-    for mn in metrics.keys():
-        metrics[mn] = {
+    for met_id, met in metrics.items():
+        metrics[met_id] = {
             "score": score,
-            "description": metrics[mn]["description"],
-            "criteria": metrics[mn]["criteria"],
+            "id": met_id,
+            "code": met["code"],
+            "description": met["description"],
+            "criteria": met["criteria"],
         }
 
 
-def get_common_score_type(score_dict):
+def get_child_common_score_type(score_dict):
     score_types = set(
         [
             metric["score"]
-            for subjects in score_dict.values()
-            for metrics in subjects.values()
-            for metric in metrics.values()
+            for dom in score_dict.values()
+            for sub in dom["subjects"].values()
+            for metric in sub["metrics"].values()
         ]
     )
     return score_types.pop() if len(score_types) == 1 else 0
@@ -48,8 +54,8 @@ def get_domain_score_type(subjects):
     score_types = set(
         [
             metric["score"]
-            for metrics in subjects.values()
-            for metric in metrics.values()
+            for sub in subjects.values()
+            for metric in sub["metrics"].values()
         ]
     )
     return score_types.pop() if len(score_types) == 1 else 0
@@ -64,9 +70,9 @@ def get_assessment_status(score_dict) -> AssessmentStatus:
     total_metrics = 0
     scored_metrics = 0
 
-    for subjects in score_dict.values():
-        for metrics in subjects.values():
-            for metric in metrics.values():
+    for dom in score_dict.values():
+        for sub in dom["subjects"].values():
+            for metric in sub["metrics"].values():
                 total_metrics += 1
                 if metric["score"] != 0:
                     scored_metrics += 1
@@ -84,9 +90,9 @@ def get_children_assessment_status(children_scores: list) -> AssessmentStatus:
     any_incomplete = False
 
     for child_scores in children_scores.values():
-        for subjects in child_scores.values():
-            for metrics in subjects.values():
-                for metric in metrics.values():
+        for dom in child_scores.values():
+            for sub in dom["subjects"].values():
+                for metric in sub["metrics"].values():
                     score = metric["score"]
                     if score and score > 0:
                         any_scored = True
@@ -102,32 +108,43 @@ def get_children_assessment_status(children_scores: list) -> AssessmentStatus:
     return AssessmentStatus.IN_PROGRESS
 
 
-def create_default_scoring_dict(age_group):
-    scoring_dict = {
-        domain: {
-            subject: {metric: 0 for metric in metrics}
-            for subject, metrics in subjects.items()
-        }
-        for domain, subjects in METRICS_SCHEMA[age_group].items()
-    }
-    return scoring_dict
-
-
-def create_source_scoring_dict(age_group, scores):
-    # scores = [{"name": "Child 1", "code-1": 2, "code-2": 3}, ...]
+def create_source_scoring_dict(age_group_slug, scores):
     scoring_dict = {}
+    target_age = next(
+        (
+            item
+            for item in METRICS_SCHEMA
+            if item.get("slug", item["id"]) == age_group_slug
+        ),
+        None,
+    )
+    if not target_age:
+        return scoring_dict
+
     for item in scores:
-        name = item["name"]
-        scoring_dict[name] = {}
-        for dn, subjects in METRICS_SCHEMA[age_group].items():
-            scoring_dict[name][dn] = {}
-            for sn, metrics in subjects.items():
-                scoring_dict[name][dn][sn] = {}
-                for code, metric in metrics.items():
-                    score = item.get(code, 0)
-                    scoring_dict[name][dn][sn][code] = {
+        name_child = item["name"]
+        scoring_dict[name_child] = {}
+        for domain in target_age.get("domains", []):
+            dom_id = domain.get("slug", domain["id"])
+            scoring_dict[name_child][dom_id] = {
+                "name": domain.get("name", dom_id),
+                "subjects": {},
+            }
+            for subject in domain.get("subjects", []):
+                sub_id = subject.get("slug", subject["id"])
+                scoring_dict[name_child][dom_id]["subjects"][sub_id] = {
+                    "name": subject.get("name", sub_id),
+                    "metrics": {},
+                }
+                for metric in subject.get("metrics", []):
+                    met_id = metric.get("id", metric["code"])
+                    score = item.get(metric["code"], 0)
+                    scoring_dict[name_child][dom_id]["subjects"][sub_id]["metrics"][
+                        met_id
+                    ] = {
+                        "code": metric["code"],
                         "score": score,
-                        "description": metric["original"],
-                        "criteria": metric["criteria"],
+                        "description": metric.get("original", ""),
+                        "criteria": metric.get("criteria", []),
                     }
     return scoring_dict

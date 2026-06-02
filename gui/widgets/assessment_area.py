@@ -15,7 +15,7 @@ from gui.widgets.assessment.domain_block import DomainBlock
 from gui.constants.colors import AppColors
 from gui.constants.icons import IconPaths
 from gui.utils.icon_utils import get_svg_pixmap
-from logic.assessment_tools import bulk_update, get_common_score_type
+from logic.assessment_tools import bulk_update, get_child_common_score_type
 
 
 class AssessmentArea(QFrame):
@@ -104,14 +104,14 @@ class AssessmentArea(QFrame):
 
     def on_bulk_score(self, score):
         bulk_update(self.score_dict, score)
-        for dn, domain_block in self.domain_blocks.items():
-            domain_block.applyData(self.score_dict[dn])
+        for dom_id, domain_block in self.domain_blocks.items():
+            domain_block.applyData(self.score_dict[dom_id]["subjects"])
         self.on_score_updated.emit(self.child_name, self.score_dict)
 
-    def handle_child_update(self, dn, subjects):
+    def handle_child_update(self, dom_id, subjects):
         # Update self.score_togle state
-        self.score_dict[dn] = subjects
-        cmn_score = get_common_score_type(self.score_dict)
+        self.score_dict[dom_id]["subjects"] = subjects
+        cmn_score = get_child_common_score_type(self.score_dict)
         self.score_toggle.set_score(cmn_score)
         # Send signal to parent
         self.on_score_updated.emit(self.child_name, self.score_dict)
@@ -125,12 +125,14 @@ class AssessmentArea(QFrame):
         self.child_name_lbl.setText(self.child_name)
 
         self._clear_domain_blocks()
-        for domain_name, subjects in self.score_dict.items():
-            domain_block = DomainBlock(domain_name, subjects, parent=self)
+        for dom_id, dom in self.score_dict.items():
+            domain_block = DomainBlock(
+                dom_id, dom["name"], dom["subjects"], parent=self
+            )
             domain_block.on_score_updated.connect(self.handle_child_update)
-            self.domain_blocks[domain_name] = domain_block
+            self.domain_blocks[dom_id] = domain_block
             self.body_layout.addWidget(domain_block)
         self.body_layout.addStretch()
 
-        cmn_score = get_common_score_type(self.score_dict)
+        cmn_score = get_child_common_score_type(self.score_dict)
         self.score_toggle.set_score(cmn_score)

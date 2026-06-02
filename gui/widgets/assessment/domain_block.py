@@ -9,16 +9,16 @@ from PySide6.QtCore import Signal
 from gui.widgets.assessment.subject_block import SubjectBlock
 from gui.widgets.score_toggle import ScoreToggle, ScoreButtonType
 from logic.assessment_tools import set_subjects_score, get_domain_score_type
-from gui.constants.strings import DOMAIN_NAMES
 from gui.utils.style_utils import apply_shadow
 
 
 class DomainBlock(QFrame):
-    on_score_updated = Signal(str, dict)  # domain_name, subjects
+    on_score_updated = Signal(str, dict)  # dom_id, subjects
 
-    def __init__(self, domain_name, subjects, parent=None):
+    def __init__(self, id, name, subjects, parent=None):
         super().__init__(parent)
-        self.domain_name = domain_name
+        self.id = id
+        self.name = name
         self.subjects = subjects
         self.subject_blocks: dict[str, SubjectBlock] = {}
         self.setObjectName("domain_block")
@@ -28,7 +28,7 @@ class DomainBlock(QFrame):
         layout.setContentsMargins(0, 0, 0, 10)
         layout.setSpacing(0)
 
-        title = QLabel(DOMAIN_NAMES.get(self.domain_name, self.domain_name))
+        title = QLabel(self.name)
         self.score_toggle = ScoreToggle(
             btn_type=ScoreButtonType.DOMAIN, size=18, spacing=2, parent=self
         )
@@ -44,13 +44,13 @@ class DomainBlock(QFrame):
 
         body_layout = QVBoxLayout()
         body_layout.setContentsMargins(0, 0, 0, 0)
-        for subject_name in self.subjects.keys():
+        for sub_id, sub in self.subjects.items():
             is_expanded = False
             subject_block = SubjectBlock(
-                subject_name, self.subjects[subject_name], is_expanded, parent=self
+                sub_id, sub["name"], sub["metrics"], is_expanded, parent=self
             )
             subject_block.on_score_updated.connect(self.handle_child_update)
-            self.subject_blocks[subject_name] = subject_block
+            self.subject_blocks[sub_id] = subject_block
             body_layout.addWidget(subject_block)
         self.applyData(self.subjects)
 
@@ -63,25 +63,25 @@ class DomainBlock(QFrame):
 
     def on_bulk_score(self, score):
         set_subjects_score(self.subjects, score)
-        for sn, metrics in self.subjects.items():
-            self.subject_blocks[sn].applyData(metrics)
+        for sub_id, sub in self.subjects.items():
+            self.subject_blocks[sub_id].applyData(sub["metrics"])
         # Send signal to parent (isn't necessary to send again)
-        self.on_score_updated.emit(self.domain_name, self.subjects)
+        self.on_score_updated.emit(self.id, self.subjects)
         # It is not necessary to update the score_toggle state here
         # because it called this method, so its state is already up to date.
 
-    def handle_child_update(self, sn, metrics):
+    def handle_child_update(self, sub_id, metrics):
         # Update self.score_togle state
-        self.subjects[sn] = metrics
+        self.subjects[sub_id]["metrics"] = metrics
         cmn_score = get_domain_score_type(self.subjects)
         self.score_toggle.set_score(cmn_score)
         # Send signal to parent
-        self.on_score_updated.emit(self.domain_name, self.subjects)
+        self.on_score_updated.emit(self.id, self.subjects)
 
     def applyData(self, subjects):
         self.subjects = subjects
-        for sn, metrics in self.subjects.items():
-            self.subject_blocks[sn].applyData(metrics)
+        for sub_id, sub in self.subjects.items():
+            self.subject_blocks[sub_id].applyData(sub["metrics"])
         cmn_score = get_domain_score_type(self.subjects)
         self.score_toggle.set_score(cmn_score)
 

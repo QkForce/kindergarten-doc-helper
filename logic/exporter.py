@@ -1,5 +1,4 @@
 from openpyxl import load_workbook
-from openpyxl.utils.cell import range_boundaries
 
 from gui.state import ChecklistBaseState
 from logic.docx_tools import create_children_grow_cards, fill_all_children_in_big_file
@@ -11,7 +10,7 @@ from logic.xlsx_tools import (
     apply_monitoring_typography,
     apply_monitoring_number_rounding,
     apply_monitoring_formula_fixing,
-    remove_empty_rows_and_cols
+    remove_empty_rows_and_cols,
 )
 from logic.config_tools import get_all_metric_codes
 
@@ -74,10 +73,10 @@ class SmartEntryExporter(Exporter):
             {
                 "name": name,
                 **{
-                    metric_code: metric["score"]
-                    for subjects in state.children_scores[name].values()
-                    for metrics in subjects.values()
-                    for metric_code, metric in metrics.items()
+                    met["code"]: met["score"]
+                    for dom in state.children_scores[name].values()
+                    for sub in dom["subjects"].values()
+                    for met in sub["metrics"].values()
                 },
             }
             for name in state.original_children_order
