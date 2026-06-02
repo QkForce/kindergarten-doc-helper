@@ -1,6 +1,6 @@
 import os
 from dotenv import load_dotenv
-from config.metrics_schema import METRICS_SCHEMA
+from config.metrics_schema import METRICS_SCHEMA, METRICS_SCHEMA_NEW
 
 load_dotenv()
 
@@ -13,3 +13,5 @@ ROW_START = int(os.getenv("ROW_START", 14))
 ROW_END = int(os.getenv("ROW_END", 38))
 
 AGE_GROUP_DATA = METRICS_SCHEMA[GROUP_TYPE]
+
+AGE_GROUPS = {age_group["slug"]: age_group["name"] for age_group in METRICS_SCHEMA_NEW}

@@ -5,9 +5,8 @@ from PySide6.QtWidgets import QLabel, QComboBox, QMessageBox, QSizePolicy
 from gui.steps.base_step import BaseStep
 from gui.widgets.file_picker import FilePickerWidget
 from gui.state import ChecklistBaseState
-from gui.constants.strings import AppStrings, AGE_GROUPS
+from config.config import AGE_GROUPS
 from logic.xlsx_tools import get_sheet_names
-
 
 T = TypeVar("T", bound=ChecklistBaseState)
 
