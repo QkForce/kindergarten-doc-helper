@@ -4,14 +4,17 @@
   "age_groups": [
     {
       "id": "age_1",
+      "slug": "early_age",
       "name": "Бөбек (ерте жас)",
       "domains": [
         {
           "id": "age_1_dom_1",
+          "slug": "physical",
           "name": "Физикалық қасиеттерді дамыту",
           "subjects": [
             {
               "id": "age_1_dom_1_sub_1",
+              "slug": "phys_ed",
               "name": "Дене тәрбиесі",
               "metrics": [
                 {
@@ -97,10 +100,12 @@
         },
         {
           "id": "age_1_dom_2",
+          "slug": "communicative",
           "name": "Коммуникативтік дағдыларды дамыту",
           "subjects": [
             {
               "id": "age_1_dom_2_sub_1",
+              "slug": "lang_dev",
               "name": "Тіл дамыту",
               "metrics": [
                 {
@@ -184,6 +189,7 @@
             },
             {
               "id": "age_1_dom_2_sub_2",
+              "slug": "literature",
               "name": "Көркем әдебиет",
               "metrics": [
                 {
@@ -247,10 +253,12 @@
         },
         {
           "id": "age_1_dom_3",
+          "slug": "cognitive",
           "name": "Танымдық және зияткерлік дағдыларды дамыту",
           "subjects": [
             {
               "id": "age_1_dom_3_sub_1",
+              "slug": "sensory",
               "name": "Сенсорика",
               "metrics": [
                 {
@@ -314,10 +322,12 @@
         },
         {
           "id": "age_1_dom_4",
+          "slug": "creativity",
           "name": "Шығармашылық дағдыларын, зерттеу іс-әрекетін дамыту",
           "subjects": [
             {
               "id": "age_1_dom_4_sub_1",
+              "slug": "modeling",
               "name": "Мүсіндеу",
               "metrics": [
                 {
@@ -368,6 +378,7 @@
             },
             {
               "id": "age_1_dom_4_sub_2",
+              "slug": "music",
               "name": "Музыка",
               "metrics": [
                 {
@@ -442,10 +453,12 @@
         },
         {
           "id": "age_1_dom_5",
+          "slug": "social",
           "name": "Әлеуметтік-эмоционалды дағдыларды қалыптастыру",
           "subjects": [
             {
               "id": "age_1_dom_5_sub_1",
+              "slug": "world_view",
               "name": "Қоршаған әлеммен танысу",
               "metrics": [
                 {
@@ -511,14 +524,17 @@
     },
     {
       "id": "age_2",
+      "slug": "junior",
       "name": "Кіші топ",
       "domains": [
         {
           "id": "age_2_dom_1",
+          "slug": "physical",
           "name": "Физикалық қасиеттерді дамыту",
           "subjects": [
             {
               "id": "age_2_dom_1_sub_1",
+              "slug": "phys_ed",
               "name": "Дене тәрбиесі",
               "metrics": [
                 {
@@ -571,10 +587,12 @@
         },
         {
           "id": "age_2_dom_2",
+          "slug": "communicative",
           "name": "Коммуникативтік дағдыларды дамыту",
           "subjects": [
             {
               "id": "age_2_dom_2_sub_1",
+              "slug": "lang_dev",
               "name": "Тіл дамыту",
               "metrics": [
                 {
@@ -625,6 +643,7 @@
             },
             {
               "id": "age_2_dom_2_sub_2",
+              "slug": "literature",
               "name": "Көркем әдебиет",
               "metrics": [
                 {
@@ -677,10 +696,12 @@
         },
         {
           "id": "age_2_dom_3",
+          "slug": "cognitive",
           "name": "Танымдық және зияткерлік дағдыларды дамыту",
           "subjects": [
             {
               "id": "age_2_dom_3_sub_1",
+              "slug": "sensory",
               "name": "Сенсорика",
               "metrics": [
                 {
@@ -733,10 +754,12 @@
         },
         {
           "id": "age_2_dom_4",
+          "slug": "creativity",
           "name": "Шығармашылық дағдыларын, зерттеу іс-әрекетін дамыту",
           "subjects": [
             {
               "id": "age_2_dom_4_sub_1",
+              "slug": "drawing",
               "name": "Сурет салу",
               "metrics": [
                 {
@@ -787,6 +810,7 @@
             },
             {
               "id": "age_2_dom_4_sub_2",
+              "slug": "modeling",
               "name": "Мүсіндеу",
               "metrics": [
                 {
@@ -837,6 +861,7 @@
             },
             {
               "id": "age_2_dom_4_sub_3",
+              "slug": "appli",
               "name": "Жапсыру",
               "metrics": [
                 {
@@ -887,6 +912,7 @@
             },
             {
               "id": "age_2_dom_4_sub_4",
+              "slug": "construct",
               "name": "Құрастыру",
               "metrics": [
                 {
@@ -937,6 +963,7 @@
             },
             {
               "id": "age_2_dom_4_sub_5",
+              "slug": "music",
               "name": "Музыка",
               "metrics": [
                 {
@@ -989,10 +1016,12 @@
         },
         {
           "id": "age_2_dom_5",
+          "slug": "social",
           "name": "Әлеуметтік-эмоционалды дағдыларды қалыптастыру",
           "subjects": [
             {
               "id": "age_2_dom_5_sub_1",
+              "slug": "world_view",
               "name": "Қоршаған әлеммен танысу",
               "metrics": [
                 {
@@ -1047,14 +1076,17 @@
     },
     {
       "id": "age_3",
+      "slug": "middle",
       "name": "Ортаңғы топ",
       "domains": [
         {
           "id": "age_3_dom_1",
+          "slug": "physical",
           "name": "Физикалық қасиеттерді дамыту",
           "subjects": [
             {
               "id": "age_3_dom_1_sub_1",
+              "slug": "phys_ed",
               "name": "Дене тәрбиесі",
               "metrics": [
                 {
@@ -1118,10 +1150,12 @@
         },
         {
           "id": "age_3_dom_2",
+          "slug": "communicative",
           "name": "Коммуникативтік дағдыларды дамыту",
           "subjects": [
             {
               "id": "age_3_dom_2_sub_1",
+              "slug": "lang_dev",
               "name": "Тіл дамыту",
               "metrics": [
                 {
@@ -1183,6 +1217,7 @@
             },
             {
               "id": "age_3_dom_2_sub_2",
+              "slug": "literature",
               "name": "Көркем әдебиет",
               "metrics": [
                 {
@@ -1244,6 +1279,7 @@
             },
             {
               "id": "age_3_dom_2_sub_3",
+              "slug": "kaz_lang",
               "name": "Қазақ тілі",
               "metrics": [
                 {
@@ -1307,10 +1343,12 @@
         },
         {
           "id": "age_3_dom_3",
+          "slug": "cognitive",
           "name": "Танымдық және зияткерлік дағдыларды дамыту",
           "subjects": [
             {
               "id": "age_3_dom_3_sub_1",
+              "slug": "math",
               "name": "Математика",
               "metrics": [
                 {
@@ -1374,10 +1412,12 @@
         },
         {
           "id": "age_3_dom_4",
+          "slug": "creativity",
           "name": "Шығармашылық дағдыларын, зерттеу іс-әрекетін дамыту",
           "subjects": [
             {
               "id": "age_3_dom_4_sub_1",
+              "slug": "drawing",
               "name": "Сурет салу",
               "metrics": [
                 {
@@ -1439,6 +1479,7 @@
             },
             {
               "id": "age_3_dom_4_sub_2",
+              "slug": "modeling",
               "name": "Мүсіндеу",
               "metrics": [
                 {
@@ -1500,6 +1541,7 @@
             },
             {
               "id": "age_3_dom_4_sub_3",
+              "slug": "appli",
               "name": "Жапсыру",
               "metrics": [
                 {
@@ -1561,6 +1603,7 @@
             },
             {
               "id": "age_3_dom_4_sub_4",
+              "slug": "construct",
               "name": "Құрастыру",
               "metrics": [
                 {
@@ -1622,6 +1665,7 @@
             },
             {
               "id": "age_3_dom_4_sub_5",
+              "slug": "music",
               "name": "Музыка",
               "metrics": [
                 {
@@ -1685,10 +1729,12 @@
         },
         {
           "id": "age_3_dom_5",
+          "slug": "social",
           "name": "Әлеуметтік-эмоционалды дағдыларды қалыптастыру",
           "subjects": [
             {
               "id": "age_3_dom_5_sub_1",
+              "slug": "world_view",
               "name": "Қоршаған әлеммен танысу",
               "metrics": [
                 {
@@ -1754,14 +1800,17 @@
     },
     {
       "id": "age_4",
+      "slug": "senior",
       "name": "Ересек топ",
       "domains": [
         {
           "id": "age_4_dom_1",
+          "slug": "physical",
           "name": "Физикалық қасиеттерді дамыту",
           "subjects": [
             {
               "id": "age_4_dom_1_sub_1",
+              "slug": "phys_ed",
               "name": "Дене тәрбиесі",
               "metrics": [
                 {
@@ -1836,10 +1885,12 @@
         },
         {
           "id": "age_4_dom_2",
+          "slug": "communicative",
           "name": "Коммуникативтік дағдыларды дамыту",
           "subjects": [
             {
               "id": "age_4_dom_2_sub_1",
+              "slug": "lang_dev",
               "name": "Тіл дамыту",
               "metrics": [
                 {
@@ -1912,6 +1963,7 @@
             },
             {
               "id": "age_4_dom_2_sub_2",
+              "slug": "literature",
               "name": "Көркем әдебиет",
               "metrics": [
                 {
@@ -1984,6 +2036,7 @@
             },
             {
               "id": "age_4_dom_2_sub_3",
+              "slug": "kaz_lang",
               "name": "Қазақ тілі",
               "metrics": [
                 {
@@ -2058,10 +2111,12 @@
         },
         {
           "id": "age_4_dom_3",
+          "slug": "cognitive",
           "name": "Танымдық және зияткерлік дағдыларды дамыту",
           "subjects": [
             {
               "id": "age_4_dom_3_sub_1",
+              "slug": "math",
               "name": "Математика",
               "metrics": [
                 {
@@ -2136,10 +2191,12 @@
         },
         {
           "id": "age_4_dom_4",
+          "slug": "creativity",
           "name": "Шығармашылық дағдыларын, зерттеу іс-әрекетін дамыту",
           "subjects": [
             {
               "id": "age_4_dom_4_sub_1",
+              "slug": "drawing",
               "name": "Сурет салу",
               "metrics": [
                 {
@@ -2212,6 +2269,7 @@
             },
             {
               "id": "age_4_dom_4_sub_2",
+              "slug": "modeling",
               "name": "Мүсіндеу",
               "metrics": [
                 {
@@ -2284,6 +2342,7 @@
             },
             {
               "id": "age_4_dom_4_sub_3",
+              "slug": "appli",
               "name": "Жапсыру",
               "metrics": [
                 {
@@ -2356,6 +2415,7 @@
             },
             {
               "id": "age_4_dom_4_sub_4",
+              "slug": "construct",
               "name": "Құрастыру",
               "metrics": [
                 {
@@ -2428,6 +2488,7 @@
             },
             {
               "id": "age_4_dom_4_sub_5",
+              "slug": "music",
               "name": "Музыка",
               "metrics": [
                 {
@@ -2502,10 +2563,12 @@
         },
         {
           "id": "age_4_dom_5",
+          "slug": "social",
           "name": "Әлеуметтік-эмоционалды дағдыларды қалыптастыру",
           "subjects": [
             {
               "id": "age_4_dom_5_sub_1",
+              "slug": "world_view",
               "name": "Қоршаған әлеммен танысу",
               "metrics": [
                 {
@@ -2582,14 +2645,17 @@
     },
     {
       "id": "age_5",
+      "slug": "preschool",
       "name": "Мектепке даярлық тобы",
       "domains": [
         {
           "id": "age_5_dom_1",
+          "slug": "physical",
           "name": "Физикалық қасиеттерді дамыту",
           "subjects": [
             {
               "id": "age_5_dom_1_sub_1",
+              "slug": "phys_ed",
               "name": "Дене тәрбиесі",
               "metrics": [
                 {
@@ -2675,10 +2741,12 @@
         },
         {
           "id": "age_5_dom_2",
+          "slug": "communicative",
           "name": "Коммуникативтік дағдыларды дамыту",
           "subjects": [
             {
               "id": "age_5_dom_2_sub_1",
+              "slug": "lang_dev",
               "name": "Тіл дамыту",
               "metrics": [
                 {
@@ -2762,6 +2830,7 @@
             },
             {
               "id": "age_5_dom_2_sub_2",
+              "slug": "literature",
               "name": "Көркем әдебиет",
               "metrics": [
                 {
@@ -2845,6 +2914,7 @@
             },
             {
               "id": "age_5_dom_2_sub_3",
+              "slug": "literacy",
               "name": "Сауат ашу негіздері",
               "metrics": [
                 {
@@ -2928,6 +2998,7 @@
             },
             {
               "id": "age_5_dom_2_sub_4",
+              "slug": "kaz_lang",
               "name": "Қазақ тілі",
               "metrics": [
                 {
@@ -3013,10 +3084,12 @@
         },
         {
           "id": "age_5_dom_3",
+          "slug": "cognitive",
           "name": "Танымдық және зияткерлік дағдыларды дамыту",
           "subjects": [
             {
               "id": "age_5_dom_3_sub_1",
+              "slug": "math",
               "name": "Математика",
               "metrics": [
                 {
@@ -3102,10 +3175,12 @@
         },
         {
           "id": "age_5_dom_4",
+          "slug": "creativity",
           "name": "Шығармашылық дағдыларын, зерттеу іс-әрекетін дамыту",
           "subjects": [
             {
               "id": "age_5_dom_4_sub_1",
+              "slug": "drawing",
               "name": "Сурет салу",
               "metrics": [
                 {
@@ -3189,6 +3264,7 @@
             },
             {
               "id": "age_5_dom_4_sub_2",
+              "slug": "modeling",
               "name": "Мүсіндеу",
               "metrics": [
                 {
@@ -3272,6 +3348,7 @@
             },
             {
               "id": "age_5_dom_4_sub_3",
+              "slug": "appli",
               "name": "Жапсыру",
               "metrics": [
                 {
@@ -3355,6 +3432,7 @@
             },
             {
               "id": "age_5_dom_4_sub_4",
+              "slug": "construct",
               "name": "Құрастыру",
               "metrics": [
                 {
@@ -3438,6 +3516,7 @@
             },
             {
               "id": "age_5_dom_4_sub_5",
+              "slug": "music",
               "name": "Музыка",
               "metrics": [
                 {
@@ -3523,10 +3602,12 @@
         },
         {
           "id": "age_5_dom_5",
+          "slug": "social",
           "name": "Әлеуметтік-эмоционалды дағдыларды қалыптастыру",
           "subjects": [
             {
               "id": "age_5_dom_5_sub_1",
+              "slug": "world_view",
               "name": "Қоршаған әлеммен танысу",
               "metrics": [
                 {
