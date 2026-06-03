@@ -12,7 +12,6 @@ from logic.xlsx_tools import (
     apply_monitoring_formula_fixing,
     remove_empty_rows_and_cols,
 )
-from logic.config_tools import get_all_metric_codes
 
 
 class ExportResult:
@@ -81,7 +80,7 @@ class SmartEntryExporter(Exporter):
             }
             for name in state.original_children_order
         ]
-        self.metrics_codes = get_all_metric_codes(state.age_group_id)
+        self.metrics_codes = state.metric_codes
         self.state = state
         self.progress_callback = progress_callback
 
