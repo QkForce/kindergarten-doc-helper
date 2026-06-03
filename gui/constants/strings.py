@@ -1,6 +1,3 @@
-from logic.types import AgeGroup, Domain, Subject
-
-
 class AppStrings:
     # App General
     APP_NAME = "KinderDoc Helper"
