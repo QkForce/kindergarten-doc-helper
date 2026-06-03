@@ -10,9 +10,9 @@ def load_config() -> dict:
         return json.load(f)
 
 
-def load_age_group(age_group) -> dict:
+def load_age_group(age_group_id) -> dict:
     config = load_config()
-    return config.get(age_group, {})
+    return config.get(age_group_id, {})
 
 
 def save_config(data: dict):
@@ -21,7 +21,7 @@ def save_config(data: dict):
     return CONFIG_FILE
 
 
-def save_age_group(age_group: str, data: dict):
+def save_age_group(age_group_id: str, data: dict):
     config = load_config()
-    config[age_group] = data
+    config[age_group_id] = data
     return save_config(config)

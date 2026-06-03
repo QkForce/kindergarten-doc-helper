@@ -81,7 +81,7 @@ class SmartEntryExporter(Exporter):
             }
             for name in state.original_children_order
         ]
-        self.metrics_codes = get_all_metric_codes(state.age_group)
+        self.metrics_codes = get_all_metric_codes(state.age_group_id)
         self.state = state
         self.progress_callback = progress_callback
 

@@ -157,7 +157,7 @@ class StepChildAssessment(BaseStep[SmartEntryState]):
 
         scores = result["children_scores"]
         self.state.children_scores = create_source_scoring_dict(
-            self.state.age_group, scores
+            self.state.age_group_id, scores
         )
         self.state.original_children_order = list(self.state.children_scores.keys())
 

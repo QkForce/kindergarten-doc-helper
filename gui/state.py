@@ -1,7 +1,5 @@
-from typing import Dict, List, Optional
-from openpyxl.workbook.workbook import Workbook
+from typing import List, Dict
 
-from logic.types import AgeGroup
 from logic.config_tools import get_age_group_data, get_all_metric_codes
 
 
@@ -12,7 +10,7 @@ class ChecklistBaseState:
     def init(self):
         self.file_path: str = ""
         self.sheet_name: str = ""
-        self.age_group: Optional[AgeGroup] = None
+        self.age_group_id: str = ""
 
         # Data Location in Excel (Coordinates)
         self.children_start_row: int = 0
@@ -34,12 +32,12 @@ class ChecklistBaseState:
     @property
     def age_group_data(self):
         # domain_name: {subject_name: {metric_code: {original: str, transformed: str}}}
-        return get_age_group_data(self.age_group)
+        return get_age_group_data(self.age_group_id)
 
     @property
     def metric_codes(self):
         # [metric_code1, metric_code2, ...]
-        return get_all_metric_codes(self.age_group)
+        return get_all_metric_codes(self.age_group_id)
 
 
 class GeneratorState(ChecklistBaseState):

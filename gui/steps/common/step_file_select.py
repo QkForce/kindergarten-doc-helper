@@ -74,6 +74,6 @@ class StepFileSelect(BaseStep[T]):
             return False
 
         self.state.sheet_name = self.combo_sheet.currentText()
-        self.state.age_group = self.combo_group.currentData()
+        self.state.age_group_id = self.combo_group.currentData()
 
         return True
