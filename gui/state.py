@@ -1,6 +1,6 @@
 from typing import List, Dict
 
-from logic.config_tools import get_age_group_data, get_all_metric_codes
+from config.metrics_schema import get_age_group_data, get_all_metric_codes
 
 
 class ChecklistBaseState:
@@ -31,7 +31,19 @@ class ChecklistBaseState:
 
     @property
     def age_group_data(self):
-        # domain_name: {subject_name: {metric_code: {original: str, transformed: str}}}
+        # {
+        #   id: str,
+        #   name: str,
+        #   domains: [{
+        #     id: str,
+        #     name: str,
+        #     subjects: [{
+        #       id: str,
+        #       name: str,
+        #       metrics: [{id: str, code: str, original: str, transformed: str, criteria: list}]
+        #     }]
+        #   }]
+        # }
         return get_age_group_data(self.age_group_id)
 
     @property

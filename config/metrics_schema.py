@@ -16,3 +16,26 @@ METRICS_SCHEMA = load_metrics_schema_raw()
 AGE_GROUPS = {
     age_group["id"]: age_group["name"] for age_group in METRICS_SCHEMA["age_groups"]
 }
+
+
+def get_age_group_data(age_group_id: str) -> dict:
+    return next(
+        (
+            age_group
+            for age_group in METRICS_SCHEMA["age_groups"]
+            if age_group["id"] == age_group_id
+        ),
+        None,
+    )
+
+
+def get_all_metric_codes(age_group_id: str) -> list:
+    age_group = get_age_group_data(age_group_id)
+    if not age_group:
+        return []
+    return [
+        met["code"]
+        for dom in age_group["domains"]
+        for sub in dom["subjects"]
+        for met in sub["metrics"]
+    ]
