@@ -37,3 +37,5 @@ _RAW_DATA = load_metrics_schema_raw()
 METRICS_SCHEMA = load_legacy_schema(_RAW_DATA)
 
 METRICS_SCHEMA_NEW = _RAW_DATA.get("age_groups", [])
+
+AGE_GROUPS = {age_group["slug"]: age_group["name"] for age_group in METRICS_SCHEMA_NEW}
