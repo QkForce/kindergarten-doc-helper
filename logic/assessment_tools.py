@@ -1,4 +1,4 @@
-from config.metrics_schema import METRICS_SCHEMA_NEW as METRICS_SCHEMA
+from logic.config_tools import get_age_group_data
 from logic.types import AssessmentStatus
 
 
@@ -108,16 +108,9 @@ def get_children_assessment_status(children_scores: list) -> AssessmentStatus:
     return AssessmentStatus.IN_PROGRESS
 
 
-def create_source_scoring_dict(age_group_slug, scores):
+def create_source_scoring_dict(age_group_id, scores):
     scoring_dict = {}
-    target_age = next(
-        (
-            item
-            for item in METRICS_SCHEMA
-            if item.get("slug", item["id"]) == age_group_slug
-        ),
-        None,
-    )
+    target_age = get_age_group_data(age_group_id)
     if not target_age:
         return scoring_dict
 
@@ -125,13 +118,13 @@ def create_source_scoring_dict(age_group_slug, scores):
         name_child = item["name"]
         scoring_dict[name_child] = {}
         for domain in target_age.get("domains", []):
-            dom_id = domain.get("slug", domain["id"])
+            dom_id = domain["id"]
             scoring_dict[name_child][dom_id] = {
                 "name": domain.get("name", dom_id),
                 "subjects": {},
             }
             for subject in domain.get("subjects", []):
-                sub_id = subject.get("slug", subject["id"])
+                sub_id = subject["id"]
                 scoring_dict[name_child][dom_id]["subjects"][sub_id] = {
                     "name": subject.get("name", sub_id),
                     "metrics": {},
