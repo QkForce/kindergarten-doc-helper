@@ -32,7 +32,6 @@ class Exporter:
 class DocxGenerateExporter(Exporter):
     def set_data(self, state: ChecklistBaseState, progress_callback):
         self.state = state
-        self.age_group_data = state.age_group_data
         self.progress_callback = progress_callback
         self.all_children_data = build_all_grow_cards(
             state.children_scores, state.age_group_data
@@ -50,7 +49,6 @@ class DocxGenerateExporter(Exporter):
 class DocxFillExporter(Exporter):
     def set_data(self, state: ChecklistBaseState, progress_callback):
         self.state = state
-        self.age_group_data = state.age_group_data
         self.progress_callback = progress_callback
         self.all_children_data = build_all_grow_cards(
             state.children_scores, state.age_group_data
