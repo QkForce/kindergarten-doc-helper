@@ -11,8 +11,8 @@ def build_grow_card(child: Dict, age_group_data: List[Dict]) -> Dict:
             for met in sub["metrics"]
             if child.get(met["code"]) in (2, 3)
         ]
-        dom_id = dom["id"]
-        card[dom_id] = random.choice(candidates) if candidates else ""
+        placeholder_key = dom["placeholder_key"]
+        card[placeholder_key] = random.choice(candidates) if candidates else ""
     return card
 
 
