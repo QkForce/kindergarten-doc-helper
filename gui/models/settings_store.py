@@ -47,10 +47,15 @@ class SettingsStore:
         except (IndexError, KeyError):
             return []
 
-    def add_domain(self, ag_id, name="Жаңа бағыт"):
+    def add_domain(self, ag_id, name="Жаңа бағыт", placeholder_key=""):
         ag = self.find_ag(ag_id)
         if ag:
-            new_dom = {"id": f"dom_{time.time_ns()}", "name": name, "subjects": []}
+            new_dom = {
+                "id": f"dom_{time.time_ns()}",
+                "name": name,
+                "placeholder_key": placeholder_key,
+                "subjects": [],
+            }
             ag["domains"].append(new_dom)
             return new_dom
         return None

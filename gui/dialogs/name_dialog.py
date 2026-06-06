@@ -23,3 +23,9 @@ class NameDialog(BaseDialog):
 
     def getText(self):
         return self.text_edit.toPlainText().strip()
+
+    def getResult(self) -> dict:
+        return {"name": self.text_edit.toPlainText().strip()}
+
+    def isEmpty(self) -> bool:
+        return not bool(self.text_edit.toPlainText().strip())

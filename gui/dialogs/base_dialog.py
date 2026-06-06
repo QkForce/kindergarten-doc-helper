@@ -94,6 +94,12 @@ class BaseDialog(QDialog):
         content_layout.addWidget(content_frame)
         content_layout.addWidget(footer)
 
+    def getResult(self) -> dict:
+        return None
+
+    def isEmpty(self) -> bool:
+        return True
+
     def mousePressEvent(self, event):
         if event.button() == Qt.MouseButton.LeftButton:
             if self.header.underMouse():

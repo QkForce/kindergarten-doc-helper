@@ -6,6 +6,8 @@ from PySide6.QtWidgets import (
 )
 from PySide6.QtCore import Qt
 
+from gui.dialogs.name_dialog import NameDialog
+from gui.dialogs.domain_dialog import DomainDialog
 from gui.widgets.settings.simple_list_widget import SimpleListWidget
 from gui.widgets.settings.subject_list_widget import SubjectListWidget
 from gui.models.settings_store import SettingsStore
@@ -25,8 +27,11 @@ class SettingsDialog(QDialog):
         self.setMinimumSize(950, 650)
 
         # SIDEBAR
-        self.age_group_list = SimpleListWidget("Жас топтары", "Жаңа жас тобын қосу")
-        self.domain_list = SimpleListWidget("Бағыттар", "Жаңа бағыт қосу")
+        ag_dialog = lambda parent: NameDialog("", "Жаңа жас тобын қосу", parent)
+        self.age_group_list = SimpleListWidget("Жас топтары", ag_dialog)
+
+        dom_dialog = lambda parent: DomainDialog("", "", "Жаңа бағыт қосу", parent)
+        self.domain_list = SimpleListWidget("Бағыттар", dom_dialog)
 
         sidebar_frame = QFrame()
         sidebar_frame.setObjectName("sidebar_frame")
@@ -159,8 +164,8 @@ class SettingsDialog(QDialog):
 
     # --- AGE GROUP ACTION HANDLERS ---
 
-    def on_add_age_group_clicked(self, name):
-        ag = self.store.add_age_group(name)
+    def on_add_age_group_clicked(self, dialog_result):
+        ag = self.store.add_age_group(dialog_result["name"])
         self.age_group_list.addItem(
             ag["id"],
             ag["name"],
@@ -188,10 +193,12 @@ class SettingsDialog(QDialog):
 
     # --- DOMAIN ACTION HANDLERS ---
 
-    def on_add_domain_clicked(self, name):
+    def on_add_domain_clicked(self, dialog_result):
         ag = self.current_age_group
         if ag:
-            dom = self.store.add_domain(ag["id"], name)
+            dom = self.store.add_domain(
+                ag["id"], dialog_result["name"], dialog_result["placeholder_key"]
+            )
             self.domain_list.addItem(
                 dom["id"],
                 dom["name"],
