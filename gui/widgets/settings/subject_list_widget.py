@@ -79,9 +79,9 @@ class SubjectListWidget(QFrame):
     def on_add_subject_clicked(self):
         dialog = NameDialog("", self.add_title, self)
         if dialog.exec() == dialog.Accepted:
-            new_name = dialog.getText()
-            if new_name:
-                self.on_add_subject_signal.emit(new_name)
+            if not dialog.isEmpty():
+                result = dialog.getResult()
+                self.on_add_subject_signal.emit(result["name"])
 
     # --- BREADCRUMB METHODS ---
 

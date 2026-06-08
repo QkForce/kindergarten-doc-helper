@@ -7,7 +7,6 @@ from PySide6.QtWidgets import (
     QTableWidgetItem,
     QHeaderView,
     QPushButton,
-    QWidget,
 )
 from PySide6.QtCore import Qt, Signal
 
@@ -183,9 +182,9 @@ class SubjectBlock(QFrame):
     def on_edit_clicked(self):
         dialog = NameDialog(self.subject_name, "АТАУДЫ ӨЗГЕРТУ", self)
         if dialog.exec() == dialog.Accepted:
-            new_name = dialog.getText()
-            if new_name:
-                self.on_edit_signal.emit(self.subject_id, new_name)
+            if not dialog.isEmpty():
+                result = dialog.getResult()
+                self.on_edit_signal.emit(self.subject_id, result["name"])
 
     def on_edit_metric_clicked(self, met_id, code, desc, c1, c2, c3):
         dialog = EditMetricDialog(met_id, code, desc, c1, c2, c3)

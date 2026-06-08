@@ -21,9 +21,6 @@ class NameDialog(BaseDialog):
         self.body_layout.addWidget(input_label)
         self.body_layout.addWidget(self.text_edit)
 
-    def getText(self):
-        return self.text_edit.toPlainText().strip()
-
     def getResult(self) -> dict:
         return {"name": self.text_edit.toPlainText().strip()}
 
