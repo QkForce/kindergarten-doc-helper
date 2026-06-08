@@ -3,20 +3,21 @@ from PySide6.QtCore import Signal
 
 from gui.constants.icons import IconPaths
 from gui.widgets.icon_button import IconButton
-from gui.dialogs.name_dialog import NameDialog
 
 
 class SimpleListItemWidget(QFrame):
-    on_edit_signal = Signal(str, str)  # id, new name
+    on_edit_signal = Signal(str, dict)  # id, result from the edit dialog
     on_delete_signal = Signal(str)  # id
 
-    def __init__(self, id, name, obj_name, parent=None):
+    def __init__(self, id, name, obj_name, on_edit, on_delete, parent=None):
         super().__init__(parent)
         self.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
         self.setObjectName(obj_name)
         self.setProperty("selected", "false")
         self.id = id
         self.name = name
+        self.on_edit_signal.connect(on_edit)
+        self.on_delete_signal.connect(on_delete)
 
         self.label = QLabel(self.name)
         self.label.setWordWrap(True)
@@ -39,15 +40,18 @@ class SimpleListItemWidget(QFrame):
         layout.addWidget(edit_btn)
         layout.addWidget(delete_btn)
 
-    def start_edit(self):
-        dialog = NameDialog(self.name, "АТАУДЫ ӨЗГЕРТУ", self)
-        if dialog.exec() == dialog.Accepted:
-            new_name = dialog.getText()
-            if new_name:
-                self.on_edit_signal.emit(self.id, new_name)
+    def create_edit_dialog(self):
+        raise NotImplementedError("Subclasses must implement create_edit_dialog method")
 
-    def updateName(self, name):
-        self.name = name
+    def start_edit(self):
+        dialog = self.create_edit_dialog()
+        if dialog.exec() == dialog.Accepted:
+            if not dialog.isEmpty():
+                result = dialog.getResult()
+                self.on_edit_signal.emit(self.id, result)
+
+    def updateData(self, data):
+        self.name = data["name"]
         self.label.setText(self.name)
 
     def setActive(self, is_active):

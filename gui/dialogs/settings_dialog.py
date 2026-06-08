@@ -8,6 +8,8 @@ from PySide6.QtCore import Qt
 
 from gui.dialogs.name_dialog import NameDialog
 from gui.dialogs.domain_dialog import DomainDialog
+from gui.widgets.settings.age_group_list_item_widget import AgeGroupListItemWidget
+from gui.widgets.settings.domain_list_item_widget import DomainListItemWidget
 from gui.widgets.settings.simple_list_widget import SimpleListWidget
 from gui.widgets.settings.subject_list_widget import SubjectListWidget
 from gui.models.settings_store import SettingsStore
@@ -111,13 +113,16 @@ class SettingsDialog(QDialog):
             return
 
         for dom in domains:
-            self.domain_list.addItem(
+            item_widget = DomainListItemWidget(
                 dom["id"],
                 dom["name"],
+                dom["placeholder_key"],
                 "domain_item_widget",
                 self.on_edit_domain,
                 self.on_delete_domain,
+                parent=self.domain_list,
             )
+            self.domain_list.addItem(item_widget)
 
     def refresh_all(self):
         self.age_group_list.blockSignals(True)
@@ -125,13 +130,15 @@ class SettingsDialog(QDialog):
 
         age_groups = self.store.get_age_groups()
         for ag in age_groups:
-            self.age_group_list.addItem(
+            item_widget = AgeGroupListItemWidget(
                 ag["id"],
                 ag["name"],
                 "age_group_item_widget",
                 self.on_edit_age_group,
                 self.on_delete_age_group,
+                parent=self.age_group_list,
             )
+            self.age_group_list.addItem(item_widget)
 
         self.age_group_list.blockSignals(False)
 
@@ -166,20 +173,23 @@ class SettingsDialog(QDialog):
 
     def on_add_age_group_clicked(self, dialog_result):
         ag = self.store.add_age_group(dialog_result["name"])
-        self.age_group_list.addItem(
+        item_widget = AgeGroupListItemWidget(
             ag["id"],
             ag["name"],
             "age_group_item_widget",
             self.on_edit_age_group,
             self.on_delete_age_group,
+            parent=self.age_group_list,
         )
+        self.age_group_list.addItem(item_widget)
         self.age_group_list.selectLastItem()
 
-    def on_edit_age_group(self, age_group_id, new_name):
+    def on_edit_age_group(self, age_group_id, result):
+        new_name = result["name"]
         ag = self.store.find_ag(age_group_id)
         if ag:
             ag["name"] = new_name
-        self.age_group_list.updateItemName(age_group_id, new_name)
+        self.age_group_list.updateItemData(age_group_id, {"name": new_name})
 
         current_ag = self.current_age_group
         if current_ag and current_ag["id"] == age_group_id:
@@ -199,16 +209,20 @@ class SettingsDialog(QDialog):
             dom = self.store.add_domain(
                 ag["id"], dialog_result["name"], dialog_result["placeholder_key"]
             )
-            self.domain_list.addItem(
+            item_widget = DomainListItemWidget(
                 dom["id"],
                 dom["name"],
+                dom["placeholder_key"],
                 "domain_item_widget",
                 self.on_edit_domain,
                 self.on_delete_domain,
+                parent=self.domain_list,
             )
+            self.domain_list.addItem(item_widget)
             self.domain_list.selectLastItem()
 
-    def on_edit_domain(self, domain_id, new_name):
+    def on_edit_domain(self, domain_id, result):
+        new_name = result["name"]
         ag = self.current_age_group
         if not ag:
             return
@@ -216,7 +230,10 @@ class SettingsDialog(QDialog):
         if not dom:
             return
         dom["name"] = new_name
-        self.domain_list.updateItemName(domain_id, new_name)
+        dom["placeholder_key"] = result["placeholder_key"]
+        self.domain_list.updateItemData(
+            domain_id, {"name": new_name, "placeholder_key": result["placeholder_key"]}
+        )
 
         if self.domain_list.current_id == domain_id:
             self.body.setBreadcrumbDomain(new_name)

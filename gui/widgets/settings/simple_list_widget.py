@@ -99,27 +99,22 @@ class SimpleListWidget(QFrame):
         if self.list.count() > 0:
             self.list.setCurrentRow(0)
 
-    def addItem(self, id, name, obj_name, on_edit, on_delete, width=180):
+    def addItem(self, item_widget, width=180):
         item = QListWidgetItem(self.list)
-        custom_widget = SimpleListItemWidget(id, name, obj_name)
-        custom_widget.setFixedWidth(width)
-        item.setSizeHint(custom_widget.sizeHint())
+        item_widget.setFixedWidth(width)
+        item.setSizeHint(item_widget.sizeHint())
         self.list.addItem(item)
-        self.list.setItemWidget(item, custom_widget)
-        custom_widget.on_edit_signal.connect(on_edit)
-        custom_widget.on_delete_signal.connect(
-            lambda: self.on_delete_clicked(custom_widget.id, on_delete)
-        )
+        self.list.setItemWidget(item, item_widget)
 
         self.list.setVisible(True)
         self.empty_label.setVisible(False)
 
-    def updateItemName(self, id, name):
+    def updateItemData(self, id, data):
         for i in range(self.list.count()):
             item = self.list.item(i)
             widget = self.list.itemWidget(item)
             if widget and widget.id == id:
-                widget.updateName(name)
+                widget.updateData(data)
                 break
 
     def deleteItem(self, id):
