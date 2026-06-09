@@ -118,3 +118,10 @@ class BaseDialog(QDialog):
         self.header.setCursor(Qt.CursorShape.OpenHandCursor)
         self._drag_pos = None
         event.accept()
+
+    def keyPressEvent(self, event):
+        if event.key() in (Qt.Key.Key_Return, Qt.Key.Key_Enter):
+            self.save_btn.animateClick()
+            event.accept()
+        else:
+            super().keyPressEvent(event)

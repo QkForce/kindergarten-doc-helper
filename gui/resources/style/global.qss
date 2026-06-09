@@ -200,6 +200,20 @@ QCheckBox::indicator:checked {
     image: url(gui/resources/icons/check-white.svg); 
 }
 
+/* QLineEdit */
+
+QLineEdit {
+    border: 1px solid @BORDER;
+    border-radius: 8px;
+    padding: 6px;
+    font-size: 14px;
+    color: @TEXT_MAIN;
+    background-color: @SIDEBAR;
+}
+QLineEdit:focus {
+    border: 1px solid @PRIMARY;
+}
+
 /* QTextEdit */
 
 QTextEdit[textedit-style="box"] {
