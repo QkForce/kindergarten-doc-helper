@@ -1,3 +1,5 @@
+from PySide6.QtCore import Qt
+
 from gui.dialogs.domain_dialog import DomainDialog
 from gui.widgets.settings.simple_list_item_widget import SimpleListItemWidget
 
@@ -10,7 +12,9 @@ class DomainListItemWidget(SimpleListItemWidget):
         self.placeholder_key = placeholder_key
 
     def create_edit_dialog(self):
-        return DomainDialog(self.name, self.placeholder_key, "БАҒЫТТЫ ӨЗГЕРТУ", self)
+        dialog = DomainDialog(self.name, self.placeholder_key, "БАҒЫТТЫ ӨЗГЕРТУ")
+        dialog.setWindowModality(Qt.WindowModality.ApplicationModal)
+        return dialog
 
     def updateData(self, data):
         self.name = data["name"]
