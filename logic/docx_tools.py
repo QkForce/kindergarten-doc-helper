@@ -6,6 +6,38 @@ from docx.oxml.table import CT_Tbl
 from docx.table import _Cell, Table
 from docx.text.paragraph import Paragraph
 
+import re
+from docx import Document
+
+
+def analyze_template_placeholders(template_path, data_keys):
+    doc = Document(template_path)
+    template_keys = set()
+    pattern = re.compile(r"\{\{([^}]+)\}\}")
+
+    for paragraph in doc.paragraphs:
+        for match in pattern.finditer(paragraph.text):
+            template_keys.add(match.group(1).strip())
+    for table in doc.tables:
+        for row in table.rows:
+            for cell in row.cells:
+                for paragraph in cell.paragraphs:
+                    for match in pattern.finditer(paragraph.text):
+                        template_keys.add(match.group(1).strip())
+
+    expected_set = set(data_keys)
+
+    # Keys NOT in the template (but present in the data)
+    missing_in_template = expected_set - template_keys
+
+    # EXTRA keys in the template (but not in the data)
+    extra_in_template = template_keys - expected_set
+
+    # Intersection of two sides (Exactly exchangeable keys)
+    intersection_keys = template_keys & expected_set
+
+    return missing_in_template, extra_in_template, intersection_keys
+
 
 def replace_placeholders_in_document(element, replacements):
     if hasattr(element, "paragraphs"):
@@ -22,6 +54,21 @@ def replace_placeholders_in_document(element, replacements):
 
 
 def create_children_grow_cards(template_path, children_data, progress_callback=None):
+    if not children_data:
+        raise ValueError("Қате: Өңдеуге жіберілген балалар деректер жиыны бос!")
+    all_data_keys = {key for child in children_data for key in child.keys()}
+    missing, extra, _ = analyze_template_placeholders(template_path, all_data_keys)
+    if extra:
+        raise ValueError(
+            f"Қате: Шаблонда белгісіз маркерлер бар: {', '.join(extra)}. "
+            f"Оларды Word файлынан өшіріңіз немесе баптаудан шаблонға сәйкес қылыңыз!"
+        )
+    if missing:
+        raise ValueError(
+            f"Қате: Мына деректер шаблонда қолданылмаған: {', '.join(missing)}. "
+            f"Шаблонға тиісті маркерлерді қосыңыз немесе баптаудан шаблонға сәйкес қылыңыз!"
+        )
+
     merged_doc = Document(template_path)
     replace_placeholders_in_document(merged_doc, children_data[0])
     merged_body = merged_doc.element.body
