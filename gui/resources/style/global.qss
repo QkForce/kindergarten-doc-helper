@@ -45,6 +45,13 @@ QPushButton[btn-size="small"] {
     border-radius: 6px;
 }
 
+QPushButton[btn-size="medium"] {
+    padding: 6px 10px 6px 10px;
+    font-size: 13px;
+    font-weight: bold;
+    border-radius: 7px;
+}
+
 QPushButton[btn-size="large"] {
     padding: 10px;
     font-size: 14px;

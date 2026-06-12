@@ -3,6 +3,7 @@ from PySide6.QtWidgets import (
     QFrame,
     QVBoxLayout,
     QHBoxLayout,
+    QPushButton,
 )
 from PySide6.QtCore import Qt
 
@@ -48,11 +49,32 @@ class SettingsDialog(QDialog):
         # BODY
         self.body = SubjectListWidget("Жаңа пән қосу")
 
-        layout = QHBoxLayout(self)
-        layout.setContentsMargins(0, 0, 0, 0)
-        layout.setSpacing(0)
-        layout.addWidget(sidebar_frame)
-        layout.addWidget(self.body)
+        # CONTENT
+        content_layout = QHBoxLayout()
+        content_layout.setContentsMargins(0, 0, 0, 0)
+        content_layout.setSpacing(0)
+        content_layout.addWidget(sidebar_frame)
+        content_layout.addWidget(self.body)
+
+        # FOOTER
+        self.save_button = QPushButton("Сақтау")
+        self.save_button.setProperty("btn-size", "medium")
+        self.save_button.setProperty("btn-type", "primary")
+        self.save_button.setFixedWidth(100)
+
+        footer_frame = QFrame()
+        footer_frame.setFixedHeight(50)
+        footer_frame.setObjectName("dialog_footer_frame")
+        footer_layout = QHBoxLayout(footer_frame)
+        footer_layout.setContentsMargins(10, 10, 10, 10)
+        footer_layout.setAlignment(Qt.AlignmentFlag.AlignRight)
+        footer_layout.addWidget(self.save_button)
+
+        root_layout = QVBoxLayout(self)
+        root_layout.setContentsMargins(0, 0, 0, 0)
+        root_layout.setSpacing(0)
+        root_layout.addLayout(content_layout)
+        root_layout.addWidget(footer_frame)
 
     def connect_signals(self):
         self.age_group_list.on_selection_changed_signal.connect(
@@ -63,6 +85,7 @@ class SettingsDialog(QDialog):
         self.age_group_list.on_add_signal.connect(self.on_add_age_group_clicked)
         self.domain_list.on_add_signal.connect(self.on_add_domain_clicked)
         self.body.on_add_subject_signal.connect(self.on_add_subject_clicked)
+        self.save_button.clicked.connect(self.accept)
 
     def sync_subjects(self):
         self.body.clear()
