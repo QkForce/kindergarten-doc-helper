@@ -13,13 +13,12 @@ from PySide6.QtGui import QIcon
 from gui.constants.colors import AppColors
 from gui.widgets.feature_card import FeatureCard
 from gui.widgets.icon_button import IconButton
-from gui.widgets.flow_layout import FlowLayout
 from gui.constants.icons import IconPaths
 from gui.constants.strings import AppStrings
 from gui.utils.icon_utils import get_svg_pixmap
 from gui.utils.style_utils import apply_shadow
 from gui.dialogs.settings_dialog import SettingsDialog
-from logic.config_store import load_config
+from logic.config_store import load_config, save_config
 
 
 class HubPage(QFrame):
@@ -121,4 +120,4 @@ class HubPage(QFrame):
         settings_dialog = SettingsDialog(settings=settings, parent=self)
         if settings_dialog.exec() == QDialog.Accepted:
             new_settings = settings_dialog.get_data()
-            print("New settings:", new_settings)
+            save_config(new_settings)
