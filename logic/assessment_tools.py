@@ -1,4 +1,4 @@
-from config.metrics_schema import get_age_group_data
+from logic.config_store import get_age_group_data
 from logic.types import AssessmentStatus
 
 

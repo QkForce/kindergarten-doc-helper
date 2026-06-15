@@ -1,6 +1,6 @@
 from typing import List, Dict
 
-from config.metrics_schema import get_age_group_data, get_all_metric_codes
+from logic.config_store import get_age_group_data, get_all_metric_codes
 
 
 class ChecklistBaseState:
