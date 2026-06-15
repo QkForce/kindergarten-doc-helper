@@ -1,4 +1,5 @@
 import json
+import os
 from datetime import datetime
 from pathlib import Path
 
@@ -7,13 +8,13 @@ CONFIG_FILE = BASE / "metrics_schema.json"
 
 
 def load_config() -> dict:
+    if not os.path.exists(CONFIG_FILE):
+        return {"version": "1.0", "age_groups": []}
     with open(CONFIG_FILE, "r", encoding="utf-8") as f:
-        return json.load(f)
-
-
-def load_age_group(age_group_id) -> dict:
-    config = load_config()
-    return config.get(age_group_id, {})
+        try:
+            return json.load(f)
+        except json.JSONDecodeError:
+            return {"version": "1.0", "age_groups": []}
 
 
 def save_config(data: dict):
@@ -27,7 +28,31 @@ def save_config(data: dict):
     return CONFIG_FILE
 
 
-def save_age_group(age_group_id: str, data: dict):
-    config = load_config()
-    config[age_group_id] = data
-    return save_config(config)
+METRICS_SCHEMA = load_config()
+
+AGE_GROUPS = {
+    age_group["id"]: age_group["name"] for age_group in METRICS_SCHEMA["age_groups"]
+}
+
+
+def get_age_group_data(age_group_id: str) -> dict:
+    return next(
+        (
+            age_group
+            for age_group in METRICS_SCHEMA["age_groups"]
+            if age_group["id"] == age_group_id
+        ),
+        None,
+    )
+
+
+def get_all_metric_codes(age_group_id: str) -> list:
+    age_group = get_age_group_data(age_group_id)
+    if not age_group:
+        return []
+    return [
+        met["code"]
+        for dom in age_group["domains"]
+        for sub in dom["subjects"]
+        for met in sub["metrics"]
+    ]
