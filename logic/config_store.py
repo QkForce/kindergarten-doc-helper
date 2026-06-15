@@ -28,22 +28,15 @@ def save_config(data: dict):
     return CONFIG_FILE
 
 
-METRICS_SCHEMA = load_config()
-
-
 def get_age_group_dict_for_combo() -> dict:
-    return {
-        age_group["id"]: age_group["name"] for age_group in METRICS_SCHEMA["age_groups"]
-    }
+    config = load_config()
+    return {ag["id"]: ag["name"] for ag in config["age_groups"]}
 
 
 def get_age_group_data(age_group_id: str) -> dict:
+    config = load_config()
     return next(
-        (
-            age_group
-            for age_group in METRICS_SCHEMA["age_groups"]
-            if age_group["id"] == age_group_id
-        ),
+        (ag for ag in config["age_groups"] if ag["id"] == age_group_id),
         None,
     )
 
