@@ -13,10 +13,6 @@ def load_metrics_schema_raw():
 
 METRICS_SCHEMA = load_metrics_schema_raw()
 
-AGE_GROUPS = {
-    age_group["id"]: age_group["name"] for age_group in METRICS_SCHEMA["age_groups"]
-}
-
 
 def get_age_group_data(age_group_id: str) -> dict:
     return next(

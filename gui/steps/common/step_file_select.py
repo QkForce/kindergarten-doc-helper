@@ -5,7 +5,7 @@ from PySide6.QtWidgets import QLabel, QComboBox, QMessageBox, QSizePolicy
 from gui.steps.base_step import BaseStep
 from gui.widgets.file_picker import FilePickerWidget
 from gui.state import ChecklistBaseState
-from config.metrics_schema import AGE_GROUPS
+from logic.config_store import get_age_group_dict_for_combo
 from logic.xlsx_tools import get_sheet_names
 
 T = TypeVar("T", bound=ChecklistBaseState)
@@ -29,7 +29,7 @@ class StepFileSelect(BaseStep[T]):
 
         # Топ түрін таңдау
         self.combo_group = QComboBox()
-        for key, display_text in AGE_GROUPS.items():
+        for key, display_text in get_age_group_dict_for_combo().items():
             self.combo_group.addItem(display_text, key)
 
         group_type_label = QLabel("Топ түрі:")

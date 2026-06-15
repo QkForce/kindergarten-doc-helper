@@ -30,9 +30,11 @@ def save_config(data: dict):
 
 METRICS_SCHEMA = load_config()
 
-AGE_GROUPS = {
-    age_group["id"]: age_group["name"] for age_group in METRICS_SCHEMA["age_groups"]
-}
+
+def get_age_group_dict_for_combo() -> dict:
+    return {
+        age_group["id"]: age_group["name"] for age_group in METRICS_SCHEMA["age_groups"]
+    }
 
 
 def get_age_group_data(age_group_id: str) -> dict:
