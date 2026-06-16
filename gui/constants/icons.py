@@ -12,10 +12,6 @@ class IconPaths:
     FEATURE_ENTRY_XLSX = str(ICON_DIR / "table.svg")
     FEATURE_MONFORM = str(ICON_DIR / "wand-sparkles.svg")
 
-    # For navigation
-    BACK = str(ICON_DIR / "arrow_back.png")
-    FORWARD = str(ICON_DIR / "arrow_forward.png")
-
     # Status icons
     SUCCESS = str(ICON_DIR / "circle-check.svg")
     EMPTY = str(ICON_DIR / "search-x.svg")
