@@ -5,6 +5,7 @@ from gui.pages.generator_page import GeneratorPage
 from gui.pages.filler_page import FillerPage
 from gui.pages.smart_entry_page import SmartEntryPage
 from gui.pages.monform_page import MonFormPage
+from gui.pages.growform_page import GrowFormPage
 from gui.constants.strings import AppStrings
 from gui.utils.window_utils import center_on_screen
 
@@ -39,6 +40,7 @@ class MainWindow(QMainWindow):
         hub.template_requested.connect(self.show_filler)
         hub.entry_requested.connect(self.show_smart_entry)
         hub.monform_requested.connect(self.show_monform)
+        hub.growform_requested.connect(self.show_growform)
 
         self.stack.addWidget(hub)
         self.stack.setCurrentWidget(hub)
@@ -57,6 +59,10 @@ class MainWindow(QMainWindow):
 
     def show_monform(self):
         page = MonFormPage(on_finish=self.show_hub)
+        self._add_and_switch(page)
+
+    def show_growform(self):
+        page = GrowFormPage(on_finish=self.show_hub)
         self._add_and_switch(page)
 
     def _add_and_switch(self, widget):

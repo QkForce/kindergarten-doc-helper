@@ -16,7 +16,7 @@ class FeatureCard(QFrame):
 
     def __init__(self, title, description, icon_path: IconPaths):
         super().__init__()
-        self.setFixedSize(200, 250)
+        self.setFixedSize(250, 200)
         self.setObjectName("feature_card")
         self.setCursor(Qt.PointingHandCursor)
 

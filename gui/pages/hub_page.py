@@ -27,6 +27,7 @@ class HubPage(QFrame):
     template_requested = Signal()
     entry_requested = Signal()
     monform_requested = Signal()
+    growform_requested = Signal()
 
     def __init__(self):
         super().__init__()
@@ -88,6 +89,11 @@ class HubPage(QFrame):
             AppStrings.CARD_MONFORM_DESC,
             IconPaths.FEATURE_MONFORM,
         )
+        self.card_growform = FeatureCard(
+            AppStrings.CARD_GROWFORM_TITLE,
+            AppStrings.CARD_GROWFORM_DESC,
+            IconPaths.FEATURE_GROWFORM,
+        )
 
         cards_layout = QGridLayout()
         cards_layout.setSpacing(20)
@@ -96,12 +102,13 @@ class HubPage(QFrame):
         cards_layout.addWidget(self.card_gen, 0, 0)
         cards_layout.addWidget(self.card_tpl, 0, 1)
         cards_layout.addWidget(self.card_entry, 0, 2)
-        cards_layout.addWidget(self.card_monform, 0, 3)
+        cards_layout.addWidget(self.card_monform, 1, 0)
+        cards_layout.addWidget(self.card_growform, 1, 1)
 
         main_layout = QVBoxLayout(self)
         main_layout.setContentsMargins(10, 0, 10, 10)
         main_layout.addWidget(header_frame)
-        main_layout.setSpacing(20)
+        main_layout.addSpacing(20)
         main_layout.addWidget(title, 0, Qt.AlignCenter)
         main_layout.addWidget(subtitle, 0, Qt.AlignCenter)
         main_layout.addSpacing(20)
@@ -114,6 +121,7 @@ class HubPage(QFrame):
         self.card_tpl.clicked.connect(self.template_requested.emit)
         self.card_entry.clicked.connect(self.entry_requested.emit)
         self.card_monform.clicked.connect(self.monform_requested.emit)
+        self.card_growform.clicked.connect(self.growform_requested.emit)
 
     def open_settings(self):
         settings = load_config()
