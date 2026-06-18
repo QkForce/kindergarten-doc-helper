@@ -34,7 +34,7 @@ class GrowFormPage(WizardWidget[MonFormState]):
             steps.append(step)
         module_options = ModuleOptions(
             title="Grow Card Formatter",
-            icon_path=IconPaths.FEATURE_MONFORM,
+            icon_path=IconPaths.FEATURE_GROWFORM,
         )
         super().__init__(
             steps=steps,

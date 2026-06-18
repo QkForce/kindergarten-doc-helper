@@ -11,7 +11,7 @@ class IconPaths:
     FEATURE_TEMPLATE_FILLER = str(ICON_DIR / "file-pen.svg")
     FEATURE_ENTRY_XLSX = str(ICON_DIR / "table.svg")
     FEATURE_MONFORM = str(ICON_DIR / "wand-sparkles.svg")
-    FEATURE_GROWFORM = str(ICON_DIR / "wand-sparkles.svg")
+    FEATURE_GROWFORM = str(ICON_DIR / "sprout.svg")
 
     # Status icons
     SUCCESS = str(ICON_DIR / "circle-check.svg")
