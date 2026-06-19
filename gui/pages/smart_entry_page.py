@@ -1,6 +1,6 @@
 from typing import Callable
 
-from gui.steps.common.step_file_select import StepFileSelect
+from gui.steps.common.step_monitoring_config import StepMonitoringConfig
 from gui.steps.step_child_assessment import StepChildAssessment
 from gui.steps.common.step_file_export import StepFileExport, StepFileExportOptions
 from gui.widgets.wizard_widget import WizardWidget, ModuleOptions
@@ -24,7 +24,7 @@ class SmartEntryPage(WizardWidget[SmartEntryState]):
             result_desc="Мониторинг файлын төменгі батырма арқылы ала аласыз.",
         )
         step_factories = [
-            lambda: StepFileSelect(state),
+            lambda: StepMonitoringConfig(state),
             lambda: StepChildAssessment(state),
             lambda: StepFileExport(
                 state, exporter=SmartEntryExporter(), options=options

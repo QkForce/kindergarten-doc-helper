@@ -1,6 +1,6 @@
 from typing import Callable
 
-from gui.steps.common.step_file_select import StepFileSelect
+from gui.steps.common.step_monitoring_config import StepMonitoringConfig
 from gui.steps.common.step_children_scores import StepChildrenScores
 from gui.steps.step_docx_fill_setup import StepDocxFillSetup
 from gui.steps.common.step_file_export import StepFileExport, StepFileExportOptions
@@ -25,7 +25,7 @@ class FillerPage(WizardWidget[FillerState]):
             result_desc="Даму картасын төменгі батырма арқылы ала аласыз.",
         )
         step_factories = [
-            lambda: StepFileSelect(state),
+            lambda: StepMonitoringConfig(state),
             lambda: StepChildrenScores(state),
             lambda: StepDocxFillSetup(state),
             lambda: StepFileExport(state, exporter=DocxFillExporter(), options=options),

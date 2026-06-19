@@ -11,7 +11,7 @@ from logic.xlsx_tools import get_sheet_names
 T = TypeVar("T", bound=ChecklistBaseState)
 
 
-class StepFileSelect(BaseStep[T]):
+class StepMonitoringConfig(BaseStep[T]):
     def setup_ui(self):
         # Excel файлды таңдау
         self.file_select_widget = FilePickerWidget("Мониторинг файлы")

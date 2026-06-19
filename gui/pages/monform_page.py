@@ -1,6 +1,6 @@
 from typing import Callable
 
-from gui.steps.common.step_file_select import StepFileSelect
+from gui.steps.common.step_monitoring_config import StepMonitoringConfig
 from gui.steps.step_monform import StepMonitoringFormatter
 from gui.steps.common.step_file_export import StepFileExport, StepFileExportOptions
 from gui.widgets.wizard_widget import WizardWidget, ModuleOptions
@@ -24,7 +24,7 @@ class MonFormPage(WizardWidget[MonFormState]):
             result_desc="Мониторинг файлын төменгі батырма арқылы ала аласыз.",
         )
         step_factories = [
-            lambda: StepFileSelect(state),
+            lambda: StepMonitoringConfig(state),
             lambda: StepMonitoringFormatter(state),
             lambda: StepFileExport(state, exporter=MonFormExporter(), options=options),
         ]
