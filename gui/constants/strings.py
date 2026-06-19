@@ -50,6 +50,7 @@ class AppStrings:
     ERROR_CHILDREN_SCORES_DESC = "Автоматты жүктеу кезінде қате: {}"
 
     MONFORM_NO_ACTION_SELECTED = "Кем дегенде бір әрекетті таңдаңыз."
+    ACTIONS_SELECT_NO_ACTION_SELECTED = "Кем дегенде бір әрекетті таңдаңыз."
 
     EXPORT_BTN_LBL_SAVE_FILE = "Нәтижені жүктеу (сақтау)"
     EXPORT_DIALOG_TITLE_ASK_FILE_PATH = "Құжатты қайда сақтау керек?"
@@ -171,6 +172,29 @@ MONFORM_CHECKBOXES = [
     {
         "id": "remove_empty_spaces",
         "title": "Бос жолдар мен бағандарды орындарды жою",
+        "default": False,
+    },
+]
+
+GROWFORM_CHECKBOXES = [
+    {
+        "id": "fix_typography",
+        "title": "Қаріптерді реттеу",
+        "default": True,
+    },
+    {
+        "id": "remove_empty_spaces",
+        "title": "Бос орындарды жою",
+        "default": False,
+    },
+    {
+        "id": "add_page_breaks",
+        "title": "Беттерді бөлу (Page Break)",
+        "default": False,
+    },
+    {
+        "id": "autofit_tables",
+        "title": "Кесте енін теңшеу",
         "default": False,
     },
 ]

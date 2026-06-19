@@ -1,17 +1,18 @@
 from typing import Callable
 
+from gui.steps.common.step_actions_select import StepActionsSelect
 from gui.steps.step_docx_template import StepDocxTemplate
 from gui.steps.common.step_file_export import StepFileExportOptions
 from gui.widgets.wizard_widget import WizardWidget, ModuleOptions
-from gui.state import MonFormState
+from gui.state import GrowFormState
 from logic.types import Step
-from gui.constants.strings import GROW_CARD_FORMATTER_OPTIONS
+from gui.constants.strings import GROW_CARD_FORMATTER_OPTIONS, GROWFORM_CHECKBOXES
 from gui.constants.icons import IconPaths
 
 
-class GrowFormPage(WizardWidget[MonFormState]):
+class GrowFormPage(WizardWidget[GrowFormState]):
     def __init__(self, on_finish: Callable, parent=None):
-        state = MonFormState()
+        state = GrowFormState()
         options = StepFileExportOptions(
             file_name="Балалардың даму картасы (updated).docx",
             file_filter="DOCX Files (*.docx)",
@@ -23,6 +24,7 @@ class GrowFormPage(WizardWidget[MonFormState]):
         )
         step_factories = [
             lambda: StepDocxTemplate(state),
+            lambda: StepActionsSelect(state, checkboxes_data=GROWFORM_CHECKBOXES),
         ]
         steps = []
         for index, factory in enumerate(step_factories):

@@ -52,6 +52,12 @@ class ChecklistBaseState:
         return get_all_metric_codes(self.age_group_id)
 
 
+class ActionsSelectState(ChecklistBaseState):
+    def __init__(self):
+        super().__init__()
+        self.actions: dict = {}
+
+
 class GeneratorState(ChecklistBaseState):
     def __init__(self):
         super().__init__()
@@ -77,3 +83,8 @@ class MonFormState(ChecklistBaseState):
     def __init__(self):
         super().__init__()
         self.actions: dict = {}
+
+
+class GrowFormState(ActionsSelectState):
+    def __init__(self):
+        super().__init__()
