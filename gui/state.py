@@ -88,3 +88,4 @@ class MonFormState(ChecklistBaseState):
 class GrowFormState(ActionsSelectState):
     def __init__(self):
         super().__init__()
+        self.input_file_path = ""

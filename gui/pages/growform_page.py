@@ -1,7 +1,7 @@
 from typing import Callable
 
 from gui.steps.common.step_actions_select import StepActionsSelect
-from gui.steps.step_docx_template import StepDocxTemplate
+from gui.steps.common.step_file_select import StepFileSelectOptions, StepFileSelect
 from gui.steps.common.step_file_export import StepFileExportOptions
 from gui.widgets.wizard_widget import WizardWidget, ModuleOptions
 from gui.state import GrowFormState
@@ -13,6 +13,13 @@ from gui.constants.icons import IconPaths
 class GrowFormPage(WizardWidget[GrowFormState]):
     def __init__(self, on_finish: Callable, parent=None):
         state = GrowFormState()
+        step_file_select_options = StepFileSelectOptions(
+            file_picker_label="Балалардың даму картасы файлы (.docx)",
+            file_picker_caption="Балалардың даму картасы файлын таңдаңыз",
+            file_picker_filter="DOCX Files (*.docx)",
+            validation_error_msg="Балалардың даму картасы файлын таңдаңыз.",
+            state_file_attr_name="input_file_path",
+        )
         options = StepFileExportOptions(
             file_name="Балалардың даму картасы (updated).docx",
             file_filter="DOCX Files (*.docx)",
@@ -23,7 +30,7 @@ class GrowFormPage(WizardWidget[GrowFormState]):
             result_desc="Даму картасын төменгі батырма арқылы ала аласыз.",
         )
         step_factories = [
-            lambda: StepDocxTemplate(state),
+            lambda: StepFileSelect(state, step_file_select_options),
             lambda: StepActionsSelect(state, checkboxes_data=GROWFORM_CHECKBOXES),
         ]
         steps = []
