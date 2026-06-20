@@ -85,7 +85,8 @@ class MonFormState(ChecklistBaseState):
         self.actions: dict = {}
 
 
-class GrowFormState(ActionsSelectState):
+class GrowFormState(ChecklistBaseState):
     def __init__(self):
         super().__init__()
-        self.input_file_path = ""
+        self.grow_card_file_path = None
+        self.temp_file_path = None
