@@ -28,11 +28,11 @@ def format_kazakh_typography(text: str) -> str:
     return text.strip()
 
 
-def set_paragraph_tightness(paragraph):
+def set_paragraph_tightness(paragraph, space_before=0, space_after=0, line_spacing=1.0):
     p_format = paragraph.paragraph_format
-    p_format.space_before = Pt(0)
-    p_format.space_after = Pt(0)
-    p_format.line_spacing = 1.0
+    p_format.space_before = Pt(space_before)
+    p_format.space_after = Pt(space_after)
+    p_format.line_spacing = line_spacing
 
 
 def analyze_template_placeholders(template_path, data_keys):

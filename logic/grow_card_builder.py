@@ -21,9 +21,8 @@ class GrowCardBuilder:
     ) -> _Document:
         self._keep_only_first_page_header(self.docx)
 
-        for index, student in enumerate(students_cards):
-            if index > 0:
-                self.docx.add_page_break()
+        for student in students_cards:
+            self.docx.add_page_break()
 
             self._add_title(
                 self.docx,
@@ -35,7 +34,7 @@ class GrowCardBuilder:
 
             self._add_meta_paragraph(self.docx, "Баланың Т.А.Ә.:", fullname)
             self._add_meta_paragraph(self.docx, "Баланың туған жылы, күні:", birth_date)
-            self._add_meta_paragraph(self.docx, "Топ:", group_name)
+            self._add_meta_paragraph(self.docx, "Топ:", group_name, space_after=6)
 
             self._create_assessment_table(self.docx, student["assessments"])
         return self.docx
@@ -60,14 +59,14 @@ class GrowCardBuilder:
     def _add_title(self, docx, title):
         p = docx.add_paragraph()
         p.alignment = 1
-        set_paragraph_tightness(p)
+        set_paragraph_tightness(p, space_after=6)
         run = p.add_run(title)
         run.bold = True
         set_run_typography(run, size_pt=12)
 
-    def _add_meta_paragraph(self, docx, label: str, value: str):
+    def _add_meta_paragraph(self, docx, label: str, value: str, space_after=0):
         p = docx.add_paragraph()
-        set_paragraph_tightness(p)
+        set_paragraph_tightness(p, space_after=space_after)
 
         run_label = p.add_run(f"{label} ")
         run_label.bold = True
