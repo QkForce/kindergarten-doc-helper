@@ -1,7 +1,13 @@
+from docx import Document
 from openpyxl import load_workbook
 
-from gui.state import ChecklistBaseState
-from logic.docx_tools import create_children_grow_cards, fill_all_children_in_big_file
+from gui.state import ChecklistBaseState, GrowFormState
+from logic.docx_tools import (
+    create_children_grow_cards,
+    fill_all_children_in_big_file,
+)
+from logic.grow_card_builder import GrowCardBuilder
+from logic.grow_card_parser import GrowCardParser
 from logic.metrics_tools import build_all_grow_cards
 from logic.xlsx_tools import (
     fill_assessment_table,
@@ -135,10 +141,31 @@ class MonFormExporter:
             self.progress("Бос жолдар мен бағандарды жою...")
             remove_empty_rows_and_cols(sheet, **b)
 
-        # merged_ranges = list(sheet.merged_cells.ranges)
-        # print("*****")
-        # for m_range in merged_ranges:
-        #     coord = m_range.coord
-        #     min_col, min_row, max_col, max_row = range_boundaries(coord)
-        #     print(coord, min_col, min_row, max_col, max_row)
         return ExportResult(workbook)
+
+
+class GrowFormExporter(Exporter):
+    def set_data(self, state: GrowFormState, progress_callback):
+        self.state = state
+        self.progress_callback = progress_callback
+        self.action_index = 0
+        self.total_actions = 1
+
+    def progress(self, label: str):
+        self.action_index += 1
+        self.progress_callback(label, self.action_index, self.total_actions)
+
+    def export(self) -> ExportResult:
+        # self.progress("Балалардың даму картасы файлы оқылуда...")
+        # grow_card_docx = Document(self.state.grow_card_file_path)
+
+        # self.progress("Үлгі файлы оқылуда...")
+        # temp_docx = Document(self.state.temp_file_path)
+
+        grow_card_parser = GrowCardParser(self.state.grow_card_file_path)
+        grow_card_data = grow_card_parser.parse()
+
+        grow_card_builder = GrowCardBuilder(self.state.temp_file_path)
+        docx = grow_card_builder.build(grow_card_data)
+        self.progress("Балалардың даму картасы файлы оқылуда...")
+        return ExportResult(docx)

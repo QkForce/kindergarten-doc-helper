@@ -1,19 +1,20 @@
 from typing import Callable
 
-from gui.steps.step_growform_config import StepGrowFormConfig
-from gui.steps.common.step_file_export import StepFileExportOptions
-from gui.widgets.wizard_widget import WizardWidget, ModuleOptions
-from gui.state import GrowFormState
-from logic.types import Step
 from gui.constants.strings import GROW_CARD_FORMATTER_OPTIONS
 from gui.constants.icons import IconPaths
+from gui.state import GrowFormState
+from gui.steps.step_growform_config import StepGrowFormConfig
+from gui.steps.common.step_file_export import StepFileExportOptions, StepFileExport
+from gui.widgets.wizard_widget import WizardWidget, ModuleOptions
+from logic.types import Step
+from logic.exporter import GrowFormExporter
 
 
 class GrowFormPage(WizardWidget[GrowFormState]):
     def __init__(self, on_finish: Callable, parent=None):
         state = GrowFormState()
         options = StepFileExportOptions(
-            file_name="Балалардың даму картасы (updated).docx",
+            file_name="Балалардың даму картасы (formated).docx",
             file_filter="DOCX Files (*.docx)",
             file_extension=".docx",
             get_progress_title=self.get_progress_title,
@@ -23,6 +24,7 @@ class GrowFormPage(WizardWidget[GrowFormState]):
         )
         step_factories = [
             lambda: StepGrowFormConfig(state, parent=self),
+            lambda: StepFileExport(state, GrowFormExporter(), options, parent=self),
         ]
         steps = []
         for index, factory in enumerate(step_factories):

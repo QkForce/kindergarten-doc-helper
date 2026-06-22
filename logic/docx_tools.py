@@ -1,13 +1,38 @@
-from docx import Document
-from docx.oxml.text.paragraph import CT_P
+import re
 
+from docx import Document
 from docx.document import Document as _Document
 from docx.oxml.table import CT_Tbl
+from docx.oxml.text.paragraph import CT_P
 from docx.table import _Cell, Table
 from docx.text.paragraph import Paragraph
+from docx.shared import Pt
 
-import re
-from docx import Document
+
+def set_run_typography(run, font_name="Times New Roman", size_pt=14):
+    run.font.name = font_name
+    run.font.size = Pt(size_pt)
+
+
+def format_kazakh_typography(text: str) -> str:
+    if not text:
+        return ""
+    # Remove extra spaces before commas, periods, and colons
+    text = re.sub(r"\s+([,.:;])", r"\1", text)
+    # Add a space after the symbols (if none exist)
+    text = re.sub(r"([,.:;])(?![\s$])", r"\1 ", text)
+    # Replace straight quotes with Kazakh "«»"
+    text = re.sub(r'"([^"]+)"', r"«\1»", text)
+    # Clean up excess spaces
+    text = re.sub(r"\s+", " ", text)
+    return text.strip()
+
+
+def set_paragraph_tightness(paragraph):
+    p_format = paragraph.paragraph_format
+    p_format.space_before = Pt(0)
+    p_format.space_after = Pt(0)
+    p_format.line_spacing = 1.0
 
 
 def analyze_template_placeholders(template_path, data_keys):
