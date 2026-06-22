@@ -8,7 +8,9 @@ from PySide6.QtWidgets import QFileDialog, QApplication
 from tests.e2e.helpers import mock_file_dialog, wait_until_visible, click_list_item
 
 
-def assert_step_monitoring_config(qtbot, monkeypatch, page, xlsx_path, sheet_idx, group_idx):
+def assert_step_monitoring_config(
+    qtbot, monkeypatch, page, xlsx_path, sheet_idx, group_idx
+):
     step1 = page.get_step(0)
     monkeypatch.setattr(QFileDialog, "getOpenFileName", mock_file_dialog(xlsx_path))
     QTest.mouseClick(step1.file_select_widget.btn_browse, Qt.LeftButton)
@@ -74,6 +76,24 @@ def assert_step_docx_template(qtbot, monkeypatch, page, temp_path):
     assert (
         page.btn_next.isEnabled()
     ), "step_docx_template: Шаблон таңдалмады немесе 'Келесі' батырмасы бұғаттаулы!"
+
+    QTest.mouseClick(page.btn_next, Qt.LeftButton)
+    QApplication.processEvents()
+
+
+def assert_step_file_select(qtbot, monkeypatch, step, page, grow_card_path):
+    assert step is not None, "step_file_select виджеті табылмады"
+    qtbot.waitUntil(lambda: step.isVisible(), timeout=5000)
+
+    monkeypatch.setattr(QFileDialog, "getOpenFileName", mock_file_dialog(grow_card_path))
+    QTest.mouseClick(step.file_select_widget.btn_browse, Qt.LeftButton)
+    QApplication.processEvents()
+
+    qtbot.waitUntil(lambda: page.btn_next.isEnabled(), timeout=5000)
+    assert page.btn_next.isEnabled(), (
+        "step_file_select: Балалардың даму картасы файлы таңдалмады "
+        "немесе 'Келесі' батырмасы бұғаттаулы!"
+    )
 
     QTest.mouseClick(page.btn_next, Qt.LeftButton)
     QApplication.processEvents()

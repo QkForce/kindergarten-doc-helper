@@ -59,7 +59,16 @@ class MonFormConfig(TestConfig):
     )
 
 
+@dataclass(frozen=True)
+class GrowFormConfig(TestConfig):
+    grow_card_path: Path = Path(os.getenv("TEST_UIE2E_GROWFORM_GROW_CARD_PATH", ""))
+    out_file_name: str = os.getenv(
+        "TEST_UIE2E_GROWFORM_RES_FILE_NAME", "test_res_monform.docx"
+    )
+
+
 docx_gen_cfg = DocxGenConfig()
 filler_cfg = FillerConfig()
 smart_entry_cfg = SmartEntryConfig()
 monform_cfg = MonFormConfig()
+growform_cfg = GrowFormConfig()
