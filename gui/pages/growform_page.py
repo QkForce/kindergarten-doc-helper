@@ -3,7 +3,7 @@ from typing import Callable
 from gui.constants.strings import GROW_CARD_FORMATTER_OPTIONS
 from gui.constants.icons import IconPaths
 from gui.state import GrowFormState
-from gui.steps.step_growform_config import StepGrowFormConfig
+from gui.steps.common.step_file_select import StepFileSelect, StepFileSelectOptions
 from gui.steps.common.step_file_export import StepFileExportOptions, StepFileExport
 from gui.widgets.wizard_widget import WizardWidget, ModuleOptions
 from logic.types import Step
@@ -13,7 +13,14 @@ from logic.exporter import GrowFormExporter
 class GrowFormPage(WizardWidget[GrowFormState]):
     def __init__(self, on_finish: Callable, parent=None):
         state = GrowFormState()
-        options = StepFileExportOptions(
+        file_select_options = StepFileSelectOptions(
+            file_picker_label="Балалардың даму картасы файлы",
+            file_picker_caption="Балалардың даму картасы файлын таңдау",
+            file_picker_filter="Document files (*.docx)",
+            validation_error_msg="Балалардың даму картасы файлын таңдаңыз!",
+            state_file_attr_name="grow_card_file_path",
+        )
+        file_export_options = StepFileExportOptions(
             file_name="Балалардың даму картасы (formated).docx",
             file_filter="DOCX Files (*.docx)",
             file_extension=".docx",
@@ -22,9 +29,10 @@ class GrowFormPage(WizardWidget[GrowFormState]):
             result_title="Даму картасы дайын",
             result_desc="Даму картасын төменгі батырма арқылы ала аласыз.",
         )
+        exporter = GrowFormExporter()
         step_factories = [
-            lambda: StepGrowFormConfig(state, parent=self),
-            lambda: StepFileExport(state, GrowFormExporter(), options, parent=self),
+            lambda: StepFileSelect(state, file_select_options, parent=self),
+            lambda: StepFileExport(state, exporter, file_export_options, parent=self),
         ]
         steps = []
         for index, factory in enumerate(step_factories):
