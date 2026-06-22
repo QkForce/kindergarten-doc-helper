@@ -9,8 +9,12 @@ from docx.oxml import CT_P, CT_Tbl
 
 
 class GrowCardParser:
-    def __init__(self, file_path: str):
-        self.doc = Document(file_path)
+    def __init__(self, source):
+        if isinstance(source, _Document):
+            self.doc = source
+        else:
+            # If it gets str or BytesIO, python-docx will read and open it
+            self.doc = Document(source)
 
     def iter_block_items(self, parent):
         if isinstance(parent, _Document):

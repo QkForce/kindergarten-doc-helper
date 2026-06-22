@@ -47,7 +47,7 @@ class GrowFormPage(WizardWidget[GrowFormState]):
         )
 
     def get_progress_title(self, lbl, current, total):
-        return f"Файлға жазу процесі: {current}/{total}"
+        return "Файлды экспорттау"
 
     def get_progress_desc(self, lbl, current, total):
-        return f"Деректері жазылып жатқан бала: {lbl}"
+        return f"{current}/{total}: {lbl}"

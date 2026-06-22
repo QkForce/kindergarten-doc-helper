@@ -149,25 +149,30 @@ class GrowFormExporter(Exporter):
         self.state = state
         self.progress_callback = progress_callback
         self.action_index = 0
-        self.total_actions = 1
+        self.total_actions = 5
 
     def progress(self, label: str):
         self.action_index += 1
         self.progress_callback(label, self.action_index, self.total_actions)
 
     def export(self) -> ExportResult:
-        # self.progress("Балалардың даму картасы файлы оқылуда...")
-        # grow_card_docx = Document(self.state.grow_card_file_path)
+        # progress - 1
+        self.progress("Балалардың даму картасы файлы оқылуда...")
+        grow_card_docx = Document(self.state.grow_card_file_path)
 
-        # self.progress("Үлгі файлы оқылуда...")
-        # temp_docx = Document(self.state.temp_file_path)
-
-        grow_card_parser = GrowCardParser(self.state.grow_card_file_path)
+        grow_card_parser = GrowCardParser(grow_card_docx)
+        # progress - 2
+        self.progress("Талдау: оқу жылын анықтау")
         academic_year = grow_card_parser.parse_academic_year()
+        # progress - 3
+        self.progress("Талдау: топ атауы мен түрін анықтау")
         group_name = grow_card_parser.parse_group_name()
+        # progress - 4
+        self.progress("Талдау: балалардың аттарын, туған күнін және бағаларын жинау")
         students_cards = grow_card_parser.parse()
 
-        grow_card_builder = GrowCardBuilder(self.state.temp_file_path)
-        docx = grow_card_builder.build(students_cards, academic_year, group_name)
-        self.progress("Балалардың даму картасы файлы оқылуда...")
-        return ExportResult(docx)
+        # progress - 5
+        grow_card_builder = GrowCardBuilder(grow_card_docx)
+        self.progress("Файлды құрастыру: балалардың даму картасы файлын дайындау")
+        result_docx = grow_card_builder.build(students_cards, academic_year, group_name)
+        return ExportResult(result_docx)

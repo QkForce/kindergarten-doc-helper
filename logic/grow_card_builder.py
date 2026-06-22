@@ -9,48 +9,52 @@ from logic.docx_tools import (
 
 
 class GrowCardBuilder:
-    def __init__(self, template_path: str):
-        self.template_path = template_path
+    def __init__(self, source):
+        if isinstance(source, _Document):
+            self.docx = source
+        else:
+            # If str or BytesIO is given, python-docx will handle it itself
+            self.docx = Document(source)
 
     def build(
         self, students_cards: list[dict], academic_year: str, group_name: str
     ) -> _Document:
-        docx = Document(self.template_path)
-        self._keep_only_first_page_header(docx)
+        self._keep_only_first_page_header(self.docx)
 
         for index, student in enumerate(students_cards):
             if index > 0:
-                docx.add_page_break()
+                self.docx.add_page_break()
 
             self._add_title(
-                docx, f"{academic_year} оқу жылына арналған баланың жеке даму картасы"
+                self.docx,
+                f"{academic_year} оқу жылына арналған баланың жеке даму картасы",
             )
             fullname = format_kazakh_typography(student["fullname"])
             birth_date = student["birth_date"].strip()
             birth_date = f"{birth_date} ж." if birth_date else ""
 
-            self._add_meta_paragraph(docx, "Баланың Т.А.Ә.:", fullname)
-            self._add_meta_paragraph(docx, "Баланың туған жылы, күні:", birth_date)
-            self._add_meta_paragraph(docx, "Топ:", group_name)
+            self._add_meta_paragraph(self.docx, "Баланың Т.А.Ә.:", fullname)
+            self._add_meta_paragraph(self.docx, "Баланың туған жылы, күні:", birth_date)
+            self._add_meta_paragraph(self.docx, "Топ:", group_name)
 
-            self._create_assessment_table(docx, student["assessments"])
-        return docx
+            self._create_assessment_table(self.docx, student["assessments"])
+        return self.docx
 
-    def _keep_only_first_page_header(self, doc):
+    def _keep_only_first_page_header(self, docx):
         target_p_idx = -1
-        for idx, p in enumerate(doc.paragraphs):
+        for idx, p in enumerate(docx.paragraphs):
             if "баланың т.а.ә" in p.text.lower() or "т.а.ә" in p.text.lower():
                 target_p_idx = idx
                 break
 
         if target_p_idx != -1:
             start_p_remove = max(0, target_p_idx - 2)
-            for p_idx in range(len(doc.paragraphs) - 1, start_p_remove - 1, -1):
-                p_element = doc.paragraphs[p_idx]._p
+            for p_idx in range(len(docx.paragraphs) - 1, start_p_remove - 1, -1):
+                p_element = docx.paragraphs[p_idx]._p
                 p_element.getparent().remove(p_element)
 
-        while len(doc.tables) > 0:
-            tbl_element = doc.tables[0]._element
+        while len(docx.tables) > 0:
+            tbl_element = docx.tables[0]._element
             tbl_element.getparent().remove(tbl_element)
 
     def _add_title(self, docx, title):
