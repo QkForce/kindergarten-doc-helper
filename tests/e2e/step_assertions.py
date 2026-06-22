@@ -8,7 +8,7 @@ from PySide6.QtWidgets import QFileDialog, QApplication
 from tests.e2e.helpers import mock_file_dialog, wait_until_visible, click_list_item
 
 
-def assert_step_file_select(qtbot, monkeypatch, page, xlsx_path, sheet_idx, group_idx):
+def assert_step_monitoring_config(qtbot, monkeypatch, page, xlsx_path, sheet_idx, group_idx):
     step1 = page.get_step(0)
     monkeypatch.setattr(QFileDialog, "getOpenFileName", mock_file_dialog(xlsx_path))
     QTest.mouseClick(step1.file_select_widget.btn_browse, Qt.LeftButton)
