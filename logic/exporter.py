@@ -164,9 +164,10 @@ class GrowFormExporter(Exporter):
 
         grow_card_parser = GrowCardParser(self.state.grow_card_file_path)
         academic_year = grow_card_parser.parse_academic_year()
+        group_name = grow_card_parser.parse_group_name()
         students_cards = grow_card_parser.parse()
 
         grow_card_builder = GrowCardBuilder(self.state.temp_file_path)
-        docx = grow_card_builder.build(students_cards, academic_year)
+        docx = grow_card_builder.build(students_cards, academic_year, group_name)
         self.progress("Балалардың даму картасы файлы оқылуда...")
         return ExportResult(docx)

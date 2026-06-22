@@ -1,4 +1,6 @@
 import re
+from collections import Counter
+
 from docx import Document
 from docx.document import Document as _Document
 from docx.table import Table, _Cell
@@ -44,9 +46,43 @@ class GrowCardParser:
             "ішкі жол табылмады!"
         )
 
+    def parse_group_name(self) -> str:
+        group_counter = Counter()
+        stop_words = ["санаторлық", "топтарымен", "бөбекжай", "балабақшасы"]
+
+        # Search and collect group names by template
+        for block in self.iter_block_items(self.doc):
+            if not isinstance(block, Paragraph):
+                continue
+            text = block.text.strip()
+            if not text:
+                continue
+            matches = re.findall(r"([«\"'][^»\"']+[»\"']\s+\w+\s+\w+)", text)
+            for match in matches:
+                cleaned_match = self._clean_spaces(match)
+                cleaned_match = re.sub(
+                    r"^[«\"']([^»\"']+)[»\"']", r"«\1»", cleaned_match
+                )
+                if any(stop in cleaned_match.lower() for stop in stop_words):
+                    continue
+                group_counter[cleaned_match] += 1
+
+        if not group_counter:
+            raise ValueError(
+                "Қате: Құжаттан топ атауы «...»\s+\w+\s+\w+ үлгісу бойынша табылмады!"
+            )
+
+        most_common = group_counter.most_common()
+        if len(most_common) == 1 or most_common[0][1] > most_common[1][1]:
+            return most_common[0][0]
+        raise ValueError(
+            "Қате: Топ атауын нақты анықтау мүмкін емес! "
+            f"Бірдей жиілікте бірнеше нұсқа бар: {most_common}"
+        )
+
     def parse(self) -> list[dict]:
         students_cards = []
-        current_meta = {"fullname": "", "birth_date": "", "group_name": ""}
+        current_meta = {"fullname": "", "birth_date": ""}
         for block in self.iter_block_items(self.doc):
             if isinstance(block, Paragraph):
                 text = block.text.strip()
@@ -54,20 +90,10 @@ class GrowCardParser:
                     continue
                 if "Баланың Т.А.Ә" in text or "Т.А.Ә" in text:
                     current_meta["fullname"] = self._clean_meta_value(text, "Т.А.Ә")
-                elif "туған жылы" in text or "күні" in text or "«" in text:
+                elif "туған жылы" in text or "күні" in text:
                     keyword = "күні" if "күні" in text else "жылы"
                     raw_value = self._clean_meta_value(text, keyword)
-                    if "«" in raw_value and "»" in raw_value:
-                        group_match = re.search(r"«[^»]+»\s*\w*\s*\w*", raw_value)
-                        if group_match:
-                            g_name = group_match.group(0).strip()
-                            current_meta["group_name"] = g_name
-                            raw_date = raw_value.replace(g_name, "").strip()
-                            current_meta["birth_date"] = self._extract_birth_date(
-                                raw_date
-                            )
-                    else:
-                        current_meta["birth_date"] = self._extract_birth_date(raw_value)
+                    current_meta["birth_date"] = self._extract_birth_date(raw_value)
             elif isinstance(block, Table):
                 if not block.rows or "Құзыреттіліктер" not in block.cell(0, 0).text:
                     continue
@@ -77,11 +103,10 @@ class GrowCardParser:
                         {
                             "fullname": current_meta["fullname"] or "Анықталмады",
                             "birth_date": current_meta["birth_date"] or "Анықталмады",
-                            "group_name": current_meta["group_name"] or "Анықталмады",
                             "assessments": assessments,
                         }
                     )
-                current_meta = {"fullname": "", "birth_date": "", "group_name": ""}
+                current_meta = {"fullname": "", "birth_date": ""}
         return students_cards
 
     def _extract_birth_date(self, raw_value: str) -> str:

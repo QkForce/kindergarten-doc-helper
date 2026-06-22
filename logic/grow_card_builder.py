@@ -12,7 +12,9 @@ class GrowCardBuilder:
     def __init__(self, template_path: str):
         self.template_path = template_path
 
-    def build(self, students_cards: list[dict], academic_year: str) -> _Document:
+    def build(
+        self, students_cards: list[dict], academic_year: str, group_name: str
+    ) -> _Document:
         docx = Document(self.template_path)
         self._keep_only_first_page_header(docx)
 
@@ -24,7 +26,6 @@ class GrowCardBuilder:
                 docx, f"{academic_year} оқу жылына арналған баланың жеке даму картасы"
             )
             fullname = format_kazakh_typography(student["fullname"])
-            group_name = format_kazakh_typography(student["group_name"])
             birth_date = student["birth_date"].strip()
             birth_date = f"{birth_date} ж." if birth_date else ""
 
