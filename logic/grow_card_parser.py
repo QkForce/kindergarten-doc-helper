@@ -24,6 +24,26 @@ class GrowCardParser:
             elif isinstance(child, CT_Tbl):
                 yield Table(child, parent)
 
+    def parse_academic_year(self) -> str:
+        for block in self.iter_block_items(self.doc):
+            if not isinstance(block, Paragraph):
+                continue
+            text = block.text.strip()
+            match = re.search(
+                r"(\d{4})\s*[\-\–\—]\s*(\d{4})\s*оқу\s+жылына\s+арналған",
+                text,
+                re.IGNORECASE,
+            )
+            if match:
+                start_year = match.group(1)
+                end_year = match.group(2)
+                return f"{start_year} – {end_year} оқу жылына арналған"
+
+        raise ValueError(
+            "Қате: Құжаттан 'XXXX – XXXX оқу жылына арналған' үлгісіне сәйкес "
+            "ішкі жол табылмады!"
+        )
+
     def parse(self) -> list[dict]:
         students_cards = []
         current_meta = {"fullname": "", "birth_date": "", "group_name": ""}

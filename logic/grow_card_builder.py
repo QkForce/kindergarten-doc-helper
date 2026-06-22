@@ -1,5 +1,5 @@
 from docx import Document
-from docx.text.paragraph import Paragraph
+from docx.document import Document as _Document
 
 from logic.docx_tools import (
     format_kazakh_typography,
@@ -12,16 +12,16 @@ class GrowCardBuilder:
     def __init__(self, template_path: str):
         self.template_path = template_path
 
-    def build(self, students_data: list[dict]):
+    def build(self, students_cards: list[dict], academic_year: str) -> _Document:
         docx = Document(self.template_path)
         self._keep_only_first_page_header(docx)
 
-        for index, student in enumerate(students_data):
+        for index, student in enumerate(students_cards):
             if index > 0:
                 docx.add_page_break()
 
             self._add_title(
-                docx, "2025-2026 оқу жылына арналған баланың жеке даму картасы"
+                docx, f"{academic_year} оқу жылына арналған баланың жеке даму картасы"
             )
             fullname = format_kazakh_typography(student["fullname"])
             group_name = format_kazakh_typography(student["group_name"])
