@@ -7,7 +7,6 @@ from logic.docx_tools import (
     fill_all_children_in_big_file,
 )
 from logic.grow_card_builder import GrowCardBuilder
-from logic.grow_card_parser import GrowCardParser
 from logic.metrics_tools import build_all_grow_cards
 from logic.xlsx_tools import (
     fill_assessment_table,
@@ -149,7 +148,7 @@ class GrowFormExporter(Exporter):
         self.state = state
         self.progress_callback = progress_callback
         self.action_index = 0
-        self.total_actions = 5
+        self.total_actions = 2
 
     def progress(self, label: str):
         self.action_index += 1
@@ -160,19 +159,12 @@ class GrowFormExporter(Exporter):
         self.progress("Балалардың даму картасы файлы оқылуда...")
         grow_card_docx = Document(self.state.grow_card_file_path)
 
-        grow_card_parser = GrowCardParser(grow_card_docx)
         # progress - 2
-        self.progress("Талдау: оқу жылын анықтау")
-        academic_year = grow_card_parser.parse_academic_year()
-        # progress - 3
-        self.progress("Талдау: топ атауы мен түрін анықтау")
-        group_name = grow_card_parser.parse_group_name()
-        # progress - 4
-        self.progress("Талдау: балалардың аттарын, туған күнін және бағаларын жинау")
-        students_cards = grow_card_parser.parse()
-
-        # progress - 5
         grow_card_builder = GrowCardBuilder(grow_card_docx)
         self.progress("Файлды құрастыру: балалардың даму картасы файлын дайындау")
-        result_docx = grow_card_builder.build(students_cards, academic_year, group_name)
+        result_docx = grow_card_builder.build(
+            self.state.students_cards,
+            self.state.academic_year,
+            self.state.group_name,
+        )
         return ExportResult(result_docx)

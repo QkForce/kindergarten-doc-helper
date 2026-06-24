@@ -4,6 +4,7 @@ from gui.constants.strings import GROW_CARD_FORMATTER_OPTIONS
 from gui.constants.icons import IconPaths
 from gui.state import GrowFormState
 from gui.steps.common.step_file_select import StepFileSelect, StepFileSelectOptions
+from gui.steps.step_sort_children import StepSortChildren
 from gui.steps.common.step_file_export import StepFileExportOptions, StepFileExport
 from gui.widgets.wizard_widget import WizardWidget, ModuleOptions
 from logic.types import Step
@@ -32,6 +33,7 @@ class GrowFormPage(WizardWidget[GrowFormState]):
         exporter = GrowFormExporter()
         step_factories = [
             lambda: StepFileSelect(state, file_select_options, parent=self),
+            lambda: StepSortChildren(state, parent=self),
             lambda: StepFileExport(state, exporter, file_export_options, parent=self),
         ]
         steps = []
