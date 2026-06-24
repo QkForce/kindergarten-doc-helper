@@ -90,3 +90,6 @@ class GrowFormState(ChecklistBaseState):
         super().__init__()
         self.grow_card_file_path = None
         self.temp_file_path = None
+        self.academic_year: str = ""
+        self.group_name: str = ""
+        self.students_cards: list[dict] = None
