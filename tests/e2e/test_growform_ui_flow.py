@@ -1,9 +1,11 @@
 from gui.pages.growform_page import GrowFormPage
+import gui.steps.base_loader_step as step_loader_module
 import gui.steps.common.step_file_export as step_file_export_module
 from tests.e2e.helpers import mock_ui_dialogs, sync_worker, init_test_page
 from tests.e2e.test_config import growform_cfg as conf
 from tests.e2e.step_assertions import (
     assert_step_file_select,
+    assert_step_sort_children,
     assert_step_file_export,
 )
 
@@ -11,6 +13,7 @@ from tests.e2e.step_assertions import (
 @mock_ui_dialogs
 def test_growform_ui_flow(qtbot, monkeypatch, tmp_path):
     output_path = tmp_path / "growform_output.docx"
+    monkeypatch.setattr(step_loader_module, "start_worker_task", sync_worker)
     monkeypatch.setattr(step_file_export_module, "start_worker_task", sync_worker)
 
     assert (
@@ -37,10 +40,17 @@ def test_growform_ui_flow(qtbot, monkeypatch, tmp_path):
         conf.grow_card_path,
     )
 
-    assert_step_file_export(
+    assert_step_sort_children(
         qtbot,
         monkeypatch,
         page.get_step(1),
+        page,
+    )
+
+    assert_step_file_export(
+        qtbot,
+        monkeypatch,
+        page.get_step(2),
         output_path,
         conf.out_dir,
         conf.out_file_name,

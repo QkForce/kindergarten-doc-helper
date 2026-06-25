@@ -85,7 +85,9 @@ def assert_step_file_select(qtbot, monkeypatch, step, page, grow_card_path):
     assert step is not None, "step_file_select виджеті табылмады"
     qtbot.waitUntil(lambda: step.isVisible(), timeout=5000)
 
-    monkeypatch.setattr(QFileDialog, "getOpenFileName", mock_file_dialog(grow_card_path))
+    monkeypatch.setattr(
+        QFileDialog, "getOpenFileName", mock_file_dialog(grow_card_path)
+    )
     QTest.mouseClick(step.file_select_widget.btn_browse, Qt.LeftButton)
     QApplication.processEvents()
 
@@ -230,6 +232,20 @@ def assert_step_monform_setup(qtbot, monkeypatch, page):
     assert (
         page.btn_next.isEnabled()
     ), "step_monform_setup: 'Келесі' батырмасы белсенді емес!"
+
+    QTest.mouseClick(page.btn_next, Qt.LeftButton)
+    QApplication.processEvents()
+
+
+def assert_step_sort_children(qtbot, monkeypatch, step, page):
+    assert step is not None, "step_sort_children виджеті табылмады"
+    qtbot.waitUntil(lambda: step.isVisible(), timeout=5000)
+
+    qtbot.waitUntil(lambda: page.btn_next.isEnabled(), timeout=5000)
+    assert page.btn_next.isEnabled(), (
+        "step_sort_children: Балалардың даму картасы файлы таңдалмады "
+        "немесе 'Келесі' батырмасы бұғаттаулы!"
+    )
 
     QTest.mouseClick(page.btn_next, Qt.LeftButton)
     QApplication.processEvents()
