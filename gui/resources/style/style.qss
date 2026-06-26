@@ -282,6 +282,34 @@ QWidget#metric_score_toggle  #score_button {
 }
 
 
+/* GROW CARD FORMATTER */
+
+QFrame#sort_children_content > QTableWidget {
+    background-color: transparent;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    gridline-color: @BORDER;
+    outline: none;
+}
+QFrame#sort_children_content > QTableWidget QHeaderView {
+    border-top: 1px solid @BORDER;
+    border-bottom: none;
+    border-radius: none;
+}
+QFrame#sort_children_content > QTableWidget QHeaderView::section:horizontal {
+    border-right: 1px solid @BORDER;
+    border-bottom: none;
+}
+QFrame#sort_children_content > QTableView::item {
+    border: none;
+    border-top: 1px solid @BORDER;
+    border-right: 1px solid @BORDER;
+}
+QFrame#sort_children_content > QTableView::item:selected {
+    background-color: @CELL_SELECTED_BG;
+    color: @CELL_TEXT;
+}
+
 /* SETTINGS DIALOG */
 
 QFrame#sidebar_frame {

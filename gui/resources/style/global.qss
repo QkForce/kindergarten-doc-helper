@@ -322,6 +322,11 @@ QTableView QHeaderView::section:horizontal {
     background-color: transparent;
 }
 
+QTableWidget QTableCornerButton::section {
+    background-color: @HEADER_CELL_BACKGROUND;
+    border-top-left-radius: 8px;
+}
+
 QTableView::item {
     padding: 0px;
     margin: 0px;

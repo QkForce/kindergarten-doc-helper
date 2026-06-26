@@ -8,6 +8,7 @@ from PySide6.QtWidgets import (
 
 from gui.steps.base_loader_step import BaseLoaderStep, StepLoaderOptions
 from gui.state import GrowFormState
+from gui.steps.contents.sort_children_content import SortChildrenContent
 from logic.grow_card_parser import GrowCardParser
 
 
@@ -21,11 +22,7 @@ class StepSortChildren(BaseLoaderStep[GrowFormState]):
             error_title="",
             error_desc="",
         )
-        content_widget = QListWidget()
-        content_widget.setDragEnabled(True)
-        content_widget.setAcceptDrops(True)
-        content_widget.setDropIndicatorShown(True)
-        content_widget.setDragDropMode(QAbstractItemView.InternalMove)
+        content_widget = SortChildrenContent()
         super().__init__(state, options, content_widget, parent)
 
     def connect_signals(self):
@@ -44,12 +41,9 @@ class StepSortChildren(BaseLoaderStep[GrowFormState]):
         }
 
     def validate_before_next(self):
-        sorted_cards = []
-        for i in range(self.content_widget.count()):
-            item = self.content_widget.item(i)
-            child_data = item.data(100)
-            sorted_cards.append(child_data)
-        self.state.students_cards = sorted_cards
+        # sorted_cards = []
+        # self.content_widget.applyData()
+        # self.state.students_cards = sorted_cards
         return True
 
     def is_result_empty(self, result):
@@ -60,12 +54,8 @@ class StepSortChildren(BaseLoaderStep[GrowFormState]):
         self.state.group_name = result["group_name"]
         self.state.students_cards = result["students_cards"]
 
-        self.content_widget.clear()
-        for child in result["students_cards"]:
-            fullname = child.get("fullname", "Белгісіз бала")
-            item = QListWidgetItem(fullname)
-            item.setData(100, child)
-            self.content_widget.addItem(item)
+        # self.content_widget.clear()
+        self.content_widget.applyData(result["students_cards"])
 
     def load_failed(self, err):
         return
