@@ -2,11 +2,13 @@ from PySide6.QtWidgets import (
     QFrame,
     QVBoxLayout,
     QLabel,
-    QTableWidget,
+    QAbstractItemView,
     QTableWidgetItem,
     QHeaderView,
 )
 from PySide6.QtCore import Qt
+
+from gui.widgets.reorderable_table_widget import ReorderableTableWidget
 
 
 class SortChildrenContent(QFrame):
@@ -17,14 +19,17 @@ class SortChildrenContent(QFrame):
         sub_title = QLabel("Балалар тізімі:")
         sub_title.setProperty("lbl-level", "h3")
 
-        self.table = QTableWidget()
+        self.table = ReorderableTableWidget()
         self.table.setShowGrid(False)
-        self.table.setSelectionBehavior(QTableWidget.SelectRows)
-        self.table.setSelectionMode(QTableWidget.SingleSelection)
         self.table.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
         self.table.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
         self.table.setCornerButtonEnabled(False)
-
+        self.table.setDragEnabled(True)
+        self.table.setAcceptDrops(True)
+        self.table.setDropIndicatorShown(True)
+        self.table.setSelectionBehavior(QAbstractItemView.SelectRows)
+        self.table.setSelectionMode(QAbstractItemView.SingleSelection)
+        self.table.setDragDropMode(QAbstractItemView.InternalMove)
         self.table.setColumnCount(5)
         self.table.setHorizontalHeaderLabels(
             [
