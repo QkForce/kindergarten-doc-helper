@@ -9,8 +9,8 @@ class BadgeButton(QPushButton):
     def __init__(self, icon_path, label: str, text: str, parent=None):
         super().__init__(text, parent)
         self.setObjectName(f"badge_button")
-        self.setProperty("btn-mid", "medium")
-        self.setProperty("btn-type", "ghost")
+        self.setProperty("btn-size", "medium")
+        self.setProperty("btn-type", "outline")
         self.setFlat(True)
         self.label = label
         icon_pixmap = get_svg_pixmap(icon_path, AppColors.PRIMARY, 16)

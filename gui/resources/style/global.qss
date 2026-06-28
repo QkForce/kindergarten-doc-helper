@@ -61,14 +61,30 @@ QPushButton[btn-size="large"] {
 }
 
 QPushButton[btn-type="primary"] {
-    background-color: @BTN_PRIMARY_BG;
-    color: @CANVAS;
+    background-color: @BTN_PRIMARY_BASE_BG;
+    color: @BTN_PRIMARY_BASE_TEXT;
 }
 QPushButton[btn-type="primary"]:hover {
-    background-color: @BTN_PRIMARY_HOVER;
+    background-color: @BTN_PRIMARY_HOVER_BG;
+    color: @BTN_PRIMARY_HOVER_TEXT;
 }
 QPushButton[btn-type="primary"]:pressed {
-    background-color: @BTN_PRIMARY_PRESSED;
+    background-color: @BTN_PRIMARY_PRESSED_BG;
+    color: @BTN_PRIMARY_PRESSED_TEXT;
+}
+
+QPushButton[btn-type="outline"] {
+    background-color: @BTN_OUTLINE_BASE_BG;
+    border: 1px solid @BTN_OUTLINE_BASE_BORDER;
+    color: @BTN_OUTLINE_BASE_TEXT;
+}
+QPushButton[btn-type="outline"]:hover {
+    background-color: @BTN_OUTLINE_HOVER_BG;
+    color: @BTN_OUTLINE_HOVER_TEXT;
+}
+QPushButton[btn-type="outline"]:pressed {
+    background-color: @BTN_PRIMARY_PRESSED_BG;
+    color: @BTN_PRIMARY_PRESSED_TEXT;
 }
 
 IconButton[btn-type="ghost"] {

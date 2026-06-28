@@ -72,9 +72,20 @@ class AppColors:
     STATUS_DESC = Palette.Slate400
 
     # Button colors
-    BTN_PRIMARY_BG = Palette.Slate900
-    BTN_PRIMARY_HOVER = Palette.Blue700
-    BTN_PRIMARY_PRESSED = Palette.Blue600
+    BTN_PRIMARY_BASE_BG = Palette.Slate900
+    BTN_PRIMARY_BASE_TEXT = Palette.White
+    BTN_PRIMARY_HOVER_BG = Palette.Blue700
+    BTN_PRIMARY_HOVER_TEXT = Palette.White
+    BTN_PRIMARY_PRESSED_BG = Palette.Blue600
+    BTN_PRIMARY_PRESSED_TEXT = Palette.White
+
+    BTN_OUTLINE_BASE_BG = Palette.White
+    BTN_OUTLINE_BASE_BORDER = Palette.Slate200
+    BTN_OUTLINE_BASE_TEXT = Palette.Slate800
+    BTN_OUTLINE_HOVER_BG = Palette.Slate50
+    BTN_OUTLINE_HOVER_TEXT = Palette.Slate900
+    BTN_OUTLINE_PRESSED_BG = Palette.Slate100
+    BTN_OUTLINE_PRESSED_TEXT = Palette.Slate900
 
     BTN_GHOST_TEXT = Palette.Slate400  # #94A3B8
     BTN_GHOST_HOVER_TEXT = Palette.Slate800  # #1E293B
