@@ -1,5 +1,6 @@
 from PySide6.QtWidgets import (
     QFrame,
+    QHBoxLayout,
     QVBoxLayout,
     QLabel,
     QAbstractItemView,
@@ -8,7 +9,9 @@ from PySide6.QtWidgets import (
 )
 from PySide6.QtCore import Qt
 
+from gui.constants.icons import IconPaths
 from gui.widgets.reorderable_table_widget import ReorderableTableWidget
+from gui.widgets.ui.context_badge_group import BadgeButton, ContextBadgeGroup
 
 
 class SortChildrenContent(QFrame):
@@ -18,6 +21,16 @@ class SortChildrenContent(QFrame):
 
         sub_title = QLabel("Балалар тізімі:")
         sub_title.setProperty("lbl-level", "h3")
+        self.group_name_btn = BadgeButton(IconPaths.USERS, " Топ: ", "")
+        self.academic_year_btn = BadgeButton(IconPaths.CALENDAR, " Оқу жылы: ", "")
+        context_badge_group = ContextBadgeGroup(
+            [self.group_name_btn, self.academic_year_btn], parent=self
+        )
+
+        header_layout = QHBoxLayout()
+        header_layout.addWidget(sub_title)
+        header_layout.addStretch()
+        header_layout.addWidget(context_badge_group)
 
         self.table = ReorderableTableWidget()
         self.table.setShowGrid(False)
@@ -44,7 +57,7 @@ class SortChildrenContent(QFrame):
         layout = QVBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(8)
-        layout.addWidget(sub_title)
+        layout.addLayout(header_layout)
         layout.addWidget(self.table)
 
     def set_table_item(self, row, fullname, birth_date, start, mid, end):
@@ -54,13 +67,12 @@ class SortChildrenContent(QFrame):
         self.table.setItem(row, 3, QTableWidgetItem(str(mid)))
         self.table.setItem(row, 4, QTableWidgetItem(str(end)))
 
-    def applyData(self, children=None):
-        if children is not None:
-            self.children = children
+    def applyData(self, academic_year: str, group_name: str, students_cards: list):
+        self.group_name_btn.setText(group_name)
+        self.academic_year_btn.setText(academic_year[0:11])
 
-        self.table.setRowCount(len(self.children))
-
-        for row, child in enumerate(self.children):
+        self.table.setRowCount(len(students_cards))
+        for row, child in enumerate(students_cards):
             assessments = child.get("assessments", [])
             start_assessments = [
                 next(iter(a["criterion"]), "")

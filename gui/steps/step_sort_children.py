@@ -1,11 +1,5 @@
 from docx import Document
 
-from PySide6.QtWidgets import (
-    QListWidget,
-    QAbstractItemView,
-    QListWidgetItem,
-)
-
 from gui.steps.base_loader_step import BaseLoaderStep, StepLoaderOptions
 from gui.state import GrowFormState
 from gui.steps.contents.sort_children_content import SortChildrenContent
@@ -54,8 +48,7 @@ class StepSortChildren(BaseLoaderStep[GrowFormState]):
         self.state.group_name = result["group_name"]
         self.state.students_cards = result["students_cards"]
 
-        # self.content_widget.clear()
-        self.content_widget.applyData(result["students_cards"])
+        self.content_widget.applyData(**result)
 
     def load_failed(self, err):
         return
