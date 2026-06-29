@@ -41,6 +41,8 @@ class IconPaths:
     TRASH = str(ICON_DIR / "trash-2.svg")
     EDIT = str(ICON_DIR / "pen.svg")
     CLOSE = str(ICON_DIR / "x.svg")
+    ARROW_UP_DOWN = str(ICON_DIR / "arrow-up-down.svg")
+    ROTATE = str(ICON_DIR / "rotate-ccw.svg")
 
 
 class AnimationPaths:

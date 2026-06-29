@@ -6,10 +6,14 @@ from PySide6.QtWidgets import (
     QAbstractItemView,
     QTableWidgetItem,
     QHeaderView,
+    QPushButton,
 )
 from PySide6.QtCore import Qt
+from PySide6.QtGui import QIcon
 
+from gui.constants.colors import AppColors
 from gui.constants.icons import IconPaths
+from gui.utils.icon_utils import get_svg_pixmap
 from gui.widgets.reorderable_table_widget import ReorderableTableWidget
 from gui.widgets.ui.context_badge_group import BadgeButton, ContextBadgeGroup
 
@@ -19,6 +23,7 @@ class SortChildrenContent(QFrame):
         super().__init__()
         self.setObjectName("sort_children_content")
 
+        # HEADER
         sub_title = QLabel("Балалар тізімі:")
         sub_title.setProperty("lbl-level", "h3")
         self.group_name_btn = BadgeButton(IconPaths.USERS, " Топ: ", "")
@@ -32,6 +37,41 @@ class SortChildrenContent(QFrame):
         header_layout.addStretch()
         header_layout.addWidget(context_badge_group)
 
+        # TABLE CONTROL BAR
+        sort_table_label = QLabel("Кестені сұрыптау: ")
+        sort_table_label.setProperty("lbl-level", "h3")
+
+        sort_by_names_btn = QPushButton(" Бала есімімен")
+        sort_by_names_btn.setProperty("btn-size", "medium")
+        sort_by_names_btn.setProperty("btn-type", "outline")
+        arrow_up_down_pixmap = get_svg_pixmap(
+            IconPaths.ARROW_UP_DOWN, AppColors.PRIMARY, 16
+        )
+        sort_by_names_btn.setIcon(QIcon(arrow_up_down_pixmap))
+
+        sort_by_birthdate_btn = QPushButton(" Туған күнімен")
+        sort_by_birthdate_btn.setProperty("btn-size", "medium")
+        sort_by_birthdate_btn.setProperty("btn-type", "outline")
+        calendar_pixmap = get_svg_pixmap(IconPaths.CALENDAR, AppColors.PRIMARY, 16)
+        sort_by_birthdate_btn.setIcon(QIcon(calendar_pixmap))
+
+        return_first_ordering_btn = QPushButton(" Бастапқы реттілікке қайтару")
+        return_first_ordering_btn.setProperty("btn-size", "medium")
+        return_first_ordering_btn.setProperty("btn-type", "outline")
+        rotate_pixmap = get_svg_pixmap(IconPaths.ROTATE, AppColors.PRIMARY, 16)
+        return_first_ordering_btn.setIcon(QIcon(rotate_pixmap))
+
+        table_operations_bar_frame = QFrame()
+        table_operations_bar_layout = QHBoxLayout(table_operations_bar_frame)
+        table_operations_bar_layout.setContentsMargins(0, 0, 0, 0)
+        table_operations_bar_layout.setSpacing(20)
+        table_operations_bar_layout.addWidget(sort_table_label)
+        table_operations_bar_layout.addWidget(sort_by_names_btn)
+        table_operations_bar_layout.addWidget(sort_by_birthdate_btn)
+        table_operations_bar_layout.addStretch(1)
+        table_operations_bar_layout.addWidget(return_first_ordering_btn)
+
+        # TABLE
         self.table = ReorderableTableWidget()
         self.table.setShowGrid(False)
         self.table.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
@@ -56,8 +96,9 @@ class SortChildrenContent(QFrame):
 
         layout = QVBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)
-        layout.setSpacing(8)
+        layout.setSpacing(20)
         layout.addLayout(header_layout)
+        layout.addWidget(table_operations_bar_frame)
         layout.addWidget(self.table)
 
     def set_table_item(self, row, fullname, birth_date, start, mid, end):
