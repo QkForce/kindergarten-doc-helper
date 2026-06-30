@@ -284,6 +284,12 @@ QWidget#metric_score_toggle  #score_button {
 
 /* GROW CARD FORMATTER */
 
+QFrame#table_operations_bar_frame {
+    background-color: @SIDEBAR;
+    border: 1px solid @BORDER;
+    border-radius: 10px;
+}
+
 QFrame#sort_children_content > QTableWidget {
     background-color: transparent;
     border-bottom-left-radius: 10px;

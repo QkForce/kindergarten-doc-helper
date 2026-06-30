@@ -42,7 +42,7 @@ class SortChildrenContent(QFrame):
         sort_table_label.setProperty("lbl-level", "h3")
 
         sort_by_names_btn = QPushButton(" Бала есімімен")
-        sort_by_names_btn.setProperty("btn-size", "medium")
+        sort_by_names_btn.setProperty("btn-size", "small")
         sort_by_names_btn.setProperty("btn-type", "outline")
         arrow_up_down_pixmap = get_svg_pixmap(
             IconPaths.ARROW_UP_DOWN, AppColors.PRIMARY, 16
@@ -50,20 +50,21 @@ class SortChildrenContent(QFrame):
         sort_by_names_btn.setIcon(QIcon(arrow_up_down_pixmap))
 
         sort_by_birthdate_btn = QPushButton(" Туған күнімен")
-        sort_by_birthdate_btn.setProperty("btn-size", "medium")
+        sort_by_birthdate_btn.setProperty("btn-size", "small")
         sort_by_birthdate_btn.setProperty("btn-type", "outline")
         calendar_pixmap = get_svg_pixmap(IconPaths.CALENDAR, AppColors.PRIMARY, 16)
         sort_by_birthdate_btn.setIcon(QIcon(calendar_pixmap))
 
         return_first_ordering_btn = QPushButton(" Бастапқы реттілікке қайтару")
-        return_first_ordering_btn.setProperty("btn-size", "medium")
+        return_first_ordering_btn.setProperty("btn-size", "small")
         return_first_ordering_btn.setProperty("btn-type", "outline")
         rotate_pixmap = get_svg_pixmap(IconPaths.ROTATE, AppColors.PRIMARY, 16)
         return_first_ordering_btn.setIcon(QIcon(rotate_pixmap))
 
         table_operations_bar_frame = QFrame()
+        table_operations_bar_frame.setObjectName("table_operations_bar_frame")
         table_operations_bar_layout = QHBoxLayout(table_operations_bar_frame)
-        table_operations_bar_layout.setContentsMargins(0, 0, 0, 0)
+        table_operations_bar_layout.setContentsMargins(10, 10, 10, 10)
         table_operations_bar_layout.setSpacing(20)
         table_operations_bar_layout.addWidget(sort_table_label)
         table_operations_bar_layout.addWidget(sort_by_names_btn)
