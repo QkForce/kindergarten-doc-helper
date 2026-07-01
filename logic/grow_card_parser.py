@@ -86,31 +86,54 @@ class GrowCardParser:
 
     def parse(self) -> list[dict]:
         students_cards = []
-        current_meta = {"fullname": "", "birth_date": ""}
+        index = 0
+        fullname, birth_date = "", ""
+
         for block in self.iter_block_items(self.doc):
             if isinstance(block, Paragraph):
                 text = block.text.strip()
                 if not text:
                     continue
-                if "Баланың Т.А.Ә" in text or "Т.А.Ә" in text:
-                    current_meta["fullname"] = self._clean_meta_value(text, "Т.А.Ә")
-                elif "туған жылы" in text or "күні" in text:
-                    keyword = "күні" if "күні" in text else "жылы"
-                    raw_value = self._clean_meta_value(text, keyword)
-                    current_meta["birth_date"] = self._extract_birth_date(raw_value)
+
+                text_lower = text.lower()
+
+                if "баланың т.а.ә" in text_lower or "т.а.ә" in text_lower:
+                    keyword = (
+                        "Т.А.Ә"
+                        if "Т.А.Ә" in text
+                        else ("т.а.ә" if "т.а.ә" in text else "Т.А.Ә")
+                    )
+                    fullname = self._clean_meta_value(text, keyword)
+                elif "туған жылы" in text_lower or "күні" in text_lower:
+                    keyword = "күні" if "күні" in text_lower else "жылы"
+                    clean_kw = (
+                        "күні"
+                        if "күні" in text
+                        else ("Күні" if "Күні" in text else "жылы")
+                    )
+                    raw_value = self._clean_meta_value(text, clean_kw)
+                    birth_date = self._extract_birth_date(raw_value)
+
             elif isinstance(block, Table):
-                if not block.rows or "Құзыреттіліктер" not in block.cell(0, 0).text:
+                if not block.rows or len(block.rows[0].cells) == 0:
                     continue
+
+                if "Құзыреттіліктер" not in block.cell(0, 0).text:
+                    continue
+
                 assessments = self._parse_table_rows(block)
                 if assessments:
+                    index += 1
                     students_cards.append(
                         {
-                            "fullname": current_meta["fullname"] or "Анықталмады",
-                            "birth_date": current_meta["birth_date"] or "Анықталмады",
+                            "id": index,
+                            "fullname": fullname or "Анықталмады",
+                            "birth_date": birth_date or "Анықталмады",
                             "assessments": assessments,
                         }
                     )
-                current_meta = {"fullname": "", "birth_date": ""}
+                fullname, birth_date = "", ""
+
         return students_cards
 
     def _extract_birth_date(self, raw_value: str) -> str:
