@@ -121,14 +121,24 @@ class GrowCardParser:
                 if "Құзыреттіліктер" not in block.cell(0, 0).text:
                     continue
 
+                if not fullname:
+                    raise ValueError(
+                        "Қате: Құжаттағы кестеден бұрын студенттің аты-жөні табылмады!"
+                    )
+
+                if not birth_date:
+                    raise ValueError(
+                        "Қате: Құжаттағы кестеден бұрын студенттің туған күні табылмады!"
+                    )
+
                 assessments = self._parse_table_rows(block)
                 if assessments:
                     index += 1
                     students_cards.append(
                         {
                             "id": index,
-                            "fullname": fullname or "Анықталмады",
-                            "birth_date": birth_date or "Анықталмады",
+                            "fullname": fullname,
+                            "birth_date": birth_date,
                             "assessments": assessments,
                         }
                     )
