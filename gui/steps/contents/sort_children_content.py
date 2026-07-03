@@ -22,6 +22,10 @@ class SortChildrenContent(QFrame):
     def __init__(self):
         super().__init__()
         self.setObjectName("sort_children_content")
+        self.group_name = ""
+        self.academic_year = ""
+        self.original_students = []
+        self.current_students = []
 
         # HEADER
         sub_title = QLabel("Балалар тізімі:")
@@ -102,43 +106,50 @@ class SortChildrenContent(QFrame):
         layout.addWidget(table_operations_bar_frame)
         layout.addWidget(self.table)
 
-    def set_table_item(self, row, fullname, birth_date, start, mid, end):
-        self.table.setItem(row, 0, QTableWidgetItem(str(fullname)))
-        self.table.setItem(row, 1, QTableWidgetItem(str(birth_date)))
-        self.table.setItem(row, 2, QTableWidgetItem(start))
-        self.table.setItem(row, 3, QTableWidgetItem(str(mid)))
-        self.table.setItem(row, 4, QTableWidgetItem(str(end)))
+    def set_table_item(self, row, child_dict):
+        assessments = child_dict.get("assessments", [])
+        start_assessments = [
+            next(iter(a["criterion"]), "") for a in assessments if len(a["start"]) > 1
+        ]
+        mid_assessments = [
+            next(iter(a["criterion"]), "") for a in assessments if len(a["mid"]) > 1
+        ]
+        end_assessments = [
+            next(iter(a["criterion"]), "") for a in assessments if len(a["end"]) > 1
+        ]
 
-    def applyData(self, academic_year: str, group_name: str, students_cards: list):
-        self.group_name_btn.setText(group_name)
-        self.academic_year_btn.setText(academic_year[0:11])
+        fullname_item = QTableWidgetItem(str(str(child_dict.get("fullname", ""))))
+        fullname_item.setData(100, child_dict)
+        birth_date_item = QTableWidgetItem(str(child_dict.get("birth_date", "")))
+        start_assessments_item = QTableWidgetItem(", ".join(start_assessments))
+        mid_assessments_item = QTableWidgetItem(", ".join(mid_assessments))
+        end_assessments_item = QTableWidgetItem(", ".join(end_assessments))
 
-        self.table.setRowCount(len(students_cards))
-        for row, child in enumerate(students_cards):
-            assessments = child.get("assessments", [])
-            start_assessments = [
-                next(iter(a["criterion"]), "")
-                for a in assessments
-                if len(a["start"]) > 1
-            ]
-            mid_assessments = [
-                next(iter(a["criterion"]), "") for a in assessments if len(a["mid"]) > 1
-            ]
-            end_assessments = [
-                next(iter(a["criterion"]), "") for a in assessments if len(a["end"]) > 1
-            ]
-            self.set_table_item(
-                row,
-                child.get("fullname", ""),
-                child.get("birth_date", ""),
-                ", ".join(start_assessments),
-                ", ".join(mid_assessments),
-                ", ".join(end_assessments),
-            )
+        self.table.setItem(row, 0, fullname_item)
+        self.table.setItem(row, 1, birth_date_item)
+        self.table.setItem(row, 2, start_assessments_item)
+        self.table.setItem(row, 3, mid_assessments_item)
+        self.table.setItem(row, 4, end_assessments_item)
 
+    def _refresh_table_ui(self):
+        self.table.setRowCount(len(self.current_students))
+        for row, child in enumerate(self.current_students):
+            self.set_table_item(row, child)
         header = self.table.horizontalHeader()
         header.setSectionResizeMode(0, QHeaderView.ResizeMode.Interactive)
         self.table.setColumnWidth(0, 260)
         header.setSectionResizeMode(1, QHeaderView.ResizeMode.ResizeToContents)
         for i in range(2, self.table.columnCount()):
             header.setSectionResizeMode(i, QHeaderView.ResizeMode.Stretch)
+
+    def applyData(self, academic_year: str, group_name: str, students_cards: list):
+        self.academic_year = academic_year
+        self.group_name = group_name
+        if not self.original_students:
+            self.original_students = list(students_cards)
+        self.current_students = list(students_cards)
+
+        self.group_name_btn.setText(group_name)
+        self.academic_year_btn.setText(academic_year[0:11])
+
+        self._refresh_table_ui()
