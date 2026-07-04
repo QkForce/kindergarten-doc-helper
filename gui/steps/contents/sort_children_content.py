@@ -16,6 +16,7 @@ from gui.constants.icons import IconPaths
 from gui.utils.icon_utils import get_svg_pixmap
 from gui.widgets.reorderable_table_widget import ReorderableTableWidget
 from gui.widgets.ui.context_badge_group import BadgeButton, ContextBadgeGroup
+from gui.utils.string_utils import get_sort_key
 
 
 class SortChildrenContent(QFrame):
@@ -105,6 +106,12 @@ class SortChildrenContent(QFrame):
         layout.addLayout(header_layout)
         layout.addWidget(table_operations_bar_frame)
         layout.addWidget(self.table)
+
+        sort_by_names_btn.clicked.connect(self._sort_by_fullname)
+
+    def _sort_by_fullname(self):
+        self.current_students.sort(key=lambda x: get_sort_key(x.get("fullname", "")))
+        self._refresh_table_ui()
 
     def set_table_item(self, row, child_dict):
         assessments = child_dict.get("assessments", [])
