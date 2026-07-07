@@ -60,11 +60,11 @@ class SortChildrenContent(QFrame):
         calendar_pixmap = get_svg_pixmap(IconPaths.CALENDAR, AppColors.PRIMARY, 16)
         sort_by_birthdate_btn.setIcon(QIcon(calendar_pixmap))
 
-        return_first_ordering_btn = QPushButton(" Бастапқы реттілікке қайтару")
-        return_first_ordering_btn.setProperty("btn-size", "small")
-        return_first_ordering_btn.setProperty("btn-type", "outline")
+        reset_sorting_btn = QPushButton(" Бастапқы реттілікке қайтару")
+        reset_sorting_btn.setProperty("btn-size", "small")
+        reset_sorting_btn.setProperty("btn-type", "outline")
         rotate_pixmap = get_svg_pixmap(IconPaths.ROTATE, AppColors.PRIMARY, 16)
-        return_first_ordering_btn.setIcon(QIcon(rotate_pixmap))
+        reset_sorting_btn.setIcon(QIcon(rotate_pixmap))
 
         table_operations_bar_frame = QFrame()
         table_operations_bar_frame.setObjectName("table_operations_bar_frame")
@@ -75,7 +75,7 @@ class SortChildrenContent(QFrame):
         table_operations_bar_layout.addWidget(sort_by_names_btn)
         table_operations_bar_layout.addWidget(sort_by_birthdate_btn)
         table_operations_bar_layout.addStretch(1)
-        table_operations_bar_layout.addWidget(return_first_ordering_btn)
+        table_operations_bar_layout.addWidget(reset_sorting_btn)
 
         # TABLE
         self.table = ReorderableTableWidget()
@@ -109,6 +109,7 @@ class SortChildrenContent(QFrame):
 
         sort_by_names_btn.clicked.connect(self._sort_by_fullname)
         sort_by_birthdate_btn.clicked.connect(self._sort_by_birthdate)
+        reset_sorting_btn.clicked.connect(self._reset_sorting)
 
     def _sort_by_fullname(self):
         self.current_students.sort(key=lambda x: get_sort_key(x.get("fullname", "")))
@@ -118,6 +119,10 @@ class SortChildrenContent(QFrame):
         self.current_students.sort(
             key=lambda x: get_date_sort_key(x.get("birth_date", ""))
         )
+        self._refresh_table_ui()
+
+    def _reset_sorting(self):
+        self.current_students = list(self.original_students)
         self._refresh_table_ui()
 
     def set_table_item(self, row, child_dict):
@@ -167,3 +172,16 @@ class SortChildrenContent(QFrame):
         self.academic_year_btn.setText(academic_year[0:11])
 
         self._refresh_table_ui()
+
+    def getData(self):
+        students_cards = []
+        for row in range(self.table.rowCount()):
+            item = self.table.item(row, 0)
+            if item is not None:
+                child_dict = item.data(100)
+                students_cards.append(child_dict)
+        return {
+            "academic_year": self.academic_year,
+            "group_name": self.group_name,
+            "students_cards": students_cards,
+        }
