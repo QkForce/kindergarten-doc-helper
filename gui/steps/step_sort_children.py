@@ -1,5 +1,7 @@
 from docx import Document
 
+from PySide6.QtWidgets import QMessageBox
+
 from gui.steps.base_loader_step import BaseLoaderStep, StepLoaderOptions
 from gui.state import GrowFormState
 from gui.steps.contents.sort_children_content import SortChildrenContent
@@ -9,12 +11,18 @@ from logic.grow_card_parser import GrowCardParser
 class StepSortChildren(BaseLoaderStep[GrowFormState]):
     def __init__(self, state, parent=None):
         options = StepLoaderOptions(
-            loading_title="",
-            loading_desc="",
-            empty_title="",
-            empty_desc="",
-            error_title="",
-            error_desc="",
+            loading_title="Деректерді талдау",
+            loading_desc="Балалардың даму картасын талдау және топтағы балалар тізімін шығару",
+            empty_title="Балалар тізімі бос",
+            empty_desc=(
+                "Файлдағы балалар тізімі бос немесе талдау кезінде қате пайда болды. "
+                "Өтінеміз, дұрыс файл таңдағаныңызды тексеріңіз."
+            ),
+            error_title="Файлды талдау кезіндегі қате",
+            error_desc=(
+                "Файлды оқу кезінде қате пайда болды: {} "
+                "Өтінеміз, дұрыс файл таңдағаныңызды тексеріңіз."
+            ),
         )
         content_widget = SortChildrenContent()
         super().__init__(state, options, content_widget, parent)
@@ -35,9 +43,31 @@ class StepSortChildren(BaseLoaderStep[GrowFormState]):
         }
 
     def validate_before_next(self):
-        # sorted_cards = []
-        # self.content_widget.applyData()
-        # self.state.students_cards = sorted_cards
+        data = self.content_widget.getData()
+        self.state.students_cards = data["students_cards"]
+        self.state.academic_year = data["academic_year"]
+        self.state.group_name = data["group_name"]
+        if not self.state.students_cards:
+            QMessageBox.critical(
+                self,
+                "Деректер бүтіндігінің бұзылуы",
+                "Топтағы балалар тізімі бос. Өтінеміз, дұрыс файл таңдағаныңызды тексеріңіз.",
+            )
+            return False
+        if not self.state.academic_year:
+            QMessageBox.critical(
+                self,
+                "Деректер бүтіндігінің бұзылуы",
+                "Оқу жылы анықталмады. Өтінеміз, дұрыс файл таңдағаныңызды тексеріңіз.",
+            )
+            return False
+        if not self.state.group_name:
+            QMessageBox.critical(
+                self,
+                "Деректер бүтіндігінің бұзылуы",
+                "Топ атауы анықталмады. Өтінеміз, дұрыс файл таңдағаныңызды тексеріңіз.",
+            )
+            return False
         return True
 
     def is_result_empty(self, result):
@@ -51,4 +81,6 @@ class StepSortChildren(BaseLoaderStep[GrowFormState]):
         self.content_widget.applyData(**result)
 
     def load_failed(self, err):
+        # It isn't necessary to show the error message here,
+        # because the BaseLoaderStep already shows it in the error state.
         return
