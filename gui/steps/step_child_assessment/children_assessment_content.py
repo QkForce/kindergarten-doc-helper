@@ -1,7 +1,7 @@
 from PySide6.QtWidgets import QFrame, QHBoxLayout
 from PySide6.QtCore import Signal
 
-from gui.widgets.child_selector import ChildSelector
+from gui.steps.step_child_assessment.child_selector import ChildSelector
 from gui.widgets.assessment_area import AssessmentArea
 from logic.assessment_tools import get_assessment_status
 

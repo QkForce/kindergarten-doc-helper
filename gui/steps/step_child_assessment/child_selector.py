@@ -11,7 +11,7 @@ from PySide6.QtWidgets import (
 from PySide6.QtCore import Signal
 
 from logic.types import AssessmentStatus
-from gui.widgets.items.child_item import ChildItemWidget
+from gui.steps.step_child_assessment.child_item import ChildItemWidget
 
 
 class ChildSelector(QFrame):
