@@ -1,3 +1,4 @@
+import sys
 from pathlib import Path
 
 from PySide6.QtWidgets import QApplication, QGraphicsDropShadowEffect
@@ -6,8 +7,23 @@ from PySide6.QtGui import QColor
 from gui.constants.colors import AppColors
 
 
-def read_stylesheet(file_path: str):
-    with open(file_path, "r", encoding="utf-8") as f:
+def get_resource_path(relative_path: str) -> Path:
+    """
+    EXE режимінде (sys._MEIPASS) және жай Python режимінде
+    ресурстардың нақты абсолютті жолын қайтарады.
+    """
+    if getattr(sys, 'frozen', False):
+        base_path = Path(sys._MEIPASS)
+    else:
+        # Скрипт ретінде іске қосылғанда жобаның негізгі папкасын табу
+        base_path = Path(__file__).resolve().parent.parent.parent
+
+    return base_path / relative_path
+
+
+def read_stylesheet(file_path: str | Path):
+    path = Path(file_path)
+    with open(path, "r", encoding="utf-8") as f:
         style_data = f.read()
 
     for key, value in AppColors.__dict__.items():
@@ -15,7 +31,7 @@ def read_stylesheet(file_path: str):
             style_data = style_data.replace("@" + key, value)
 
     if "@" in style_data:
-        print(f"⚠️ [STYLE WARNING]: Unreplaced color variables in {file_path}")
+        print(f"⚠️ [STYLE WARNING]: Unreplaced color variables in {path.name}")
 
     return style_data
 
@@ -25,12 +41,14 @@ def load_stylesheets(target, qss_file_paths: list[str]):
     loaded_count = 0
 
     for file_path in qss_file_paths:
-        path = Path(file_path)
-        if path.exists():
-            combined_style += read_stylesheet(file_path) + "\n"
+        # Жолды уақытша папкаға немесе негізгі директорияға сілтеп түрлендіру:
+        full_path = get_resource_path(file_path)
+
+        if full_path.exists():
+            combined_style += read_stylesheet(full_path) + "\n"
             loaded_count += 1
         else:
-            print(f"⚠️ [STYLE WARNING]: Файл табылмады: {path.absolute()}")
+            print(f"⚠️ [STYLE WARNING]: Файл табылмады: {full_path.absolute()}")
 
     if combined_style and loaded_count == len(qss_file_paths):
         target.setStyleSheet(combined_style)

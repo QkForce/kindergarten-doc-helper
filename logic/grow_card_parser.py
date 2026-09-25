@@ -73,7 +73,7 @@ class GrowCardParser:
 
         if not group_counter:
             raise ValueError(
-                "Қате: Құжаттан топ атауы «...»\s+\w+\s+\w+ үлгісу бойынша табылмады!"
+                r"Қате: Құжаттан топ атауы «...»\s+\w+\s+\w+ үлгісу бойынша табылмады!"
             )
 
         most_common = group_counter.most_common()

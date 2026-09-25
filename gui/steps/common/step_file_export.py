@@ -182,6 +182,8 @@ class StepFileExport(BaseStep[T]):
         self.exporter = exporter
         self.options = options
         self.last_error = ("", "")
+        self.is_exporting = False
+        self.current_worker = None
         super().__init__(state, parent=parent)
 
     def setup_ui(self):
@@ -299,17 +301,29 @@ class StepFileExport(BaseStep[T]):
         self.sig_progress.connect(self._listen_progress)
 
     def run_auto_load(self):
+        if self.is_exporting:
+            print(
+                "⚠️ [EXPORT WARNING]: Експорт процесі бұрыннан жүріп жатыр,"
+                " қайталап шақыру елеусіз калды."
+            )
+            return
+
         try:
-            self.sig_progress_state.emit()
+            self.is_exporting = True
             self.result_file = None
+
+            def progress_callback(name, current, total):
+                self.sig_progress.emit(name, current, total)
+
             self.exporter.set_data(
                 self.state,
-                self.sig_progress.emit,
+                progress_callback,
             )
-            start_worker_task(
+            self.current_worker = start_worker_task(
                 self.exporter.export, self._export_finished, self._export_failed
             )
         except Exception as e:
+            self.is_exporting = False
             self.last_error = (
                 AppStrings.EXPORT_ERROR_TITLE,
                 AppStrings.EXPORT_ERROR_DESC.format(str(e)),
@@ -338,6 +352,7 @@ class StepFileExport(BaseStep[T]):
             self.progress_bar.setValue(val)
 
     def _export_finished(self, result: ExportResult):
+        self.is_exporting = False
         self.result_file = result.data
 
         if result.is_success:
@@ -351,6 +366,7 @@ class StepFileExport(BaseStep[T]):
             self.sig_error_state.emit()
 
     def _export_failed(self, error):
+        self.is_exporting = False
         self.last_error = (
             AppStrings.EXPORT_ERROR_TITLE,
             AppStrings.EXPORT_ERROR_DESC.format(str(error)),

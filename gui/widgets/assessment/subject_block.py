@@ -94,11 +94,13 @@ class SubjectBlock(QFrame):
         # because it called this method, so its state is already up to date.
 
     def handle_child_update(self, met_id, score):
+        metric = self.metrics[met_id]
         self.metrics[met_id] = {
+            **metric,
+            "id": metric.get("id", met_id),
             "score": score,
-            "description": self.metrics[met_id]["description"],
-            "criteria": self.metrics[met_id]["criteria"],
         }
+
         cmn_score = get_subject_score_type(self.metrics)
         self.score_toggle.set_score(cmn_score)
         self.on_score_updated.emit(self.id, self.metrics)

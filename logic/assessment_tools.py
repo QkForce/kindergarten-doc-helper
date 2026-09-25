@@ -2,40 +2,30 @@ from logic.config_store import get_age_group_data
 from logic.types import AssessmentStatus
 
 
+def _updated_metric(metric_id, metric, score):
+    return {
+        **metric,
+        "id": metric.get("id", metric_id),
+        "score": score,
+    }
+
+
 def bulk_update(domains, score):
-    for dom_id, dom in domains.items():
-        for sub_id, sub in dom["subjects"].items():
-            for met_id, met in sub["metrics"].items():
-                domains[dom_id]["subjects"][sub_id]["metrics"][met_id] = {
-                    "score": score,
-                    "id": met_id,
-                    "code": met["code"],
-                    "description": met["description"],
-                    "criteria": met["criteria"],
-                }
+    for dom in domains.values():
+        for sub in dom["subjects"].values():
+            for met_id, metric in sub["metrics"].items():
+                sub["metrics"][met_id] = _updated_metric(met_id, metric, score)
 
 
 def set_subjects_score(subjects, score):
-    for sub_id, sub in subjects.items():
-        for met_id, met in sub["metrics"].items():
-            subjects[sub_id]["metrics"][met_id] = {
-                "score": score,
-                "id": met_id,
-                "code": met["code"],
-                "description": met["description"],
-                "criteria": met["criteria"],
-            }
+    for sub in subjects.values():
+        for met_id, metric in sub["metrics"].items():
+            sub["metrics"][met_id] = _updated_metric(met_id, metric, score)
 
 
 def set_metrics_score(metrics, score):
-    for met_id, met in metrics.items():
-        metrics[met_id] = {
-            "score": score,
-            "id": met_id,
-            "code": met["code"],
-            "description": met["description"],
-            "criteria": met["criteria"],
-        }
+    for met_id, metric in metrics.items():
+        metrics[met_id] = _updated_metric(met_id, metric, score)
 
 
 def get_child_common_score_type(score_dict):
