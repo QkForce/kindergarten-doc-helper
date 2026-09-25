@@ -3,7 +3,7 @@ from PySide6.QtWidgets import QMessageBox
 from PySide6.QtStateMachine import QStateMachine, QState
 from PySide6.QtCore import Signal
 
-from .children_assessment_content import ChildrenAssessmentWidget
+from .children_assessment_content import ChildrenAssessmentContent
 from gui.steps.base_step import BaseStep
 from gui.widgets.status_placeholder import StatusPlaceholder, ViewState
 from gui.state import SmartEntryState
@@ -27,7 +27,7 @@ class StepChildAssessment(BaseStep[SmartEntryState]):
         self.last_error = None
         self.loading = False
         self.status_placeholder = StatusPlaceholder()
-        self.content_widget = ChildrenAssessmentWidget(parent=self)
+        self.content_widget = ChildrenAssessmentContent(parent=self)
         self.content_widget.on_scores_updated.connect(
             lambda scores: setattr(self.state, "children_scores", scores)
         )

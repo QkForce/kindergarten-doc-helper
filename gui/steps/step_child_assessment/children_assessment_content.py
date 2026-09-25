@@ -6,7 +6,7 @@ from .assessment_area import AssessmentArea
 from logic.assessment_tools import get_assessment_status
 
 
-class ChildrenAssessmentWidget(QFrame):
+class ChildrenAssessmentContent(QFrame):
     on_scores_updated = Signal(dict)  # child_name -> score_dict
 
     def __init__(self, parent=None):
