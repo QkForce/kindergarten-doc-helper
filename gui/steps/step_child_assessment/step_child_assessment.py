@@ -3,8 +3,8 @@ from PySide6.QtWidgets import QMessageBox
 from PySide6.QtStateMachine import QStateMachine, QState
 from PySide6.QtCore import Signal
 
+from .children_assessment_content import ChildrenAssessmentWidget
 from gui.steps.base_step import BaseStep
-from gui.widgets.children_assessment_content import ChildrenAssessmentWidget
 from gui.widgets.status_placeholder import StatusPlaceholder, ViewState
 from gui.state import SmartEntryState
 from gui.constants.strings import AppStrings
