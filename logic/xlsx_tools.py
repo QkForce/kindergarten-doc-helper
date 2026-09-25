@@ -1,5 +1,6 @@
 import re
 from time import sleep
+from typing import Callable, List, Dict, Any, Optional
 from openpyxl import load_workbook
 from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
 
@@ -28,13 +29,15 @@ def fill_assessment_table(
     start_row: int,
     name_col: int,
     metrics_col: int,
-    metrics_codes: list,
-    children_data: list,
-    progress_callback=callable(lambda label, current_index, total_children: None),
+    metrics_codes: List[str],
+    children_data: List[Dict[str, Any]],
+    progress_callback: Optional[Callable[[str, int, int], None]] = None,
 ):
     """
     children_data: { 'name': str, 'metric_code': score (1, 2, or 3) }
     """
+    if progress_callback is None:
+        progress_callback = lambda label, current, total: None
     progress_callback("Loading the workbook", 0, 0)
     workbook = load_workbook(filename=file_path, read_only=False)
     sheet = workbook[sheet_name]
@@ -51,17 +54,13 @@ def fill_assessment_table(
                 sheet.cell(row=current_row, column=base_col + offset).value = None
 
             # Set new value
-            if score == 1:
-                sheet.cell(row=current_row, column=base_col, value=1)
-            elif score == 2:
-                sheet.cell(row=current_row, column=base_col + 1, value=1)
-            elif score == 3:
-                sheet.cell(row=current_row, column=base_col + 2, value=1)
+            if score in (1, 2, 3):
+                sheet.cell(row=current_row, column=base_col + (score - 1), value=1)
+        sleep(0.01)  # Simulate processing time
         progress_callback(
             child["name"], current_row - start_row + 1, len(children_data)
         )
         current_row += 1
-        sleep(0.01)  # Simulate processing time
     return workbook
 
 
