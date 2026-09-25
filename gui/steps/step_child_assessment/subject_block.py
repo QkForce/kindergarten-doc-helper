@@ -6,9 +6,9 @@ from PySide6.QtWidgets import (
 )
 from PySide6.QtCore import Signal
 
+from .metric_item import MetricItem
 from gui.widgets.rotating_icon import RotatingIcon
 from gui.widgets.score_toggle import ScoreToggle, ScoreButtonType
-from gui.widgets.assessment.metric_item import MetricItem
 from gui.constants.icons import IconPaths
 from gui.constants.colors import AppColors
 from gui.utils.icon_utils import get_svg_pixmap

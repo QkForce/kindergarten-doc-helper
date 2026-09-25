@@ -10,8 +10,8 @@ from PySide6.QtWidgets import (
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QIcon
 
+from .domain_block import DomainBlock
 from gui.widgets.score_toggle import ScoreToggle, ScoreButtonType
-from gui.widgets.assessment.domain_block import DomainBlock
 from gui.constants.colors import AppColors
 from gui.constants.icons import IconPaths
 from gui.utils.icon_utils import get_svg_pixmap
