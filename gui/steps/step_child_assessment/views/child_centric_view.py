@@ -1,8 +1,8 @@
 from PySide6.QtWidgets import QHBoxLayout
 
 from .base_view import BaseView
-from ..child_selector import ChildSelector
-from ..assessment_area import AssessmentArea
+from ..components.child_selector import ChildSelector
+from ..components.assessment_area import AssessmentArea
 from logic.assessment_tools import get_assessment_status
 
 
