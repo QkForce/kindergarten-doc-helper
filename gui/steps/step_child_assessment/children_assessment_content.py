@@ -1,15 +1,16 @@
 from PySide6.QtWidgets import (
-    QButtonGroup,
     QFrame,
+    QLabel,
     QWidget,
     QHBoxLayout,
     QVBoxLayout,
-    QPushButton,
     QStackedWidget,
 )
 from PySide6.QtCore import Signal
 
 from .views.child_centric_view import ChildCentricView
+from gui.widgets.ui.segmented_control import SegmentedControl
+from gui.constants.icons import IconPaths
 
 
 class ChildrenAssessmentContent(QWidget):
@@ -22,21 +23,20 @@ class ChildrenAssessmentContent(QWidget):
         self.setup_ui()
 
     def setup_ui(self):
-        self.btn_child_view = QPushButton("Балалар бойынша", self)
-        self.btn_domain_view = QPushButton("Бағыттар бойынша", self)
-        for btn in (self.btn_child_view, self.btn_domain_view):
-            btn.setCheckable(True)
-        self.mode_group = QButtonGroup(self)
-        self.mode_group.addButton(self.btn_child_view, 0)
-        self.mode_group.addButton(self.btn_domain_view, 1)
-        self.btn_child_view.setChecked(True)
+        views_label = QLabel("Көріністер: ", self)
+        views_label.setProperty("lbl-level", "h3")
+        options = [
+            ("Бала бойынша", IconPaths.USERS),
+            ("Бағыт бойынша", IconPaths.DOMAINS),
+        ]
+        self.segmented_control = SegmentedControl(options, default_index=0, parent=self)
 
         top_bar_frame = QFrame()
         top_bar_frame.setObjectName("top_bar_frame")
         top_bar_layout = QHBoxLayout(top_bar_frame)
-        top_bar_layout.setContentsMargins(16, 16, 16, 16)
-        top_bar_layout.addWidget(self.btn_child_view)
-        top_bar_layout.addWidget(self.btn_domain_view)
+        top_bar_layout.setContentsMargins(12, 8, 12, 8)
+        top_bar_layout.addWidget(views_label)
+        top_bar_layout.addWidget(self.segmented_control)
         top_bar_layout.addStretch()
 
         self.child_view = ChildCentricView(parent=self)
@@ -46,7 +46,7 @@ class ChildrenAssessmentContent(QWidget):
         self.stack.addWidget(self.child_view)  # Index 0
         self.stack.addWidget(self.domain_view)  # Index 1
 
-        self.mode_group.idClicked.connect(self._on_mode_changed)
+        self.segmented_control.on_option_changed.connect(self._on_mode_changed)
         self.child_view.on_scores_updated.connect(self._on_scores_updated)
         self.domain_view.on_scores_updated.connect(self._on_scores_updated)
 

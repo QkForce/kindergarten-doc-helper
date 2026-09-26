@@ -30,6 +30,7 @@ class IconPaths:
     COLLAPSE = str(ICON_DIR / "minimize-2.svg")
     USERS = str(ICON_DIR / "users.svg")
     CALENDAR = str(ICON_DIR / "calendar.svg")
+    DOMAINS = str(ICON_DIR / "crosshair.svg")
 
     # Smart Entry icons
     ENTRY_COMPLETED = str(ICON_DIR / "circle-check-big.svg")

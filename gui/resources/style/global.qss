@@ -186,6 +186,34 @@ QPushButton#score_btn_3:checked {
     color: @CANVAS;
 }
 
+/* SegmentedControl */
+
+QFrame#segmented_control {
+    background-color: @BG;
+    border: 1px solid @BORDER;
+    border-radius: 12px;
+}
+
+QPushButton#segment_button {
+    background-color: transparent;
+    color: @TEXT_MUTED;
+    border: none;
+    border-radius: 8px;
+    padding: 6px 8px;
+    font-weight: 500;
+    font-size: 12px;
+}
+QPushButton#segment_button:hover {
+    background-color: @SIDEBAR;
+    color: @TEXT_MAIN;
+}
+QPushButton#segment_button:checked {
+    background-color: @CANVAS;
+    color: @DARK;
+    border: 1px solid @BORDER;
+    font-weight: 600;
+}
+
 /* QCheckBox */
 
 QCheckBox {
