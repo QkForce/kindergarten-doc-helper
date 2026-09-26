@@ -147,22 +147,24 @@ def assert_step_child_assessment(qtbot, monkeypatch, page):
         step.last_error is None
     ), f"step_child_assessment: Жүктеу кезінде қате орын алған: {step.last_error}"
 
-    children_name_list = step.content_widget.selector.children_name_list
+    selector = step.content_widget.child_view.selector
+    assessment_area = step.content_widget.child_view.assessment_area
+    children_name_list = selector.children_name_list
     assert (
         len(children_name_list) > 5
     ), "step_child_assessment: Балалар тізімі толық жүктелмеген немесе бос!"
 
     for idx, child_name in enumerate(children_name_list):
-        click_list_item(step.content_widget.selector.list_widget, idx)
+        click_list_item(selector.list_widget, idx)
         qtbot.wait(150)
         QApplication.processEvents()
         qtbot.waitUntil(
-            lambda: step.content_widget.assessment_area.child_name == child_name,
+            lambda: assessment_area.child_name == child_name,
             timeout=5000,
         )
         QApplication.processEvents()
 
-        domain_blocks = step.content_widget.assessment_area.domain_blocks
+        domain_blocks = assessment_area.domain_blocks
         assert len(domain_blocks.items()) > 0, (
             "step_child_assessment: "
             f"Бағыттар тізімі жүктелмеген немесе бос! (Бала: {child_name})"

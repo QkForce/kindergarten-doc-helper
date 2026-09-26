@@ -151,7 +151,7 @@ QScrollArea {
 
 /*--- SMART ENTRY ---*/
 
-QWidget#children_assessment_widget {
+QWidget#child_centric_view_widget {
     background-color: @CANVAS;
     border: 1px solid @BORDER;
     border-radius: 24px;

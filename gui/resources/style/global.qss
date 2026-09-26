@@ -448,6 +448,12 @@ QSpinBox::down-arrow {
 
 /* QFrame */
 
+QFrame#top_bar_frame {
+    background-color: @CANVAS;
+    border: 1px solid @BORDER;
+    border-radius: 16px;
+}
+
 QFrame[frame-style="box"] {
     border: 1px solid @BORDER;
     border-radius: 8px;

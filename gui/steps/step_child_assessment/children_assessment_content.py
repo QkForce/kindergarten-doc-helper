@@ -1,48 +1,76 @@
-from PySide6.QtWidgets import QFrame, QHBoxLayout
+from PySide6.QtWidgets import (
+    QButtonGroup,
+    QFrame,
+    QWidget,
+    QHBoxLayout,
+    QVBoxLayout,
+    QPushButton,
+    QStackedWidget,
+)
 from PySide6.QtCore import Signal
 
-from .child_selector import ChildSelector
-from .assessment_area import AssessmentArea
-from logic.assessment_tools import get_assessment_status
+from .views.child_centric_view import ChildCentricView
 
 
-class ChildrenAssessmentContent(QFrame):
+class ChildrenAssessmentContent(QWidget):
     on_scores_updated = Signal(dict)  # child_name -> score_dict
 
     def __init__(self, parent=None):
         super().__init__(parent)
         # children_scores = [{"name": "Child 1", "code-1": 2, "code-2": 3}, ...]
         self.children_scores = {}
-        self.setObjectName("children_assessment_widget")
+        self.setup_ui()
 
-        self.selector = ChildSelector(parent=self)
-        self.selector.childSelected.connect(self.handle_child_selection)
+    def setup_ui(self):
+        self.btn_child_view = QPushButton("Балалар бойынша", self)
+        self.btn_domain_view = QPushButton("Бағыттар бойынша", self)
+        for btn in (self.btn_child_view, self.btn_domain_view):
+            btn.setCheckable(True)
+        self.mode_group = QButtonGroup(self)
+        self.mode_group.addButton(self.btn_child_view, 0)
+        self.mode_group.addButton(self.btn_domain_view, 1)
+        self.btn_child_view.setChecked(True)
 
-        self.assessment_area = AssessmentArea(parent=self)
-        self.assessment_area.on_score_updated.connect(self.handle_score_update)
+        top_bar_frame = QFrame()
+        top_bar_frame.setObjectName("top_bar_frame")
+        top_bar_layout = QHBoxLayout(top_bar_frame)
+        top_bar_layout.setContentsMargins(16, 16, 16, 16)
+        top_bar_layout.addWidget(self.btn_child_view)
+        top_bar_layout.addWidget(self.btn_domain_view)
+        top_bar_layout.addStretch()
 
-        layout = QHBoxLayout(self)
+        self.child_view = ChildCentricView(parent=self)
+        self.domain_view = ChildCentricView(parent=self)
+
+        self.stack = QStackedWidget(self)
+        self.stack.addWidget(self.child_view)  # Index 0
+        self.stack.addWidget(self.domain_view)  # Index 1
+
+        self.mode_group.idClicked.connect(self._on_mode_changed)
+        self.child_view.on_scores_updated.connect(self._on_scores_updated)
+        self.domain_view.on_scores_updated.connect(self._on_scores_updated)
+
+        layout = QVBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(0)
-        layout.addWidget(self.selector)
-        layout.addWidget(self.assessment_area, 1)
+        layout.addWidget(top_bar_frame)
+        layout.addSpacing(16)
+        layout.addWidget(self.stack, 1)
 
-    def applyData(self, children_scores):
+    def applyData(self, children_scores: dict):
+        """Деректер келгенде екі көрініске де береміз."""
         self.children_scores = children_scores
-        selector_data = [
-            (name, get_assessment_status(scores))
-            for name, scores in children_scores.items()
-        ]
-        self.selector.applyData(selector_data)
-        first_child_name = selector_data[0][0] if selector_data else None
-        if first_child_name:
-            self.selector.selectChild(first_child_name)
+        self.child_view.applyData(self.children_scores)
+        self.domain_view.applyData(self.children_scores)
 
-    def handle_child_selection(self, name):
-        self.assessment_area.applyChildData(name, self.children_scores[name])
+    def _on_mode_changed(self, mode_id: int):
+        """Режим ауысқанда соңғы стейтті белсенді view-ға синхрондау."""
+        self.stack.setCurrentIndex(mode_id)
+        if mode_id == 0:
+            self.child_view.applyData(self.children_scores)
+        else:
+            self.domain_view.applyData(self.children_scores)
 
-    def handle_score_update(self, child_name, scoring_dict):
-        self.children_scores[child_name] = scoring_dict
-        assessment_status = get_assessment_status(scoring_dict)
-        self.selector.setChildStatus(child_name, assessment_status)
+    def _on_scores_updated(self, updated_scores: dict):
+        self.children_scores = updated_scores
         self.on_scores_updated.emit(self.children_scores)
