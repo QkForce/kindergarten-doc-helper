@@ -9,6 +9,7 @@ from PySide6.QtWidgets import (
 from PySide6.QtCore import Signal
 
 from .views.child_centric_view import ChildCentricView
+from .views.domain_centric_view import DomainCentricView
 from gui.widgets.ui.segmented_control import SegmentedControl
 from gui.constants.icons import IconPaths
 
@@ -40,7 +41,7 @@ class ChildrenAssessmentContent(QWidget):
         top_bar_layout.addStretch()
 
         self.child_view = ChildCentricView(parent=self)
-        self.domain_view = ChildCentricView(parent=self)
+        self.domain_view = DomainCentricView(parent=self)
 
         self.stack = QStackedWidget(self)
         self.stack.addWidget(self.child_view)  # Index 0
