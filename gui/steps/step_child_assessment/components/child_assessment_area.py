@@ -18,7 +18,7 @@ from gui.utils.icon_utils import get_svg_pixmap
 from logic.assessment_tools import bulk_update, get_child_common_score_type
 
 
-class AssessmentArea(QFrame):
+class ChildAssessmentArea(QFrame):
     on_score_updated = Signal(str, dict)  # child_name, score_dict
 
     def __init__(self, parent=None):

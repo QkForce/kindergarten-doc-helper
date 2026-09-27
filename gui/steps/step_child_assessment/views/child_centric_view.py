@@ -2,7 +2,7 @@ from PySide6.QtWidgets import QHBoxLayout
 
 from .base_view import BaseView
 from ..components.child_selector import ChildSelector
-from ..components.assessment_area import AssessmentArea
+from ..components.child_assessment_area import ChildAssessmentArea
 from logic.assessment_tools import get_assessment_status
 
 
@@ -16,7 +16,7 @@ class ChildCentricView(BaseView):
         self.selector = ChildSelector(parent=self)
         self.selector.childSelected.connect(self.handle_child_selection)
 
-        self.assessment_area = AssessmentArea(parent=self)
+        self.assessment_area = ChildAssessmentArea(parent=self)
         self.assessment_area.on_score_updated.connect(self.handle_score_update)
 
         layout = QHBoxLayout(self)
