@@ -4,14 +4,14 @@ from .base_view import BaseView
 from ..components.child_selector import ChildSelector
 from ..components.child_assessment_area import ChildAssessmentArea
 from logic.assessment_tools import get_assessment_status
+from logic.types import ChildrenAssessmentDTO
 
 
 class ChildCentricView(BaseView):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setObjectName("child_centric_view_widget")
-        # children_scores = [{"name": "Child 1", "code-1": 2, "code-2": 3}, ...]
-        self.children_scores = {}
+        self.children_scores: ChildrenAssessmentDTO = {}
 
         self.selector = ChildSelector(parent=self)
         self.selector.childSelected.connect(self.handle_child_selection)
@@ -25,7 +25,7 @@ class ChildCentricView(BaseView):
         layout.addWidget(self.selector)
         layout.addWidget(self.assessment_area, 1)
 
-    def applyData(self, children_scores):
+    def applyData(self, children_scores: ChildrenAssessmentDTO):
         self.children_scores = children_scores
         selector_data = [
             (name, get_assessment_status(scores))
@@ -36,10 +36,10 @@ class ChildCentricView(BaseView):
         if first_child_name:
             self.selector.selectChild(first_child_name)
 
-    def handle_child_selection(self, name):
+    def handle_child_selection(self, name: str):
         self.assessment_area.applyChildData(name, self.children_scores[name])
 
-    def handle_score_update(self, child_name, scoring_dict):
+    def handle_score_update(self, child_name: str, scoring_dict: dict):
         self.children_scores[child_name] = scoring_dict
         assessment_status = get_assessment_status(scoring_dict)
         self.selector.setChildStatus(child_name, assessment_status)

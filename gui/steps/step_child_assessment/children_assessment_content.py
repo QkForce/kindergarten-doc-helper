@@ -12,6 +12,7 @@ from .views.child_centric_view import ChildCentricView
 from .views.domain_centric_view import DomainCentricView
 from gui.widgets.ui.segmented_control import SegmentedControl
 from gui.constants.icons import IconPaths
+from logic.types import ChildrenAssessmentDTO
 
 
 class ChildrenAssessmentContent(QWidget):
@@ -19,8 +20,7 @@ class ChildrenAssessmentContent(QWidget):
 
     def __init__(self, parent=None):
         super().__init__(parent)
-        # children_scores = [{"name": "Child 1", "code-1": 2, "code-2": 3}, ...]
-        self.children_scores = {}
+        self.children_scores: ChildrenAssessmentDTO = {}
         self.setup_ui()
 
     def setup_ui(self):
@@ -58,7 +58,7 @@ class ChildrenAssessmentContent(QWidget):
         layout.addSpacing(16)
         layout.addWidget(self.stack, 1)
 
-    def applyData(self, children_scores: dict):
+    def applyData(self, children_scores: ChildrenAssessmentDTO):
         """Деректер келгенде екі көрініске де береміз."""
         self.children_scores = children_scores
         self.child_view.applyData(self.children_scores)
@@ -72,6 +72,6 @@ class ChildrenAssessmentContent(QWidget):
         else:
             self.domain_view.applyData(self.children_scores)
 
-    def _on_scores_updated(self, updated_scores: dict):
+    def _on_scores_updated(self, updated_scores: ChildrenAssessmentDTO):
         self.children_scores = updated_scores
         self.on_scores_updated.emit(self.children_scores)

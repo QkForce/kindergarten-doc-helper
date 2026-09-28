@@ -1,5 +1,15 @@
+from typing import Any, Dict, List
+
 from logic.config_store import get_age_group_data
-from logic.types import AssessmentStatus
+from logic.types import (
+    AssessmentStatus,
+    MetricID,
+    MetricScoreDTO,
+    SubjectID,
+    SubjectScoreDTO,
+    DomainScoreDTO,
+    ChildrenAssessmentDTO,
+)
 
 
 def _updated_metric(metric_id, metric, score):
@@ -98,36 +108,45 @@ def get_children_assessment_status(children_scores: list) -> AssessmentStatus:
     return AssessmentStatus.IN_PROGRESS
 
 
-def create_source_scoring_dict(age_group_id, scores):
-    scoring_dict = {}
+def create_source_scoring_dict(
+    age_group_id: str, scores: List[Dict[str, Any]]
+) -> ChildrenAssessmentDTO:
+    scoring_dict: ChildrenAssessmentDTO = {}
     target_age = get_age_group_data(age_group_id)
     if not target_age:
         return scoring_dict
 
     for item in scores:
-        name_child = item["name"]
+        name_child: str = item["name"]
         scoring_dict[name_child] = {}
+
         for domain in target_age.get("domains", []):
-            dom_id = domain["id"]
-            scoring_dict[name_child][dom_id] = {
+            dom_id: str = domain["id"]
+            domain_entry: DomainScoreDTO = {
                 "name": domain.get("name", dom_id),
                 "subjects": {},
             }
+            scoring_dict[name_child][dom_id] = domain_entry
+
             for subject in domain.get("subjects", []):
-                sub_id = subject["id"]
-                scoring_dict[name_child][dom_id]["subjects"][sub_id] = {
+                sub_id: SubjectID = subject["id"]
+                subject_entry: SubjectScoreDTO = {
                     "name": subject.get("name", sub_id),
                     "metrics": {},
                 }
+                scoring_dict[name_child][dom_id]["subjects"][sub_id] = subject_entry
+
                 for metric in subject.get("metrics", []):
-                    met_id = metric.get("id", metric["code"])
-                    score = item.get(metric["code"], 0)
-                    scoring_dict[name_child][dom_id]["subjects"][sub_id]["metrics"][
-                        met_id
-                    ] = {
+                    met_id: MetricID = metric.get("id", metric["code"])
+                    score: int = item.get(metric["code"], 0)
+                    metric_entry: MetricScoreDTO = {
                         "code": metric["code"],
                         "score": score,
                         "description": metric.get("original", ""),
                         "criteria": metric.get("criteria", []),
                     }
+                    scoring_dict[name_child][dom_id]["subjects"][sub_id]["metrics"][
+                        met_id
+                    ] = metric_entry
+
     return scoring_dict

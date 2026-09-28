@@ -1,6 +1,7 @@
 from typing import List, Dict
 
 from logic.config_store import get_age_group_data, get_all_metric_codes
+from logic.types import ChildrenAssessmentDTO
 
 
 class ChecklistBaseState:
@@ -74,9 +75,7 @@ class FillerState(ChecklistBaseState):
 class SmartEntryState(ChecklistBaseState):
     def __init__(self):
         super().__init__()
-        self.children_scores: Dict[str, dict[str, dict[str, dict[str, int | None]]]] = (
-            {}
-        )
+        self.children_scores: ChildrenAssessmentDTO = {}
 
 
 class MonFormState(ChecklistBaseState):
