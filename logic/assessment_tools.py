@@ -8,11 +8,14 @@ from logic.types import (
     SubjectID,
     SubjectScoreDTO,
     DomainScoreDTO,
+    ChildAssessmentDTO,
     ChildrenAssessmentDTO,
 )
 
 
-def _updated_metric(metric_id, metric, score):
+def _updated_metric(
+    metric_id: MetricID, metric: MetricScoreDTO, score: int
+) -> MetricScoreDTO:
     return {
         **metric,
         "id": metric.get("id", metric_id),
@@ -20,25 +23,25 @@ def _updated_metric(metric_id, metric, score):
     }
 
 
-def bulk_update(domains, score):
+def bulk_update(domains: ChildAssessmentDTO, score: int):
     for dom in domains.values():
         for sub in dom["subjects"].values():
             for met_id, metric in sub["metrics"].items():
                 sub["metrics"][met_id] = _updated_metric(met_id, metric, score)
 
 
-def set_subjects_score(subjects, score):
+def set_subjects_score(subjects: Dict[SubjectID, SubjectScoreDTO], score: int):
     for sub in subjects.values():
         for met_id, metric in sub["metrics"].items():
             sub["metrics"][met_id] = _updated_metric(met_id, metric, score)
 
 
-def set_metrics_score(metrics, score):
+def set_metrics_score(metrics: Dict[MetricID, MetricScoreDTO], score: int):
     for met_id, metric in metrics.items():
         metrics[met_id] = _updated_metric(met_id, metric, score)
 
 
-def get_child_common_score_type(score_dict):
+def get_child_common_score_type(score_dict: ChildAssessmentDTO) -> int:
     score_types = set(
         [
             metric["score"]
@@ -50,7 +53,7 @@ def get_child_common_score_type(score_dict):
     return score_types.pop() if len(score_types) == 1 else 0
 
 
-def get_domain_score_type(subjects):
+def get_domain_score_type(subjects: Dict[SubjectID, SubjectScoreDTO]):
     score_types = set(
         [
             metric["score"]
@@ -61,12 +64,12 @@ def get_domain_score_type(subjects):
     return score_types.pop() if len(score_types) == 1 else 0
 
 
-def get_subject_score_type(metrics):
+def get_subject_score_type(metrics: Dict[MetricID, MetricScoreDTO]):
     score_types = set(metric["score"] for metric in metrics.values())
     return score_types.pop() if len(score_types) == 1 else 0
 
 
-def get_assessment_status(score_dict) -> AssessmentStatus:
+def get_assessment_status(score_dict: ChildAssessmentDTO) -> AssessmentStatus:
     total_metrics = 0
     scored_metrics = 0
 
@@ -85,7 +88,9 @@ def get_assessment_status(score_dict) -> AssessmentStatus:
         return AssessmentStatus.COMPLETED
 
 
-def get_children_assessment_status(children_scores: list) -> AssessmentStatus:
+def get_children_assessment_status(
+    children_scores: ChildrenAssessmentDTO,
+) -> AssessmentStatus:
     any_scored = False
     any_incomplete = False
 
