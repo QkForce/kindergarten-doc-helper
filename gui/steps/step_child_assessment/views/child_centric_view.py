@@ -5,7 +5,12 @@ from .base_view import BaseView
 from ..components.child_selector import ChildSelector
 from ..components.child_assessment_area import ChildAssessmentArea
 from logic.assessment_tools import get_assessment_status
-from logic.types import ChildrenAssessmentDTO, SelectorItemDTO
+from logic.types import (
+    ChildAssessmentDTO,
+    ChildName,
+    ChildrenAssessmentDTO,
+    SelectorItemDTO,
+)
 
 
 class ChildCentricView(BaseView):
@@ -42,10 +47,12 @@ class ChildCentricView(BaseView):
         if first_child_name:
             self.selector.selectChild(first_child_name)
 
-    def handle_child_selection(self, name: str):
+    def handle_child_selection(self, name: ChildName):
         self.assessment_area.applyChildData(name, self.children_scores[name])
 
-    def handle_score_update(self, child_name: str, scoring_dict: dict):
+    def handle_score_update(
+        self, child_name: ChildName, scoring_dict: ChildAssessmentDTO
+    ):
         self.children_scores[child_name] = scoring_dict
         assessment_status = get_assessment_status(scoring_dict)
         self.selector.setChildStatus(child_name, assessment_status)
