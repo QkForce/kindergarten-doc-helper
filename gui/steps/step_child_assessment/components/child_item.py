@@ -7,19 +7,19 @@ from PySide6.QtWidgets import (
 from gui.utils.icon_utils import get_svg_pixmap
 from gui.constants.icons import IconPaths
 from gui.constants.colors import AppColors
-from logic.types import AssessmentStatus
+from logic.types import SelectorItemDTO, AssessmentStatus
 
 
 class ChildItemWidget(QWidget):
-    def __init__(self, name, status=AssessmentStatus.NOT_STARTED, parent=None):
+    def __init__(self, selector_item: SelectorItemDTO, parent=None):
         super().__init__(parent)
         self.setObjectName("child_item")
 
         # Child's name
-        self.name_label = QLabel(name)
+        self.name_label = QLabel(selector_item["title"])
         # Status marker (circle)
         self.status_icon = QLabel()
-        self.setStatus(status)
+        self.setStatus(selector_item["status"])
 
         layout = QHBoxLayout(self)
         layout.addWidget(self.name_label)

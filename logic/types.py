@@ -43,3 +43,9 @@ class DomainScoreDTO(TypedDict):
 
 # ChildName -> DomainID -> DomainScoreDTO
 ChildrenAssessmentDTO = Dict[ChildName, Dict[DomainID, DomainScoreDTO]]
+
+
+class SelectorItemDTO(TypedDict):
+    id: str  # child_name or domain_id
+    title: str  # child_name or domain_name
+    status: AssessmentStatus  # NOT_STARTED, IN_PROGRESS, COMPLETED

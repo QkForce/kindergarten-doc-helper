@@ -1,10 +1,11 @@
+from typing import List
 from PySide6.QtWidgets import QHBoxLayout
 
 from .base_view import BaseView
 from ..components.child_selector import ChildSelector
 from ..components.child_assessment_area import ChildAssessmentArea
 from logic.assessment_tools import get_assessment_status
-from logic.types import ChildrenAssessmentDTO
+from logic.types import ChildrenAssessmentDTO, SelectorItemDTO
 
 
 class ChildCentricView(BaseView):
@@ -25,14 +26,19 @@ class ChildCentricView(BaseView):
         layout.addWidget(self.selector)
         layout.addWidget(self.assessment_area, 1)
 
+    def _get_selector_data(self) -> List[SelectorItemDTO]:
+        return [
+            SelectorItemDTO(
+                id=name, title=f"{i+1}. {name}", status=get_assessment_status(scores)
+            )
+            for i, (name, scores) in enumerate(self.children_scores.items())
+        ]
+
     def applyData(self, children_scores: ChildrenAssessmentDTO):
         self.children_scores = children_scores
-        selector_data = [
-            (name, get_assessment_status(scores))
-            for name, scores in children_scores.items()
-        ]
+        selector_data = self._get_selector_data()
         self.selector.applyData(selector_data)
-        first_child_name = selector_data[0][0] if selector_data else None
+        first_child_name = selector_data[0]["id"] if selector_data else None
         if first_child_name:
             self.selector.selectChild(first_child_name)
 

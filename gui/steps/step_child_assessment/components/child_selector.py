@@ -10,7 +10,7 @@ from PySide6.QtWidgets import (
 )
 from PySide6.QtCore import Signal
 
-from logic.types import AssessmentStatus
+from logic.types import AssessmentStatus, SelectorItemDTO
 from gui.steps.step_child_assessment.components.child_item import ChildItemWidget
 
 
@@ -19,7 +19,7 @@ class ChildSelector(QFrame):
 
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.children_name_list = []
+        self.children_name_list: list[str] = []
         self.setObjectName("child_selector")
         self.setFixedWidth(250)
 
@@ -40,12 +40,12 @@ class ChildSelector(QFrame):
         layout.addLayout(title_layout)
         layout.addWidget(self.list_widget)
 
-    def applyData(self, children: List[Tuple[str, AssessmentStatus]]):
+    def applyData(self, children: List[SelectorItemDTO]):
         self.list_widget.clear()
-        self.children_name_list = [child[0] for child in children]
-        for i, (name, status) in enumerate(children):
+        self.children_name_list = [child["id"] for child in children]
+        for i, child in enumerate(children):
             item = QListWidgetItem(self.list_widget)
-            custom_widget = ChildItemWidget(f"{i+1}. {name}", status)
+            custom_widget = ChildItemWidget(child, parent=self.list_widget)
             item.setSizeHint(custom_widget.sizeHint())
 
             self.list_widget.addItem(item)
