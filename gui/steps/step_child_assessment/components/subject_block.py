@@ -6,6 +6,7 @@ from PySide6.QtWidgets import (
 )
 from PySide6.QtCore import Signal
 
+
 from .metric_item import MetricItem
 from gui.widgets.rotating_icon import RotatingIcon
 from gui.widgets.score_toggle import ScoreToggle, ScoreButtonType
@@ -13,20 +14,21 @@ from gui.constants.icons import IconPaths
 from gui.constants.colors import AppColors
 from gui.utils.icon_utils import get_svg_pixmap
 from logic.assessment_tools import set_metrics_score, get_subject_score_type
+from logic.types import MetricID, MetricScoreDTO, SubjectScoreDTO
 
 
 class SubjectBlock(QFrame):
     on_score_updated = Signal(str, dict)  # sub_id, metrics
 
     def __init__(
-        self, id: str, name: str, metrics: dict, is_expanded=False, parent=None
+        self, id: str, sub_score: SubjectScoreDTO, is_expanded=False, parent=None
     ):
         super().__init__(parent)
-        self.id = id
-        self.name = name
-        self.metrics = metrics
-        self.metric_items = {}
-        self.is_expanded = is_expanded
+        self.id: str = id
+        self.name: str = sub_score["name"]
+        self.metrics: dict[MetricID, MetricScoreDTO] = sub_score["metrics"]
+        self.metric_items: dict[MetricID, MetricItem] = {}
+        self.is_expanded: bool = is_expanded
         self.setObjectName("subject_block")
         layout = QVBoxLayout(self)
 
@@ -53,9 +55,7 @@ class SubjectBlock(QFrame):
         for i, (met_id, met) in enumerate(self.metrics.items()):
             metric_item = MetricItem(
                 id=met_id,
-                code=met["code"],
-                description=met["description"],
-                criteria=met["criteria"],
+                met_score=met,
                 parent=self.body_frame,
             )
             metric_item.on_score_updated.connect(self.handle_child_update)

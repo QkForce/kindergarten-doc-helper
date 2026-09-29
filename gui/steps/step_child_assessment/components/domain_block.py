@@ -7,20 +7,21 @@ from PySide6.QtWidgets import (
 from PySide6.QtCore import Signal
 
 from .subject_block import SubjectBlock
+from gui.utils.style_utils import apply_shadow
 from gui.widgets.score_toggle import ScoreToggle, ScoreButtonType
 from logic.assessment_tools import set_subjects_score, get_domain_score_type
-from gui.utils.style_utils import apply_shadow
+from logic.types import DomainID, DomainScoreDTO, SubjectID, SubjectScoreDTO
 
 
 class DomainBlock(QFrame):
     on_score_updated = Signal(str, dict)  # dom_id, subjects
 
-    def __init__(self, id, name, subjects, parent=None):
+    def __init__(self, id: DomainID, dom_score: DomainScoreDTO, parent=None):
         super().__init__(parent)
-        self.id = id
-        self.name = name
-        self.subjects = subjects
-        self.subject_blocks: dict[str, SubjectBlock] = {}
+        self.id: DomainID = id
+        self.name: str = dom_score["name"]
+        self.subjects: dict[SubjectID, SubjectScoreDTO] = dom_score["subjects"]
+        self.subject_blocks: dict[SubjectID, SubjectBlock] = {}
         self.setObjectName("domain_block")
 
         self.setFrameShape(QFrame.Shape.StyledPanel)
@@ -47,7 +48,7 @@ class DomainBlock(QFrame):
         for sub_id, sub in self.subjects.items():
             is_expanded = False
             subject_block = SubjectBlock(
-                sub_id, sub["name"], sub["metrics"], is_expanded, parent=self
+                sub_id, sub, is_expanded, parent=self
             )
             subject_block.on_score_updated.connect(self.handle_child_update)
             self.subject_blocks[sub_id] = subject_block

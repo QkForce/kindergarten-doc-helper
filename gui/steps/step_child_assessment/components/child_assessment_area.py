@@ -16,6 +16,7 @@ from gui.constants.colors import AppColors
 from gui.constants.icons import IconPaths
 from gui.utils.icon_utils import get_svg_pixmap
 from logic.assessment_tools import bulk_update, get_child_common_score_type
+from logic.types import ChildAssessmentDTO, ChildName
 
 
 class ChildAssessmentArea(QFrame):
@@ -116,7 +117,7 @@ class ChildAssessmentArea(QFrame):
         # Send signal to parent
         self.on_score_updated.emit(self.child_name, self.score_dict)
 
-    def applyChildData(self, child_name, score_dict):
+    def applyChildData(self, child_name: ChildName, score_dict: ChildAssessmentDTO):
         if not child_name or not score_dict:
             return
 
@@ -126,9 +127,7 @@ class ChildAssessmentArea(QFrame):
 
         self._clear_domain_blocks()
         for dom_id, dom in self.score_dict.items():
-            domain_block = DomainBlock(
-                dom_id, dom["name"], dom["subjects"], parent=self
-            )
+            domain_block = DomainBlock(dom_id, dom, parent=self)
             domain_block.on_score_updated.connect(self.handle_child_update)
             self.domain_blocks[dom_id] = domain_block
             self.body_layout.addWidget(domain_block)

@@ -3,6 +3,7 @@ from PySide6.QtCore import Qt, Signal
 
 from gui.widgets.score_toggle import ScoreToggle, ScoreButtonType
 from gui.utils.formatter import format_criterion_tooltip
+from logic.types import MetricScoreDTO
 
 
 class MetricItem(QFrame):
@@ -11,19 +12,16 @@ class MetricItem(QFrame):
     def __init__(
         self,
         id: str,
-        code: str,
-        description: str,
-        criteria: list,
-        score: int = 0,
+        met_score: MetricScoreDTO,
         parent=None,
     ):
         super().__init__(parent)
-        self.id = id
-        self.code = code
-        self.description = description
-        self.criteria = [
+        self.id: str = id
+        self.code: str = met_score["code"]
+        self.description: str = met_score["description"]
+        self.criteria: list = [
             format_criterion_tooltip(i, desc)
-            for i, desc in enumerate(criteria, start=1)
+            for i, desc in enumerate(met_score["criteria"], start=1)
         ]
         self.setObjectName("metric_item")
 
@@ -41,7 +39,7 @@ class MetricItem(QFrame):
             spacing=2,
             parent=self,
         )
-        self.score_toggle.set_score(score)
+        self.score_toggle.set_score(met_score["score"])
         self.score_toggle.setObjectName("metric_score_toggle")
         self.score_toggle.scoreChanged.connect(
             lambda score: self.on_score_updated.emit(self.id, score)

@@ -41,8 +41,10 @@ class DomainScoreDTO(TypedDict):
     subjects: Dict[SubjectID, SubjectScoreDTO]
 
 
-# ChildName -> DomainID -> DomainScoreDTO
-ChildrenAssessmentDTO = Dict[ChildName, Dict[DomainID, DomainScoreDTO]]
+ChildAssessmentDTO = Dict[DomainID, DomainScoreDTO]
+
+
+ChildrenAssessmentDTO = Dict[ChildName, ChildAssessmentDTO]
 
 
 class SelectorItemDTO(TypedDict):
