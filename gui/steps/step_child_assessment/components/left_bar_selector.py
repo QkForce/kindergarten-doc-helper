@@ -45,7 +45,9 @@ class LeftBarSelector(QFrame):
         self.item_id_list = [row["id"] for row in list_data]
         for row in list_data:
             item = QListWidgetItem(self.list_widget)
-            custom_widget = SelectorItem(row["title"], parent=self.list_widget)
+            custom_widget = SelectorItem(
+                row["title"], row["status"], parent=self.list_widget
+            )
             item.setSizeHint(custom_widget.sizeHint())
 
             self.list_widget.addItem(item)

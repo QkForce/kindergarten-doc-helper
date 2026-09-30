@@ -151,46 +151,48 @@ QScrollArea {
 
 /*--- SMART ENTRY ---*/
 
-/* Child Centric View */
+/* Left Bar Selector */
 
-QWidget#child_centric_view_widget {
-    background-color: @CANVAS;
-    border: 1px solid @BORDER;
-    border-radius: 24px;
-}
-
-QFrame#child_selector {
+QFrame#left_bar_selector {
     background-color: @SIDEBAR;
     padding: 2px;
     border-right: 1px solid @BORDER;
     border-top-left-radius: 24px;
     border-bottom-left-radius: 24px;
 }
-QFrame#child_selector > QLabel {
+QFrame#left_bar_selector > QLabel {
     background-color: transparent;
     font-weight: bold;
     font-size: 12px;
     text-transform: uppercase;
     color: @TEXT_MAIN;
 }
-QFrame#child_selector QListWidget {
+QFrame#left_bar_selector QListWidget {
     border-top: 1px solid @BORDER;
     background-color: @SIDEBAR;
     outline: none;
 }
-QWidget#child_item > QLabel[selected=true] {
+QWidget#selector_item > QLabel[selected=true] {
     color: @CANVAS;
     font-size: 11px;
     font-weight: bold;
 }
-QWidget#child_item > QLabel[selected=false] {
+QWidget#selector_item > QLabel[selected=false] {
     color: @TEXT_MAIN;
     font-size: 11px;
     font-weight: bold;
 }
-QFrame#child_selector QListWidget::item:selected {
+QFrame#left_bar_selector QListWidget::item:selected {
     border-radius: 10px;
     background-color: @PRIMARY;
+}
+
+/* Child Centric View */
+
+QWidget#child_centric_view_widget {
+    background-color: @CANVAS;
+    border: 1px solid @BORDER;
+    border-radius: 24px;
 }
 
 QFrame#assessment_area QScrollArea, 
@@ -289,45 +291,6 @@ QWidget#domain_centric_view_widget {
     background-color: @CANVAS;
     border: 1px solid @BORDER;
     border-radius: 24px;
-}
-
-QFrame#left_bar_selector {
-    background-color: @SIDEBAR;
-    padding: 2px;
-    border-bottom: 1px solid @BORDER;
-    border-top-left-radius: 24px;
-    border-bottom-left-radius: 24px;
-}
-QFrame#left_bar_selector > QLabel {
-    background-color: transparent;
-    font-weight: bold;
-    font-size: 12px;
-    text-transform: uppercase;
-    color: @TEXT_MUTED;
-}
-QFrame#left_bar_selector QListWidget {
-    background-color: @SIDEBAR;
-    border: none;
-    outline: none;
-}
-QWidget#selector_item > QLabel[selected=true] {
-    color: @CANVAS;
-    font-size: 11px;
-    font-weight: bold;
-}
-QWidget#selector_item > QLabel[selected=false] {
-    color: @TEXT_MAIN;
-    font-size: 11px;
-    font-weight: bold;
-}
-QFrame#left_bar_selector QListWidget::item {
-    border-radius: 10px;
-    background-color: @CANVAS;
-    border: 1px solid @BORDER;
-}
-QFrame#left_bar_selector QListWidget::item:selected {
-    border-radius: 10px;
-    background-color: @PRIMARY;
 }
 
 

@@ -149,7 +149,7 @@ def assert_step_child_assessment(qtbot, monkeypatch, page):
 
     selector = step.content_widget.child_view.selector
     assessment_area = step.content_widget.child_view.assessment_area
-    children_name_list = selector.children_name_list
+    children_name_list = selector.item_id_list
     assert (
         len(children_name_list) > 5
     ), "step_child_assessment: Балалар тізімі толық жүктелмеген немесе бос!"

@@ -2,7 +2,7 @@ from typing import List
 from PySide6.QtWidgets import QHBoxLayout
 
 from .base_view import BaseView
-from ..components.child_selector import ChildSelector
+from ..components.left_bar_selector import LeftBarSelector
 from ..components.child_assessment_area import ChildAssessmentArea
 from logic.assessment_tools import get_assessment_status
 from logic.types import (
@@ -19,8 +19,8 @@ class ChildCentricView(BaseView):
         self.setObjectName("child_centric_view_widget")
         self.children_scores: ChildrenAssessmentDTO = {}
 
-        self.selector = ChildSelector(parent=self)
-        self.selector.childSelected.connect(self.handle_child_selection)
+        self.selector = LeftBarSelector(title="Балалар тізімі:", parent=self)
+        self.selector.itemSelected.connect(self.handle_child_selection)
 
         self.assessment_area = ChildAssessmentArea(parent=self)
         self.assessment_area.on_score_updated.connect(self.handle_score_update)
@@ -45,7 +45,7 @@ class ChildCentricView(BaseView):
         self.selector.applyData(selector_data)
         first_child_name = selector_data[0]["id"] if selector_data else None
         if first_child_name:
-            self.selector.selectChild(first_child_name)
+            self.selector.selectItem(first_child_name)
 
     def handle_child_selection(self, name: ChildName):
         self.assessment_area.applyChildData(name, self.children_scores[name])
@@ -55,5 +55,5 @@ class ChildCentricView(BaseView):
     ):
         self.children_scores[child_name] = scoring_dict
         assessment_status = get_assessment_status(scoring_dict)
-        self.selector.setChildStatus(child_name, assessment_status)
+        self.selector.setItemStatus(child_name, assessment_status)
         self.on_scores_updated.emit(self.children_scores)
