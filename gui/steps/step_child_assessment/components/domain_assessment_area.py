@@ -1,0 +1,141 @@
+from PySide6.QtWidgets import (
+    QFrame,
+    QScrollArea,
+    QVBoxLayout,
+    QHBoxLayout,
+    QLabel,
+    QPushButton,
+    QWidget,
+)
+from PySide6.QtCore import Qt, Signal
+from PySide6.QtGui import QIcon
+
+from .domain_block import DomainBlock
+from gui.widgets.score_toggle import ScoreToggle, ScoreButtonType
+from gui.constants.colors import AppColors
+from gui.constants.icons import IconPaths
+from gui.utils.icon_utils import get_svg_pixmap
+from logic.assessment_tools import bulk_update, get_child_common_score_type
+from logic.types import DomainID, DomainCentricAssessmentDTO
+
+
+class DomainAssessmentArea(QFrame):
+    on_score_updated = Signal(str, dict)  # domain_id, score_dict
+
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.domain_id = ""
+        self.domain_name = ""
+        self.score_dict = {}
+        self.domain_blocks: dict[str, DomainBlock] = {}
+        self.is_expanded = False
+        self.setObjectName("assessment_area")
+
+        self.domain_name_lbl = QLabel()
+        self.domain_name_lbl.setObjectName("selection_lbl")
+
+        self.expand_btn = QPushButton()
+        self.expand_btn.setFixedSize(32, 32)
+        self.expand_btn.clicked.connect(self.handle_expand)
+        self.expand_btn.setObjectName("expand_btn")
+        expand_icon = get_svg_pixmap(IconPaths.EXPAND, AppColors.BTN_ICON_TEXT, 16)
+        self.expand_btn.setIcon(QIcon(expand_icon))
+
+        score_toggle_lbl = QLabel("Жаппай бағалау:")
+        score_toggle_lbl.setObjectName("score_toggle_lbl")
+        self.score_toggle = ScoreToggle(
+            btn_type=ScoreButtonType.BASE, size=20, spacing=2, parent=self
+        )
+        self.score_toggle.scoreChanged.connect(self.on_bulk_score)
+        score_toggle_layout = QHBoxLayout()
+        score_toggle_layout.addWidget(score_toggle_lbl)
+        score_toggle_layout.addWidget(self.score_toggle)
+        score_toggle_frame = QFrame()
+        score_toggle_frame.setObjectName("bulk_score_toggle_frame")
+        score_toggle_frame.setLayout(score_toggle_layout)
+
+        header_layout = QHBoxLayout()
+        header_layout.addWidget(self.domain_name_lbl, alignment=Qt.AlignTop)
+        header_layout.addSpacing(10)
+        header_layout.addWidget(self.expand_btn, alignment=Qt.AlignCenter)
+        header_layout.addStretch()
+        header_layout.addWidget(score_toggle_frame)
+        header_frame = QFrame()
+        header_frame.setObjectName("assessment_header")
+        header_frame.setLayout(header_layout)
+
+        # Create a ScrollArea
+        self.scroll_area = QScrollArea()
+        self.scroll_area.setWidgetResizable(True)
+
+        # Create a custom widget for your content
+        self.scroll_content = QWidget()
+        self.body_layout = QVBoxLayout(self.scroll_content)
+        self.body_layout.setAlignment(Qt.AlignTop)
+
+        # Setting content to ScrollArea
+        self.scroll_area.setWidget(self.scroll_content)
+
+        # Add to main layout
+        layout = QVBoxLayout(self)
+        layout.setContentsMargins(0, 0, 0, 0)
+        layout.setSpacing(0)
+        layout.addWidget(header_frame)
+        layout.addWidget(self.scroll_area)
+
+    def _clear_domain_blocks(self):
+        while self.body_layout.count():
+            item = self.body_layout.takeAt(0)
+            w = item.widget()
+            if w is not None:
+                w.setParent(None)
+                w.deleteLater()
+            del item
+        self.domain_blocks.clear()
+
+    def handle_expand(self):
+        self.is_expanded = not self.is_expanded
+        expand_icon = get_svg_pixmap(
+            IconPaths.COLLAPSE if self.is_expanded else IconPaths.EXPAND,
+            AppColors.BTN_ICON_TEXT,
+            16,
+        )
+        self.expand_btn.setIcon(QIcon(expand_icon))
+        for db in self.domain_blocks.values():
+            db.setExpanded(self.is_expanded)
+
+    def on_bulk_score(self, score):
+        bulk_update(self.score_dict, score)
+        for dom_id, domain_block in self.domain_blocks.items():
+            domain_block.applyData(self.score_dict[dom_id]["subjects"])
+        self.on_score_updated.emit(self.domain_id, self.score_dict)
+
+    def handle_domain_update(self, dom_id, subjects):
+        # Update self.score_togle state
+        self.score_dict[dom_id]["subjects"] = subjects
+        cmn_score = get_child_common_score_type(self.score_dict)
+        self.score_toggle.set_score(cmn_score)
+        # Send signal to parent
+        self.on_score_updated.emit(self.domain_id, self.score_dict)
+
+    def applyData(
+        self, dom_id: DomainID, dom_name: str, score_dict: DomainCentricAssessmentDTO
+    ):
+        if not dom_id or not score_dict:
+            return
+
+        self.domain_id = dom_id
+        self.domain_name = dom_name
+        self.score_dict = score_dict
+        self.domain_name_lbl.setText(self.domain_name)
+
+        # self._clear_domain_blocks()
+        # for dom_id, dom in self.score_dict.items():
+        #     domain_block = DomainBlock(dom_id, dom, parent=self)
+        #     domain_block.on_score_updated.connect(self.handle_domain_update)
+        #     self.domain_blocks[dom_id] = domain_block
+        #     self.body_layout.addWidget(domain_block)
+        # self.body_layout.addStretch()
+
+        # cmn_score = get_domain_common_score_type(self.score_dict)
+        # self.score_toggle.set_score(cmn_score)

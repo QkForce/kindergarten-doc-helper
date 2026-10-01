@@ -1,10 +1,14 @@
-from PySide6.QtWidgets import QHBoxLayout, QFrame
+from PySide6.QtWidgets import QHBoxLayout
+
 
 from .base_view import BaseView
 from ..components.left_bar_selector import LeftBarSelector
+from ..components.domain_assessment_area import DomainAssessmentArea
+from logic.assessment_tools import get_assessment_status
 from logic.types import (
     AssessmentStatus,
     ChildrenAssessmentDTO,
+    DomainCentricAssessmentDTO,
     DomainID,
     SelectorItemDTO,
 )
@@ -19,21 +23,19 @@ class DomainCentricView(BaseView):
         self.selector = LeftBarSelector(title="Даму бағытын таңдаңыз:", parent=self)
         self.selector.itemSelected.connect(self.handle_domain_selection)
 
-        empty_frame = QFrame()
-        # self.assessment_area.on_score_updated.connect(self.handle_score_update)
+        self.assessment_area = DomainAssessmentArea(parent=self)
+        self.assessment_area.on_score_updated.connect(self.handle_score_update)
 
         layout = QHBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(0)
         layout.addWidget(self.selector)
-        layout.addWidget(empty_frame, 1)
+        layout.addWidget(self.assessment_area, 1)
 
-    def get_assessment_status(
-        self, children_scores: ChildrenAssessmentDTO, dom_id: DomainID
-    ) -> AssessmentStatus:
+    def _get_assessment_status(self, dom_id: DomainID) -> AssessmentStatus:
         total_metrics = 0
         scored_metrics = 0
-        for scores in children_scores.values():
+        for scores in self.children_scores.values():
             dom = scores.get(dom_id)
             if not dom:
                 continue
@@ -50,32 +52,47 @@ class DomainCentricView(BaseView):
         else:
             return AssessmentStatus.COMPLETED
 
-    def get_selector_data(
-        self, children_scores: ChildrenAssessmentDTO
-    ) -> list[SelectorItemDTO]:
+    def _get_selector_data(self) -> list[SelectorItemDTO]:
         domain_ids = set()
-        for scores in children_scores.values():
+        for scores in self.children_scores.values():
             for dom_id, dom in scores.items():
                 domain_ids.add((dom_id, dom["name"]))
         return [
             SelectorItemDTO(
                 id=dom_id,
                 title=dom_name,
-                status=self.get_assessment_status(children_scores, dom_id),
+                status=self._get_assessment_status(dom_id),
             )
             for dom_id, dom_name in domain_ids
         ]
 
+    def _get_assessment_area_data(
+        self, dom_id: DomainID
+    ) -> tuple[str, DomainCentricAssessmentDTO]:
+        dom_name = ""
+        domain_data: DomainCentricAssessmentDTO = {}
+
+        for child_name, child_scores in self.children_scores.items():
+            if dom_id in child_scores:
+                if not dom_name:
+                    dom_name = child_scores[dom_id]["name"]
+                domain_data[child_name] = child_scores[dom_id]
+
+        return dom_name, domain_data
+
     def applyData(self, children_scores: ChildrenAssessmentDTO):
         self.children_scores = children_scores
-        selector_data = self.get_selector_data(self.children_scores)
+        selector_data = self._get_selector_data()
         self.selector.applyData(selector_data)
         first_dom_id = selector_data[0]["id"] if selector_data else None
         if first_dom_id:
             self.selector.selectItem(first_dom_id)
 
     def handle_domain_selection(self, dom_id):
-        pass  # TODO: Implement domain selection handling for domain-centric view
+        dom_name, dom_data = self._get_assessment_area_data(dom_id)
+        self.assessment_area.applyData(dom_id, dom_name, dom_data)
 
-    def handle_score_update(self, dom_id, scoring_dict):
+    def handle_score_update(
+        self, dom_id: DomainID, scoring_dict: DomainCentricAssessmentDTO
+    ):
         pass  # TODO: Implement score update handling for domain-centric view

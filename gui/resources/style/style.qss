@@ -216,7 +216,7 @@ QPushButton#expand_btn:hover {
     border: 1px solid @BORDER;
 }
 
-QLabel#child_name_lbl {
+QFrame#assessment_area QFrame#assessment_header QLabel#selection_lbl {
     font-size: 16px;
     font-weight: bold;
     color: @TEXT_MAIN;

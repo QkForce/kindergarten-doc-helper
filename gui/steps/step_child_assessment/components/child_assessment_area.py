@@ -31,7 +31,7 @@ class ChildAssessmentArea(QFrame):
         self.setObjectName("assessment_area")
 
         self.child_name_lbl = QLabel()
-        self.child_name_lbl.setObjectName("child_name_lbl")
+        self.child_name_lbl.setObjectName("selection_lbl")
 
         self.expand_btn = QPushButton()
         self.expand_btn.setFixedSize(32, 32)
