@@ -10,7 +10,7 @@ from PySide6.QtWidgets import (
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QIcon
 
-from .domain_block import DomainBlock
+from .domain_child_block import DomainChildBlock
 from gui.widgets.score_toggle import ScoreToggle, ScoreButtonType
 from gui.constants.colors import AppColors
 from gui.constants.icons import IconPaths
@@ -27,7 +27,7 @@ class DomainAssessmentArea(QFrame):
         self.domain_id = ""
         self.domain_name = ""
         self.score_dict = {}
-        self.domain_blocks: dict[str, DomainBlock] = {}
+        self.child_blocks: dict[str, DomainChildBlock] = {}
         self.is_expanded = False
         self.setObjectName("assessment_area")
 
@@ -83,7 +83,7 @@ class DomainAssessmentArea(QFrame):
         layout.addWidget(header_frame)
         layout.addWidget(self.scroll_area)
 
-    def _clear_domain_blocks(self):
+    def _clear_child_blocks(self):
         while self.body_layout.count():
             item = self.body_layout.takeAt(0)
             w = item.widget()
@@ -91,7 +91,7 @@ class DomainAssessmentArea(QFrame):
                 w.setParent(None)
                 w.deleteLater()
             del item
-        self.domain_blocks.clear()
+        self.child_blocks.clear()
 
     def handle_expand(self):
         self.is_expanded = not self.is_expanded
@@ -101,21 +101,19 @@ class DomainAssessmentArea(QFrame):
             16,
         )
         self.expand_btn.setIcon(QIcon(expand_icon))
-        for db in self.domain_blocks.values():
+        for db in self.child_blocks.values():
             db.setExpanded(self.is_expanded)
 
     def on_bulk_score(self, score):
         bulk_update(self.score_dict, score)
-        for dom_id, domain_block in self.domain_blocks.items():
-            domain_block.applyData(self.score_dict[dom_id]["subjects"])
+        for child_name, child_block in self.child_blocks.items():
+            child_block.applyData(self.score_dict[child_name])
         self.on_score_updated.emit(self.domain_id, self.score_dict)
 
-    def handle_domain_update(self, dom_id, subjects):
-        # Update self.score_togle state
-        self.score_dict[dom_id]["subjects"] = subjects
+    def _handle_child_score_update(self, child_name, domain_score):
+        self.score_dict[child_name] = domain_score
         cmn_score = get_child_common_score_type(self.score_dict)
         self.score_toggle.set_score(cmn_score)
-        # Send signal to parent
         self.on_score_updated.emit(self.domain_id, self.score_dict)
 
     def applyData(
@@ -129,13 +127,18 @@ class DomainAssessmentArea(QFrame):
         self.score_dict = score_dict
         self.domain_name_lbl.setText(self.domain_name)
 
-        # self._clear_domain_blocks()
-        # for dom_id, dom in self.score_dict.items():
-        #     domain_block = DomainBlock(dom_id, dom, parent=self)
-        #     domain_block.on_score_updated.connect(self.handle_domain_update)
-        #     self.domain_blocks[dom_id] = domain_block
-        #     self.body_layout.addWidget(domain_block)
-        # self.body_layout.addStretch()
+        self._clear_child_blocks()
+        for child_name, dom_score in self.score_dict.items():
+            child_block = DomainChildBlock(
+                child_name=child_name,
+                domain_score=dom_score,
+                is_expanded=self.is_expanded,
+                parent=self.scroll_content,
+            )
+            child_block.on_score_updated.connect(self._handle_child_score_update)
+            self.child_blocks[child_name] = child_block
+            self.body_layout.addWidget(child_block)
 
-        # cmn_score = get_domain_common_score_type(self.score_dict)
-        # self.score_toggle.set_score(cmn_score)
+        self.body_layout.addStretch()
+        cmn_score = get_child_common_score_type(self.score_dict)
+        self.score_toggle.set_score(cmn_score)

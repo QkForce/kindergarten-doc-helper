@@ -95,4 +95,9 @@ class DomainCentricView(BaseView):
     def handle_score_update(
         self, dom_id: DomainID, scoring_dict: DomainCentricAssessmentDTO
     ):
-        pass  # TODO: Implement score update handling for domain-centric view
+        for child_name, child_domain_score in scoring_dict.items():
+            if child_name in self.children_scores:
+                self.children_scores[child_name][dom_id] = child_domain_score
+
+        self.selector.setItemStatus(dom_id, self._get_assessment_status(dom_id))
+        self.on_scores_updated.emit(self.children_scores)

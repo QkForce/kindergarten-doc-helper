@@ -67,10 +67,10 @@ class ChildrenAssessmentContent(QWidget):
     def _on_mode_changed(self, mode_id: int):
         """Режим ауысқанда соңғы стейтті белсенді view-ға синхрондау."""
         self.stack.setCurrentIndex(mode_id)
-        if mode_id == 0:
-            self.child_view.applyData(self.children_scores)
-        else:
-            self.domain_view.applyData(self.children_scores)
+        # if mode_id == 0:
+        #     self.child_view.applyData(self.children_scores)
+        # else:
+        #     self.domain_view.applyData(self.children_scores)
 
     def _on_scores_updated(self, updated_scores: ChildrenAssessmentDTO):
         self.children_scores = updated_scores

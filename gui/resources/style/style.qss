@@ -293,6 +293,12 @@ QWidget#domain_centric_view_widget {
     border-radius: 24px;
 }
 
+QFrame#domain_child_block {
+    background-color: @SIDEBAR;
+    border: 1px solid @BORDER;
+    border-radius: 16px;
+    margin: 10px 10px 0px 10px;
+}
 
 /* GROW CARD FORMATTER */
 

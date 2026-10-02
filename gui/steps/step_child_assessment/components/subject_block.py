@@ -34,8 +34,11 @@ class SubjectBlock(QFrame):
 
         title = QLabel(self.name)
         pixmap = get_svg_pixmap(IconPaths.CHEVRON_DOWN, AppColors.ICON_MAIN, 16)
-        self.chevron_icon = RotatingIcon(pixmap, -90)
-        self.line = QFrame()
+        self.chevron_icon = RotatingIcon(
+            pixmap, 0 if self.is_expanded else -90, parent=self
+        )
+        self.chevron_icon.setFixedSize(16, 16)
+        self.line = QFrame(self)
         self.line.setObjectName("separator")
         self.line.setFrameShape(QFrame.Shape.HLine)
         self.score_toggle = ScoreToggle(
